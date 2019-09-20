@@ -72,7 +72,7 @@
         \end{align*}
     \section{Exercise 2: Describe the languages denoted by the following regular expressions:}
         \subsection{$a(a|b)^*b$ [5 points]}
-            A pattern is start with n a, there are m of b behind it. The string consist of k pattern(m,n,k can be zero).
+            The string start with a, there are n a or b behind it（n can be 0）, then the string end with b.
             $$s = a + n × (a\quad or\quad b) + b\qquad (n\geq 0)$$
         \subsection{$((\epsilon|a)^*b^*)^*[5 points]$}
             A pattern is start with n a, there are m of b behind it. The string consist of k pattern(m,n,k can be zero).
@@ -102,7 +102,8 @@
             \end{lstlisting}
         \subsection{All strings of lowercase letters that contain the five vowels in order. [10 points]}
             \begin{lstlisting}
-                [a−z]*a*[a−z]*e*[a−z]*i*[a−z]*o*[a−z]*u*[a−z]*                
+                p = [b-df-hj-np-tv−z]
+                re = (a|{p})*a(e|{p})*e(i|{p})*i(o|{p})*o(u|{p})*({p})*
             \end{lstlisting}
     \section{Optional Exercises (20 bonus points)}
         \subsection{Exercise 1: Write regular definitions for the following languages. Please provide brief
