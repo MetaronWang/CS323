@@ -1,0 +1,18 @@
+\BOOKMARK [1][-]{section.1}{Exercise\0401:\040Design\040finite\040automata\040\(both\040deterministic\040and\040nondeterministic\)\040for\040each\040of\040the\040following\040regular\040languages:}{}% 1
+\BOOKMARK [2][-]{subsection.1.1}{\040L\(a\(a|b\)*b\)\040[10\040points]}{section.1}% 2
+\BOOKMARK [3][-]{subsubsection.1.1.1}{NFA}{subsection.1.1}% 3
+\BOOKMARK [3][-]{subsubsection.1.1.2}{DFA}{subsection.1.1}% 4
+\BOOKMARK [2][-]{subsection.1.2}{L\(\(\(|a\)*b*\)*\)\040[10\040points]}{section.1}% 5
+\BOOKMARK [3][-]{subsubsection.1.2.1}{NFA}{subsection.1.2}% 6
+\BOOKMARK [3][-]{subsubsection.1.2.2}{DFA}{subsection.1.2}% 7
+\BOOKMARK [2][-]{subsection.1.3}{L\(\(a|b\)*a\(a|b\)\(a|b\)\)\040[10\040points]}{section.1}% 8
+\BOOKMARK [3][-]{subsubsection.1.3.1}{NFA}{subsection.1.3}% 9
+\BOOKMARK [3][-]{subsubsection.1.3.2}{DFA}{subsection.1.3}% 10
+\BOOKMARK [1][-]{section.2}{Exercise 2: Convert the following regular expressions to NFAs using the Thompson’s Construction Algorithm \(Algorithm 3.23 in the dragon book\).}{}% 11
+\BOOKMARK [2][-]{subsection.2.1}{\040\(\(|a\)*b*\)*\040[10\040points]}{section.2}% 12
+\BOOKMARK [2][-]{subsection.2.2}{\(a|b\)*a\(a|b\)\(a|b\)[10\040points]}{section.2}% 13
+\BOOKMARK [2][-]{subsection.2.3}{a*ba*ba*ba*\040[10\040points]}{section.2}% 14
+\BOOKMARK [1][-]{section.3}{Exercise\0403:\040Convert\040the\040NFAs\040in\040Exercise\0402\040to\040DFAs\040using\040the\040Subset\040Construction\040Algorithm\040\(Algorithm\0403.20\040in\040the\040dragon\040book\).\040[30\040points\040in\040total;\04010\040points\040for\040each\040correct\040conversion]}{}% 15
+\BOOKMARK [2][-]{subsection.3.1}{\(\(|a\)*\040b*\)*\040[10\040points]}{section.3}% 16
+\BOOKMARK [2][-]{subsection.3.2}{\(a|b\)*a\(a|b\)\(a|b\)[10\040points]}{section.3}% 17
+\BOOKMARK [2][-]{subsection.3.3}{a*ba*ba*ba*\040[10\040points]}{section.3}% 18
