@@ -71,20 +71,21 @@
 #include "lex.yy.c"
 #include "stdlib.h"
 #include "stdio.h"
+#include "node.hpp"
 #include "queue"
 #include "stack"
 #include "iostream"
 #include "string"
-#define YYSTYPE char *
+#include "vector"
+#define YYSTYPE Node
 using namespace std;
 void yyerror(const char*); //必须要有
 extern int yylex(void);
-string lp = "(";
-string rp = ")";
-stack<string> ast;
-#define STMT(s) s+lp+to_string(lines)+rp
+string addLine(string,int);
 
-#line 88 "pro_1.tab.c"
+Node program;
+
+#line 89 "pro_1.tab.c"
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus
@@ -103,7 +104,7 @@ stack<string> ast;
 # undef YYERROR_VERBOSE
 # define YYERROR_VERBOSE 1
 #else
-# define YYERROR_VERBOSE 1
+# define YYERROR_VERBOSE 0
 #endif
 
 /* Use api.header.include to #include this header
@@ -156,7 +157,9 @@ extern int yydebug;
     RB = 288,
     LC = 289,
     RC = 290,
-    LINE = 291
+    LINE = 291,
+    ADD = 292,
+    SUB = 293
   };
 #endif
 
@@ -167,9 +170,23 @@ typedef int YYSTYPE;
 # define YYSTYPE_IS_DECLARED 1
 #endif
 
+/* Location type.  */
+#if ! defined YYLTYPE && ! defined YYLTYPE_IS_DECLARED
+typedef struct YYLTYPE YYLTYPE;
+struct YYLTYPE
+{
+  int first_line;
+  int first_column;
+  int last_line;
+  int last_column;
+};
+# define YYLTYPE_IS_DECLARED 1
+# define YYLTYPE_IS_TRIVIAL 1
+#endif
+
 
 extern YYSTYPE yylval;
-
+extern YYLTYPE yylloc;
 int yyparse (void);
 
 #endif /* !YY_YY_PRO_1_TAB_H_INCLUDED  */
@@ -348,13 +365,15 @@ void free (void *); /* INFRINGES ON USER NAME SPACE */
 
 #if (! defined yyoverflow \
      && (! defined __cplusplus \
-         || (defined YYSTYPE_IS_TRIVIAL && YYSTYPE_IS_TRIVIAL)))
+         || (defined YYLTYPE_IS_TRIVIAL && YYLTYPE_IS_TRIVIAL \
+             && defined YYSTYPE_IS_TRIVIAL && YYSTYPE_IS_TRIVIAL)))
 
 /* A type that is properly aligned for any stack member.  */
 union yyalloc
 {
   yytype_int16 yyss_alloc;
   YYSTYPE yyvs_alloc;
+  YYLTYPE yyls_alloc;
 };
 
 /* The size of the maximum gap between one aligned stack and the next.  */
@@ -363,8 +382,8 @@ union yyalloc
 /* The size of an array large to enough to hold all stacks, each with
    N elements.  */
 # define YYSTACK_BYTES(N) \
-     ((N) * (sizeof (yytype_int16) + sizeof (YYSTYPE)) \
-      + YYSTACK_GAP_MAXIMUM)
+     ((N) * (sizeof (yytype_int16) + sizeof (YYSTYPE) + sizeof (YYLTYPE)) \
+      + 2 * YYSTACK_GAP_MAXIMUM)
 
 # define YYCOPY_NEEDED 1
 
@@ -409,19 +428,19 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  9
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   227
+#define YYLAST   249
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  37
+#define YYNTOKENS  39
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  20
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  62
+#define YYNRULES  65
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  120
+#define YYNSTATES  123
 
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   291
+#define YYMAXUTOK   293
 
 /* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
    as returned by yylex, with out-of-bounds checking.  */
@@ -461,24 +480,24 @@ static const yytype_uint8 yytranslate[] =
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
       15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
       25,    26,    27,    28,    29,    30,    31,    32,    33,    34,
-      35,    36
+      35,    36,    37,    38
 };
 
 #if YYDEBUG
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
-static const yytype_uint8 yyrline[] =
+static const yytype_uint16 yyrline[] =
 {
-       0,    23,    23,    25,    26,    28,    29,    30,    32,    33,
-      35,    36,    38,    39,    41,    42,    44,    45,    47,    48,
-      50,    52,    54,    55,    57,    58,    59,    60,    61,    62,
-      64,    65,    67,    69,    70,    72,    73,    75,    76,    77,
-      78,    79,    80,    81,    82,    83,    84,    85,    86,    87,
-      88,    89,    90,    91,    92,    93,    94,    95,    96,    97,
-      98,   100,   101
+       0,    30,    30,    36,    45,    52,    62,    71,    81,    87,
+      98,   106,   114,   128,   139,   146,   160,   172,   185,   194,
+     202,   211,   216,   231,   240,   247,   252,   259,   265,   275,
+     288,   304,   319,   328,   335,   346,   352,   362,   368,   379,
+     384,   392,   400,   408,   416,   424,   432,   440,   448,   456,
+     464,   472,   480,   488,   496,   503,   510,   519,   527,   536,
+     544,   550,   556,   562,   570,   578
 };
 #endif
 
-#if YYDEBUG || YYERROR_VERBOSE || 1
+#if YYDEBUG || YYERROR_VERBOSE || 0
 /* YYTNAME[SYMBOL-NUM] -- String name of the symbol SYMBOL-NUM.
    First, the terminals, then, starting at YYNTOKENS, nonterminals.  */
 static const char *const yytname[] =
@@ -487,9 +506,10 @@ static const char *const yytname[] =
   "STRUCT", "IF", "ELSE", "WHILE", "RETURN", "DOT", "SEMI", "COMMA",
   "ASSIGN", "LT", "LE", "GT", "GE", "NE", "EQ", "PLUS", "MINUS", "MUL",
   "DIV", "AND", "OR", "NOT", "LP", "RP", "LB", "RB", "LC", "RC", "LINE",
-  "$accept", "Program", "ExtDefList", "ExtDef", "ExtDecList", "Specifier",
-  "StructSpecifier", "VarDec", "FunDec", "VarList", "ParamDec", "CompSt",
-  "StmtList", "Stmt", "DefList", "Def", "DecList", "Dec", "Exp", "Args", YY_NULLPTR
+  "ADD", "SUB", "$accept", "Program", "ExtDefList", "ExtDef", "ExtDecList",
+  "Specifier", "StructSpecifier", "VarDec", "FunDec", "VarList",
+  "ParamDec", "CompSt", "StmtList", "Stmt", "DefList", "Def", "DecList",
+  "Dec", "Exp", "Args", YY_NULLPTR
 };
 #endif
 
@@ -501,14 +521,14 @@ static const yytype_uint16 yytoknum[] =
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
      265,   266,   267,   268,   269,   270,   271,   272,   273,   274,
      275,   276,   277,   278,   279,   280,   281,   282,   283,   284,
-     285,   286,   287,   288,   289,   290,   291
+     285,   286,   287,   288,   289,   290,   291,   292,   293
 };
 # endif
 
-#define YYPACT_NINF -51
+#define YYPACT_NINF -66
 
 #define yypact_value_is_default(Yystate) \
-  (!!((Yystate) == (-51)))
+  (!!((Yystate) == (-66)))
 
 #define YYTABLE_NINF -1
 
@@ -519,18 +539,19 @@ static const yytype_uint16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int16 yypact[] =
 {
-      33,   -51,    44,    51,   -51,    33,    50,   -51,    32,   -51,
-     -51,    39,   -51,    56,   -10,    37,    33,     8,   -51,    68,
-      72,    33,   -51,    68,    41,    33,   -51,    68,    48,    65,
-     -51,   -51,    49,    43,    21,    67,    87,   -51,   -51,    89,
-     -51,    33,   -51,   -51,   -51,   -51,    58,   106,   111,    14,
-      14,    14,    14,   -51,    84,    43,    73,    14,   -51,    68,
-     -51,    54,    14,    14,    90,   178,   178,   107,   -51,   -51,
-     131,   -51,    14,    14,    14,    14,    14,    14,    14,    14,
-      14,    14,    14,    14,    14,    14,   178,   -51,   -51,   127,
-     125,   144,   161,   -51,   -51,   -51,   178,   178,   178,   178,
-     178,   178,   178,   178,   178,   178,   178,   178,   178,   195,
-      14,   -51,    43,    43,    14,   -51,   148,   -51,    43,   -51
+      10,   -66,     5,    24,   -66,    10,    34,   -66,   -19,   -66,
+     -66,    14,   -66,    33,   -10,    18,    10,    12,   -66,    52,
+      56,    10,   -66,    52,    25,    10,   -66,    52,    46,    63,
+     -66,   -66,    53,    78,     7,    65,    70,   -66,   -66,    59,
+     -66,    10,   -66,   -66,   -66,   -66,    58,    71,    73,    93,
+      93,    93,    93,   -66,     6,    78,    48,    93,   -66,    52,
+     -66,    89,    93,    93,   129,   217,   217,   146,   -66,   -66,
+     -66,   -66,    94,   -66,    93,    93,    93,    93,    93,    93,
+      93,    93,    93,    93,    93,    93,    93,    93,   217,   -66,
+     -66,   166,    15,   183,   200,   -66,   -66,   -66,   217,    31,
+      31,    31,    31,    31,    31,   217,   217,    31,    31,    31,
+      31,   108,    93,   -66,   -66,    78,    78,   -66,   -66,    95,
+     -66,    78,   -66
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -539,31 +560,32 @@ static const yytype_int16 yypact[] =
 static const yytype_uint8 yydefact[] =
 {
        4,    10,     0,     0,     2,     4,     0,    11,    13,     1,
-       3,    14,     6,     0,     8,     0,    31,     0,     5,     0,
-       0,    31,     7,     0,     0,    31,    17,     0,     0,    19,
-      14,     9,     0,    23,    35,     0,    33,    12,    30,    20,
-      16,     0,    15,    58,    59,    60,    57,     0,     0,     0,
-       0,     0,     0,    25,     0,    23,     0,     0,    32,     0,
-      18,     0,     0,     0,     0,    51,    52,     0,    21,    22,
-       0,    24,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,     0,    36,    34,    54,    62,
-       0,     0,     0,    26,    50,    56,    37,    40,    41,    42,
-      43,    44,    45,    46,    47,    48,    49,    38,    39,     0,
-       0,    53,     0,     0,    55,    61,    27,    29,     0,    28
+       3,    14,     6,     0,     8,     0,    33,     0,     5,     0,
+       0,    33,     7,     0,     0,    33,    17,     0,     0,    19,
+      14,     9,     0,    24,    37,     0,    35,    12,    32,    20,
+      16,     0,    15,    61,    62,    63,    60,     0,     0,     0,
+       0,     0,     0,    27,     0,    24,     0,     0,    34,     0,
+      18,     0,     0,     0,     0,    54,    55,     0,    21,    22,
+      23,    25,     0,    26,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,    38,    36,
+      57,    65,     0,     0,     0,    28,    53,    59,    40,    43,
+      44,    45,    46,    47,    48,    49,    50,    51,    52,    41,
+      42,     0,     0,    39,    56,     0,     0,    58,    64,    29,
+      31,     0,    30
 };
 
   /* YYPGOTO[NTERM-NUM].  */
-static const yytype_int16 yypgoto[] =
+static const yytype_int8 yypgoto[] =
 {
-     -51,   -51,   168,   -51,   171,     4,   -51,   -17,   -51,   166,
-     -51,   194,   169,   -50,   -14,   -51,   167,   -51,   -49,   115
+     -66,   -66,    99,   -66,    87,     4,   -66,   -17,   -66,    68,
+     -66,    96,    55,   -65,    32,   -66,    57,   -66,   -49,     2
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
       -1,     3,     4,     5,    13,    23,     7,    14,    15,    28,
-      29,    53,    54,    55,    24,    25,    35,    36,    56,    90
+      29,    53,    54,    55,    24,    25,    35,    36,    56,    92
 };
 
   /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -571,86 +593,91 @@ static const yytype_int8 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_uint8 yytable[] =
 {
-      64,    65,    66,    67,     6,    19,    34,    33,    86,     6,
-      39,    38,    89,    91,    92,     1,     2,    43,    44,    45,
-      46,    27,    20,    96,    97,    98,    99,   100,   101,   102,
-     103,   104,   105,   106,   107,   108,   109,    57,    50,    26,
-       1,     2,    34,    51,    52,    27,    43,    44,    45,    46,
-       8,     9,    47,    20,    48,    49,    11,    43,    44,    45,
-      46,    89,   116,   117,    12,   109,    16,    50,   119,    17,
-      18,    21,    51,    52,    30,    32,    37,    21,    50,    40,
-      41,    58,    42,    51,    52,    88,    70,    71,    61,    72,
-      73,    74,    75,    76,    77,    78,    79,    80,    81,    82,
-      83,    84,    59,    70,    93,    85,    72,    73,    74,    75,
-      76,    77,    78,    79,    80,    81,    82,    83,    84,    68,
-      70,    20,    85,    72,    73,    74,    75,    76,    77,    78,
-      79,    80,    81,    82,    83,    84,    62,    95,    94,    85,
-      70,    63,   110,    72,    73,    74,    75,    76,    77,    78,
-      79,    80,    81,    82,    83,    84,   111,    70,   118,    85,
-      72,    73,    74,    75,    76,    77,    78,    79,    80,    81,
-      82,    83,    84,    10,    70,   112,    85,    72,    73,    74,
+      64,    65,    66,    67,     6,    19,    34,    68,    88,     6,
+      39,     8,    91,    93,    94,    16,   113,     1,     2,     1,
+       2,    27,    20,    57,     9,    98,    99,   100,   101,   102,
+     103,   104,   105,   106,   107,   108,   109,   110,   111,    20,
+      11,    69,    34,    26,    17,    27,   114,    18,    12,    71,
+     119,   120,    21,    33,    81,    82,   122,    38,    30,    32,
+      37,    72,    73,    91,    74,    75,    76,    77,    78,    79,
+      80,    81,    82,    83,    84,    85,    86,    40,    41,    58,
+      87,    43,    44,    45,    46,    59,    42,    47,    61,    48,
+      49,    20,    43,    44,    45,    46,    43,    44,    45,    46,
+      97,    62,    50,    63,    10,   121,    31,    51,    52,    60,
+      70,    22,    21,    50,   118,     0,    89,    50,    51,    52,
+      90,    72,    51,    52,    74,    75,    76,    77,    78,    79,
+      80,    81,    82,    83,    84,    85,    86,     0,     0,     0,
+      87,   117,    72,    95,     0,    74,    75,    76,    77,    78,
+      79,    80,    81,    82,    83,    84,    85,    86,     0,    72,
+       0,    87,    74,    75,    76,    77,    78,    79,    80,    81,
+      82,    83,    84,    85,    86,     0,     0,    96,    87,    72,
+       0,   112,    74,    75,    76,    77,    78,    79,    80,    81,
+      82,    83,    84,    85,    86,     0,    72,     0,    87,    74,
       75,    76,    77,    78,    79,    80,    81,    82,    83,    84,
-      31,    70,   113,    85,    72,    73,    74,    75,    76,    77,
-      78,    79,    80,    81,    82,    83,    84,    60,    70,    22,
-      85,    72,    73,    74,    75,    76,    77,    78,    79,    80,
-      81,    82,    83,    84,    69,   115,    87,   114
+      85,    86,     0,    72,   115,    87,    74,    75,    76,    77,
+      78,    79,    80,    81,    82,    83,    84,    85,    86,     0,
+      72,   116,    87,    74,    75,    76,    77,    78,    79,    80,
+      81,    82,    83,    84,    85,    86,     0,     0,     0,    87
 };
 
-static const yytype_uint8 yycheck[] =
+static const yytype_int8 yycheck[] =
 {
-      49,    50,    51,    52,     0,    15,    23,    21,    57,     5,
-      27,    25,    61,    62,    63,     7,     8,     3,     4,     5,
-       6,    17,    32,    72,    73,    74,    75,    76,    77,    78,
-      79,    80,    81,    82,    83,    84,    85,    16,    24,    31,
-       7,     8,    59,    29,    30,    41,     3,     4,     5,     6,
-       6,     0,     9,    32,    11,    12,     6,     3,     4,     5,
-       6,   110,   112,   113,    14,   114,    34,    24,   118,    30,
-      14,    34,    29,    30,     6,     3,    35,    34,    24,    31,
-      15,    14,    33,    29,    30,    31,    13,    14,    30,    16,
+      49,    50,    51,    52,     0,    15,    23,     1,    57,     5,
+      27,     6,    61,    62,    63,    34,     1,     7,     8,     7,
+       8,    17,    32,    16,     0,    74,    75,    76,    77,    78,
+      79,    80,    81,    82,    83,    84,    85,    86,    87,    32,
+       6,    35,    59,    31,    30,    41,    31,    14,    14,     1,
+     115,   116,    34,    21,    23,    24,   121,    25,     6,     3,
+      35,    13,    14,   112,    16,    17,    18,    19,    20,    21,
+      22,    23,    24,    25,    26,    27,    28,    31,    15,    14,
+      32,     3,     4,     5,     6,    15,    33,     9,    30,    11,
+      12,    32,     3,     4,     5,     6,     3,     4,     5,     6,
+       6,    30,    24,    30,     5,    10,    19,    29,    30,    41,
+      55,    15,    34,    24,   112,    -1,    59,    24,    29,    30,
+      31,    13,    29,    30,    16,    17,    18,    19,    20,    21,
+      22,    23,    24,    25,    26,    27,    28,    -1,    -1,    -1,
+      32,    33,    13,    14,    -1,    16,    17,    18,    19,    20,
+      21,    22,    23,    24,    25,    26,    27,    28,    -1,    13,
+      -1,    32,    16,    17,    18,    19,    20,    21,    22,    23,
+      24,    25,    26,    27,    28,    -1,    -1,    31,    32,    13,
+      -1,    15,    16,    17,    18,    19,    20,    21,    22,    23,
+      24,    25,    26,    27,    28,    -1,    13,    -1,    32,    16,
       17,    18,    19,    20,    21,    22,    23,    24,    25,    26,
-      27,    28,    15,    13,    14,    32,    16,    17,    18,    19,
-      20,    21,    22,    23,    24,    25,    26,    27,    28,    35,
-      13,    32,    32,    16,    17,    18,    19,    20,    21,    22,
-      23,    24,    25,    26,    27,    28,    30,     6,    31,    32,
-      13,    30,    15,    16,    17,    18,    19,    20,    21,    22,
-      23,    24,    25,    26,    27,    28,    31,    13,    10,    32,
-      16,    17,    18,    19,    20,    21,    22,    23,    24,    25,
-      26,    27,    28,     5,    13,    31,    32,    16,    17,    18,
-      19,    20,    21,    22,    23,    24,    25,    26,    27,    28,
-      19,    13,    31,    32,    16,    17,    18,    19,    20,    21,
-      22,    23,    24,    25,    26,    27,    28,    41,    13,    15,
-      32,    16,    17,    18,    19,    20,    21,    22,    23,    24,
-      25,    26,    27,    28,    55,   110,    59,    32
+      27,    28,    -1,    13,    31,    32,    16,    17,    18,    19,
+      20,    21,    22,    23,    24,    25,    26,    27,    28,    -1,
+      13,    31,    32,    16,    17,    18,    19,    20,    21,    22,
+      23,    24,    25,    26,    27,    28,    -1,    -1,    -1,    32
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
      symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,     7,     8,    38,    39,    40,    42,    43,     6,     0,
-      39,     6,    14,    41,    44,    45,    34,    30,    14,    15,
-      32,    34,    48,    42,    51,    52,    31,    42,    46,    47,
-       6,    41,     3,    51,    44,    53,    54,    35,    51,    44,
+       0,     7,     8,    40,    41,    42,    44,    45,     6,     0,
+      41,     6,    14,    43,    46,    47,    34,    30,    14,    15,
+      32,    34,    50,    44,    53,    54,    31,    44,    48,    49,
+       6,    43,     3,    53,    46,    55,    56,    35,    53,    46,
       31,    15,    33,     3,     4,     5,     6,     9,    11,    12,
-      24,    29,    30,    48,    49,    50,    55,    16,    14,    15,
-      46,    30,    30,    30,    55,    55,    55,    55,    35,    49,
-      13,    14,    16,    17,    18,    19,    20,    21,    22,    23,
-      24,    25,    26,    27,    28,    32,    55,    53,    31,    55,
-      56,    55,    55,    14,    31,     6,    55,    55,    55,    55,
-      55,    55,    55,    55,    55,    55,    55,    55,    55,    55,
-      15,    31,    31,    31,    32,    56,    50,    50,    10,    50
+      24,    29,    30,    50,    51,    52,    57,    16,    14,    15,
+      48,    30,    30,    30,    57,    57,    57,    57,     1,    35,
+      51,     1,    13,    14,    16,    17,    18,    19,    20,    21,
+      22,    23,    24,    25,    26,    27,    28,    32,    57,    55,
+      31,    57,    58,    57,    57,    14,    31,     6,    57,    57,
+      57,    57,    57,    57,    57,    57,    57,    57,    57,    57,
+      57,    57,    15,     1,    31,    31,    31,    33,    58,    52,
+      52,    10,    52
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
-       0,    37,    38,    39,    39,    40,    40,    40,    41,    41,
-      42,    42,    43,    43,    44,    44,    45,    45,    46,    46,
-      47,    48,    49,    49,    50,    50,    50,    50,    50,    50,
-      51,    51,    52,    53,    53,    54,    54,    55,    55,    55,
-      55,    55,    55,    55,    55,    55,    55,    55,    55,    55,
-      55,    55,    55,    55,    55,    55,    55,    55,    55,    55,
-      55,    56,    56
+       0,    39,    40,    41,    41,    42,    42,    42,    43,    43,
+      44,    44,    45,    45,    46,    46,    47,    47,    48,    48,
+      49,    50,    50,    51,    51,    52,    52,    52,    52,    52,
+      52,    52,    53,    53,    54,    55,    55,    56,    56,    57,
+      57,    57,    57,    57,    57,    57,    57,    57,    57,    57,
+      57,    57,    57,    57,    57,    57,    57,    57,    57,    57,
+      57,    57,    57,    57,    58,    58
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
@@ -658,11 +685,11 @@ static const yytype_uint8 yyr2[] =
 {
        0,     2,     1,     2,     0,     3,     2,     3,     1,     3,
        1,     1,     5,     2,     1,     4,     4,     3,     3,     1,
-       2,     4,     2,     0,     2,     1,     3,     5,     7,     5,
-       2,     0,     3,     1,     3,     1,     3,     3,     3,     3,
+       2,     4,     4,     2,     0,     2,     2,     1,     3,     5,
+       7,     5,     2,     0,     3,     1,     3,     1,     3,     4,
        3,     3,     3,     3,     3,     3,     3,     3,     3,     3,
-       3,     2,     2,     4,     3,     4,     3,     1,     1,     1,
-       1,     3,     1
+       3,     3,     3,     3,     2,     2,     4,     3,     4,     3,
+       1,     1,     1,     1,     3,     1
 };
 
 
@@ -700,6 +727,32 @@ static const yytype_uint8 yyr2[] =
 #define YYERRCODE       256
 
 
+/* YYLLOC_DEFAULT -- Set CURRENT to span from RHS[1] to RHS[N].
+   If N is 0, then set CURRENT to the empty location which ends
+   the previous symbol: RHS[0] (always defined).  */
+
+#ifndef YYLLOC_DEFAULT
+# define YYLLOC_DEFAULT(Current, Rhs, N)                                \
+    do                                                                  \
+      if (N)                                                            \
+        {                                                               \
+          (Current).first_line   = YYRHSLOC (Rhs, 1).first_line;        \
+          (Current).first_column = YYRHSLOC (Rhs, 1).first_column;      \
+          (Current).last_line    = YYRHSLOC (Rhs, N).last_line;         \
+          (Current).last_column  = YYRHSLOC (Rhs, N).last_column;       \
+        }                                                               \
+      else                                                              \
+        {                                                               \
+          (Current).first_line   = (Current).last_line   =              \
+            YYRHSLOC (Rhs, 0).last_line;                                \
+          (Current).first_column = (Current).last_column =              \
+            YYRHSLOC (Rhs, 0).last_column;                              \
+        }                                                               \
+    while (0)
+#endif
+
+#define YYRHSLOC(Rhs, K) ((Rhs)[K])
+
 
 /* Enable debugging if requested.  */
 #if YYDEBUG
@@ -715,9 +768,48 @@ do {                                            \
     YYFPRINTF Args;                             \
 } while (0)
 
-/* This macro is provided for backward compatibility. */
+
+/* YY_LOCATION_PRINT -- Print the location on the stream.
+   This macro was not mandated originally: define only if we know
+   we won't break user code: when these are the locations we know.  */
+
 #ifndef YY_LOCATION_PRINT
-# define YY_LOCATION_PRINT(File, Loc) ((void) 0)
+# if defined YYLTYPE_IS_TRIVIAL && YYLTYPE_IS_TRIVIAL
+
+/* Print *YYLOCP on YYO.  Private, do not rely on its existence. */
+
+YY_ATTRIBUTE_UNUSED
+static int
+yy_location_print_ (FILE *yyo, YYLTYPE const * const yylocp)
+{
+  int res = 0;
+  int end_col = 0 != yylocp->last_column ? yylocp->last_column - 1 : 0;
+  if (0 <= yylocp->first_line)
+    {
+      res += YYFPRINTF (yyo, "%d", yylocp->first_line);
+      if (0 <= yylocp->first_column)
+        res += YYFPRINTF (yyo, ".%d", yylocp->first_column);
+    }
+  if (0 <= yylocp->last_line)
+    {
+      if (yylocp->first_line < yylocp->last_line)
+        {
+          res += YYFPRINTF (yyo, "-%d", yylocp->last_line);
+          if (0 <= end_col)
+            res += YYFPRINTF (yyo, ".%d", end_col);
+        }
+      else if (0 <= end_col && yylocp->first_column < end_col)
+        res += YYFPRINTF (yyo, "-%d", end_col);
+    }
+  return res;
+ }
+
+#  define YY_LOCATION_PRINT(File, Loc)          \
+  yy_location_print_ (File, &(Loc))
+
+# else
+#  define YY_LOCATION_PRINT(File, Loc) ((void) 0)
+# endif
 #endif
 
 
@@ -727,7 +819,7 @@ do {                                                                      \
     {                                                                     \
       YYFPRINTF (stderr, "%s ", Title);                                   \
       yy_symbol_print (stderr,                                            \
-                  Type, Value); \
+                  Type, Value, Location); \
       YYFPRINTF (stderr, "\n");                                           \
     }                                                                     \
 } while (0)
@@ -738,10 +830,11 @@ do {                                                                      \
 `-----------------------------------*/
 
 static void
-yy_symbol_value_print (FILE *yyo, int yytype, YYSTYPE const * const yyvaluep)
+yy_symbol_value_print (FILE *yyo, int yytype, YYSTYPE const * const yyvaluep, YYLTYPE const * const yylocationp)
 {
   FILE *yyoutput = yyo;
   YYUSE (yyoutput);
+  YYUSE (yylocationp);
   if (!yyvaluep)
     return;
 # ifdef YYPRINT
@@ -757,12 +850,14 @@ yy_symbol_value_print (FILE *yyo, int yytype, YYSTYPE const * const yyvaluep)
 `---------------------------*/
 
 static void
-yy_symbol_print (FILE *yyo, int yytype, YYSTYPE const * const yyvaluep)
+yy_symbol_print (FILE *yyo, int yytype, YYSTYPE const * const yyvaluep, YYLTYPE const * const yylocationp)
 {
   YYFPRINTF (yyo, "%s %s (",
              yytype < YYNTOKENS ? "token" : "nterm", yytname[yytype]);
 
-  yy_symbol_value_print (yyo, yytype, yyvaluep);
+  YY_LOCATION_PRINT (yyo, *yylocationp);
+  YYFPRINTF (yyo, ": ");
+  yy_symbol_value_print (yyo, yytype, yyvaluep, yylocationp);
   YYFPRINTF (yyo, ")");
 }
 
@@ -795,7 +890,7 @@ do {                                                            \
 `------------------------------------------------*/
 
 static void
-yy_reduce_print (yytype_int16 *yyssp, YYSTYPE *yyvsp, int yyrule)
+yy_reduce_print (yytype_int16 *yyssp, YYSTYPE *yyvsp, YYLTYPE *yylsp, int yyrule)
 {
   unsigned long yylno = yyrline[yyrule];
   int yynrhs = yyr2[yyrule];
@@ -809,7 +904,7 @@ yy_reduce_print (yytype_int16 *yyssp, YYSTYPE *yyvsp, int yyrule)
       yy_symbol_print (stderr,
                        yystos[yyssp[yyi + 1 - yynrhs]],
                        &yyvsp[(yyi + 1) - (yynrhs)]
-                                              );
+                       , &(yylsp[(yyi + 1) - (yynrhs)])                       );
       YYFPRINTF (stderr, "\n");
     }
 }
@@ -817,7 +912,7 @@ yy_reduce_print (yytype_int16 *yyssp, YYSTYPE *yyvsp, int yyrule)
 # define YY_REDUCE_PRINT(Rule)          \
 do {                                    \
   if (yydebug)                          \
-    yy_reduce_print (yyssp, yyvsp, Rule); \
+    yy_reduce_print (yyssp, yyvsp, yylsp, Rule); \
 } while (0)
 
 /* Nonzero means print parse trace.  It is left uninitialized so that
@@ -1080,9 +1175,10 @@ yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
 `-----------------------------------------------*/
 
 static void
-yydestruct (const char *yymsg, int yytype, YYSTYPE *yyvaluep)
+yydestruct (const char *yymsg, int yytype, YYSTYPE *yyvaluep, YYLTYPE *yylocationp)
 {
   YYUSE (yyvaluep);
+  YYUSE (yylocationp);
   if (!yymsg)
     yymsg = "Deleting";
   YY_SYMBOL_PRINT (yymsg, yytype, yyvaluep, yylocationp);
@@ -1100,6 +1196,12 @@ int yychar;
 
 /* The semantic value of the lookahead symbol.  */
 YYSTYPE yylval;
+/* Location data for the lookahead symbol.  */
+YYLTYPE yylloc
+# if defined YYLTYPE_IS_TRIVIAL && YYLTYPE_IS_TRIVIAL
+  = { 1, 1, 1, 1 }
+# endif
+;
 /* Number of syntax errors so far.  */
 int yynerrs;
 
@@ -1118,6 +1220,7 @@ yyparse (void)
     /* The stacks and their tools:
        'yyss': related to states.
        'yyvs': related to semantic values.
+       'yyls': related to locations.
 
        Refer to the stacks through separate pointers, to allow yyoverflow
        to reallocate them elsewhere.  */
@@ -1132,6 +1235,14 @@ yyparse (void)
     YYSTYPE *yyvs;
     YYSTYPE *yyvsp;
 
+    /* The location stack.  */
+    YYLTYPE yylsa[YYINITDEPTH];
+    YYLTYPE *yyls;
+    YYLTYPE *yylsp;
+
+    /* The locations where the error started and ended.  */
+    YYLTYPE yyerror_range[3];
+
     YYSIZE_T yystacksize;
 
   int yyn;
@@ -1141,6 +1252,7 @@ yyparse (void)
   /* The variables used to return semantic value and location from the
      action routines.  */
   YYSTYPE yyval;
+  YYLTYPE yyloc;
 
 #if YYERROR_VERBOSE
   /* Buffer for error messages, and its allocated size.  */
@@ -1149,7 +1261,7 @@ yyparse (void)
   YYSIZE_T yymsg_alloc = sizeof yymsgbuf;
 #endif
 
-#define YYPOPSTACK(N)   (yyvsp -= (N), yyssp -= (N))
+#define YYPOPSTACK(N)   (yyvsp -= (N), yyssp -= (N), yylsp -= (N))
 
   /* The number of symbols on the RHS of the reduced rule.
      Keep to zero when no symbol should be popped.  */
@@ -1157,6 +1269,7 @@ yyparse (void)
 
   yyssp = yyss = yyssa;
   yyvsp = yyvs = yyvsa;
+  yylsp = yyls = yylsa;
   yystacksize = YYINITDEPTH;
 
   YYDPRINTF ((stderr, "Starting parse\n"));
@@ -1165,6 +1278,7 @@ yyparse (void)
   yyerrstatus = 0;
   yynerrs = 0;
   yychar = YYEMPTY; /* Cause a token to be read.  */
+  yylsp[0] = yylloc;
   goto yysetstate;
 
 
@@ -1200,6 +1314,7 @@ yysetstate:
            memory.  */
         YYSTYPE *yyvs1 = yyvs;
         yytype_int16 *yyss1 = yyss;
+        YYLTYPE *yyls1 = yyls;
 
         /* Each stack pointer address is followed by the size of the
            data in use in that stack, in bytes.  This used to be a
@@ -1208,9 +1323,11 @@ yysetstate:
         yyoverflow (YY_("memory exhausted"),
                     &yyss1, yysize * sizeof (*yyssp),
                     &yyvs1, yysize * sizeof (*yyvsp),
+                    &yyls1, yysize * sizeof (*yylsp),
                     &yystacksize);
         yyss = yyss1;
         yyvs = yyvs1;
+        yyls = yyls1;
       }
 # else /* defined YYSTACK_RELOCATE */
       /* Extend the stack our own way.  */
@@ -1228,6 +1345,7 @@ yysetstate:
           goto yyexhaustedlab;
         YYSTACK_RELOCATE (yyss_alloc, yyss);
         YYSTACK_RELOCATE (yyvs_alloc, yyvs);
+        YYSTACK_RELOCATE (yyls_alloc, yyls);
 # undef YYSTACK_RELOCATE
         if (yyss1 != yyssa)
           YYSTACK_FREE (yyss1);
@@ -1236,6 +1354,7 @@ yysetstate:
 
       yyssp = yyss + yysize - 1;
       yyvsp = yyvs + yysize - 1;
+      yylsp = yyls + yysize - 1;
 
       YYDPRINTF ((stderr, "Stack size increased to %lu\n",
                   (unsigned long) yystacksize));
@@ -1312,6 +1431,7 @@ yybackup:
   YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
   *++yyvsp = yylval;
   YY_IGNORE_MAYBE_UNINITIALIZED_END
+  *++yylsp = yylloc;
   goto yynewstate;
 
 
@@ -1342,372 +1462,846 @@ yyreduce:
      GCC warning that YYVAL may be used uninitialized.  */
   yyval = yyvsp[1-yylen];
 
-
+  /* Default location. */
+  YYLLOC_DEFAULT (yyloc, (yylsp - yylen), yylen);
+  yyerror_range[1] = yyloc;
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
   case 2:
-#line 23 "pro_1.y"
-    {ast.push(STMT("Program"));}
-#line 1353 "pro_1.tab.c"
+#line 30 "pro_1.y"
+    {
+        program.show = addLine("Program", (yyloc).first_line);
+        program.subNode.push_back(yyvsp[0]);
+    }
+#line 1478 "pro_1.tab.c"
     break;
 
   case 3:
-#line 25 "pro_1.y"
-    {ast.push(STMT("ExtDefList"));}
-#line 1359 "pro_1.tab.c"
-    break;
-
-  case 5:
-#line 28 "pro_1.y"
-    {ast.push(STMT("ExtDef"));}
-#line 1365 "pro_1.tab.c"
-    break;
-
-  case 6:
-#line 29 "pro_1.y"
-    {ast.push(STMT("ExtDef"));}
-#line 1371 "pro_1.tab.c"
-    break;
-
-  case 7:
-#line 30 "pro_1.y"
-    {ast.push(STMT("ExtDef"));}
-#line 1377 "pro_1.tab.c"
-    break;
-
-  case 8:
-#line 32 "pro_1.y"
-    {ast.push(STMT("ExtDecList"));}
-#line 1383 "pro_1.tab.c"
-    break;
-
-  case 9:
-#line 33 "pro_1.y"
-    {ast.push(STMT("ExtDecList"));}
-#line 1389 "pro_1.tab.c"
-    break;
-
-  case 10:
-#line 35 "pro_1.y"
-    {ast.push(STMT("Specifier"));}
-#line 1395 "pro_1.tab.c"
-    break;
-
-  case 11:
 #line 36 "pro_1.y"
-    {ast.push(STMT("Specifier"));}
-#line 1401 "pro_1.tab.c"
-    break;
-
-  case 12:
-#line 38 "pro_1.y"
-    {ast.push(STMT("StructSpecifier"));}
-#line 1407 "pro_1.tab.c"
-    break;
-
-  case 13:
-#line 39 "pro_1.y"
-    {ast.push(STMT("StructSpecifier"));}
-#line 1413 "pro_1.tab.c"
-    break;
-
-  case 14:
-#line 41 "pro_1.y"
-    {ast.push(STMT("VarDec"));}
-#line 1419 "pro_1.tab.c"
-    break;
-
-  case 15:
-#line 42 "pro_1.y"
-    {ast.push(STMT("VarDec"));}
-#line 1425 "pro_1.tab.c"
-    break;
-
-  case 16:
-#line 44 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
-#line 1431 "pro_1.tab.c"
-    break;
-
-  case 17:
-#line 45 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
-#line 1437 "pro_1.tab.c"
-    break;
-
-  case 18:
-#line 47 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
-#line 1443 "pro_1.tab.c"
-    break;
-
-  case 19:
-#line 48 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
-#line 1449 "pro_1.tab.c"
-    break;
-
-  case 20:
-#line 50 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
-#line 1455 "pro_1.tab.c"
-    break;
-
-  case 21:
-#line 52 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
-#line 1461 "pro_1.tab.c"
-    break;
-
-  case 22:
-#line 54 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
-#line 1467 "pro_1.tab.c"
-    break;
-
-  case 23:
-#line 55 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
-#line 1473 "pro_1.tab.c"
-    break;
-
-  case 24:
-#line 57 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
-#line 1479 "pro_1.tab.c"
-    break;
-
-  case 25:
-#line 58 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
-#line 1485 "pro_1.tab.c"
-    break;
-
-  case 26:
-#line 59 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
+    {
+        Node temp; 
+        temp.subNode.push_back(yyvsp[-1]);
+        if (! yyvsp[0].subNode.empty())
+            temp.subNode.push_back(yyvsp[0]);
+        temp.show = addLine("ExtDefList", (yyloc).first_line);
+        yyval = temp;
+    }
 #line 1491 "pro_1.tab.c"
     break;
 
-  case 27:
-#line 60 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
-#line 1497 "pro_1.tab.c"
+  case 4:
+#line 45 "pro_1.y"
+    {
+        Node temp; 
+        temp.show = addLine("ExtDefList", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 1501 "pro_1.tab.c"
     break;
 
-  case 28:
-#line 61 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
-#line 1503 "pro_1.tab.c"
+  case 5:
+#line 52 "pro_1.y"
+    {
+        Node temp;
+        Node semi;
+        semi.show = "SEMI";
+        temp.subNode.push_back(yyvsp[-2]);
+        temp.subNode.push_back(yyvsp[-1]);
+        temp.subNode.push_back(semi);
+        temp.show = addLine("ExtDef", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 1516 "pro_1.tab.c"
     break;
 
-  case 29:
+  case 6:
 #line 62 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
-#line 1509 "pro_1.tab.c"
+    {
+        Node temp;
+        Node semi;
+        semi.show = "SEMI";
+        temp.subNode.push_back(yyvsp[-1]);
+        temp.subNode.push_back(semi);
+        temp.show = addLine("ExtDef", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 1530 "pro_1.tab.c"
     break;
 
-  case 30:
-#line 64 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
-#line 1515 "pro_1.tab.c"
+  case 7:
+#line 71 "pro_1.y"
+    {
+        Node temp;
+        temp.subNode.push_back(yyvsp[-2]);
+        temp.subNode.push_back(yyvsp[-1]);
+        temp.subNode.push_back(yyvsp[0]);
+        temp.show = addLine("ExtDef", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 1543 "pro_1.tab.c"
     break;
 
-  case 31:
-#line 65 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
-#line 1521 "pro_1.tab.c"
+  case 8:
+#line 81 "pro_1.y"
+    {
+        Node temp;
+        temp.subNode.push_back(yyvsp[0]);
+        temp.show = addLine("ExtDecList", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 1554 "pro_1.tab.c"
     break;
 
-  case 32:
-#line 67 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
-#line 1527 "pro_1.tab.c"
+  case 9:
+#line 87 "pro_1.y"
+    {
+        Node temp;
+        Node comma;
+        temp.subNode.push_back(yyvsp[-2]);
+        comma.show = "COMMA";
+        temp.subNode.push_back(yyvsp[0]);
+        temp.show = addLine("ExtDecList", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 1568 "pro_1.tab.c"
     break;
 
-  case 33:
-#line 69 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
-#line 1533 "pro_1.tab.c"
-    break;
-
-  case 34:
-#line 70 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
-#line 1539 "pro_1.tab.c"
-    break;
-
-  case 35:
-#line 72 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
-#line 1545 "pro_1.tab.c"
-    break;
-
-  case 36:
-#line 73 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
-#line 1551 "pro_1.tab.c"
-    break;
-
-  case 37:
-#line 75 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
-#line 1557 "pro_1.tab.c"
-    break;
-
-  case 38:
-#line 76 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
-#line 1563 "pro_1.tab.c"
-    break;
-
-  case 39:
-#line 77 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
-#line 1569 "pro_1.tab.c"
-    break;
-
-  case 40:
-#line 78 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
-#line 1575 "pro_1.tab.c"
-    break;
-
-  case 41:
-#line 79 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
+  case 10:
+#line 98 "pro_1.y"
+    {
+        Node temp;
+        Node type;
+        type.show = "TYPE: "+yyvsp[0].show;
+        temp.subNode.push_back(type);
+        temp.show = addLine("Specifier", (yyloc).first_line);
+        yyval = temp;
+    }
 #line 1581 "pro_1.tab.c"
     break;
 
-  case 42:
-#line 80 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
-#line 1587 "pro_1.tab.c"
+  case 11:
+#line 106 "pro_1.y"
+    {
+        Node temp;
+        temp.subNode.push_back(yyvsp[0]);
+        temp.show = addLine("Specifier", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 1592 "pro_1.tab.c"
     break;
 
-  case 43:
-#line 81 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
-#line 1593 "pro_1.tab.c"
-    break;
-
-  case 44:
-#line 82 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
-#line 1599 "pro_1.tab.c"
-    break;
-
-  case 45:
-#line 83 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
-#line 1605 "pro_1.tab.c"
-    break;
-
-  case 46:
-#line 84 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
+  case 12:
+#line 114 "pro_1.y"
+    {
+        Node temp, struc, id, lc, rc;
+        struc.show = "STRUCT";
+        id.show = "ID: "+yyvsp[-3].show;
+        lc.show = "LC";
+        rc.show = "RC";
+        temp.subNode.push_back(struc);
+        temp.subNode.push_back(id);
+        temp.subNode.push_back(lc);
+        temp.subNode.push_back(yyvsp[-1]);
+        temp.subNode.push_back(rc);
+        temp.show = addLine("StructSpecifier", (yyloc).first_line);
+        yyval = temp;
+    }
 #line 1611 "pro_1.tab.c"
     break;
 
-  case 47:
-#line 85 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
-#line 1617 "pro_1.tab.c"
+  case 13:
+#line 128 "pro_1.y"
+    {
+        Node temp, struc, id;
+        struc.show = "STRUCT";
+        id.show = "ID: "+yyvsp[0].show;
+        temp.subNode.push_back(struc);
+        temp.subNode.push_back(id);
+        temp.show = addLine("StructSpecifier", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 1625 "pro_1.tab.c"
     break;
 
-  case 48:
-#line 86 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
-#line 1623 "pro_1.tab.c"
+  case 14:
+#line 139 "pro_1.y"
+    {
+        Node temp, id;
+        id.show = "ID: "+yyvsp[0].show;
+        temp.subNode.push_back(id);
+        temp.show = addLine("VarDec", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 1637 "pro_1.tab.c"
     break;
 
-  case 49:
-#line 87 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
-#line 1629 "pro_1.tab.c"
+  case 15:
+#line 146 "pro_1.y"
+    {
+        Node temp, lb, i, rb;
+        lb.show = "LB";
+        rb.show = "RB";
+        i.show = "INT: "+yyvsp[-1].show;
+        temp.subNode.push_back(yyvsp[-3]);
+        temp.subNode.push_back(lb);
+        temp.subNode.push_back(i);
+        temp.subNode.push_back(rb);
+        temp.show = addLine("VarDec", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 1654 "pro_1.tab.c"
     break;
 
-  case 50:
-#line 88 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
-#line 1635 "pro_1.tab.c"
-    break;
-
-  case 51:
-#line 89 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
-#line 1641 "pro_1.tab.c"
-    break;
-
-  case 52:
-#line 90 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
-#line 1647 "pro_1.tab.c"
-    break;
-
-  case 53:
-#line 91 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
-#line 1653 "pro_1.tab.c"
-    break;
-
-  case 54:
-#line 92 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
-#line 1659 "pro_1.tab.c"
-    break;
-
-  case 55:
-#line 93 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
-#line 1665 "pro_1.tab.c"
-    break;
-
-  case 56:
-#line 94 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
+  case 16:
+#line 160 "pro_1.y"
+    {
+        Node temp, id, lp, rp;
+        id.show = "ID: "+yyvsp[-3].show;
+        lp.show = "LP";
+        rp.show = "RP";
+        temp.subNode.push_back(id);
+        temp.subNode.push_back(lp);
+        temp.subNode.push_back(yyvsp[-1]);
+        temp.subNode.push_back(rp);
+        temp.show = addLine("FunDec", (yyloc).first_line);
+        yyval = temp;
+    }
 #line 1671 "pro_1.tab.c"
     break;
 
-  case 57:
-#line 95 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
-#line 1677 "pro_1.tab.c"
+  case 17:
+#line 172 "pro_1.y"
+    {
+        Node temp, id, lp, rp;
+        id.show = "ID: "+yyvsp[-2].show;
+        lp.show = "LP";
+        rp.show = "RP";
+        temp.subNode.push_back(id);
+        temp.subNode.push_back(lp);
+        temp.subNode.push_back(rp);
+        temp.show = addLine("FunDec", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 1687 "pro_1.tab.c"
     break;
 
-  case 58:
-#line 96 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
-#line 1683 "pro_1.tab.c"
-    break;
-
-  case 59:
-#line 97 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
-#line 1689 "pro_1.tab.c"
-    break;
-
-  case 60:
-#line 98 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
-#line 1695 "pro_1.tab.c"
-    break;
-
-  case 61:
-#line 100 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
+  case 18:
+#line 185 "pro_1.y"
+    {
+        Node temp, comma;
+        comma.show ="COMMA";
+        temp.subNode.push_back(yyvsp[-2]);
+        temp.subNode.push_back(comma);
+        temp.subNode.push_back(yyvsp[0]);
+        temp.show = addLine("VarList", (yyloc).first_line);
+        yyval = temp;
+    }
 #line 1701 "pro_1.tab.c"
     break;
 
+  case 19:
+#line 194 "pro_1.y"
+    {
+        Node temp;
+        temp.subNode.push_back(yyvsp[0]);
+        temp.show = addLine("VarList", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 1712 "pro_1.tab.c"
+    break;
+
+  case 20:
+#line 202 "pro_1.y"
+    {
+        Node temp;
+        temp.subNode.push_back(yyvsp[-1]);
+        temp.subNode.push_back(yyvsp[0]);
+        temp.show = addLine("ParamDec", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 1724 "pro_1.tab.c"
+    break;
+
+  case 21:
+#line 211 "pro_1.y"
+    {
+        string e = "Error type B at Line "+to_string((yyloc).first_line)+": Missing semicolon \'}\'";
+        errList.push_back(e);
+    }
+#line 1733 "pro_1.tab.c"
+    break;
+
+  case 22:
+#line 216 "pro_1.y"
+    {
+        Node temp, lc, rc;
+        lc.show = "LC";
+        rc.show = "RC";
+        temp.subNode.push_back(lc);
+        if (! yyvsp[-2].subNode.empty())
+            temp.subNode.push_back(yyvsp[-2]);
+        if (! yyvsp[-1].subNode.empty())
+            temp.subNode.push_back(yyvsp[-1]);
+        temp.subNode.push_back(rc);
+        temp.show = addLine("CompSt", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 1751 "pro_1.tab.c"
+    break;
+
+  case 23:
+#line 231 "pro_1.y"
+    {
+        Node temp;
+        temp.subNode.push_back(yyvsp[-1]);
+        if (! yyvsp[0].subNode.empty())
+            temp.subNode.push_back(yyvsp[0]);
+        temp.show = addLine("StmtList", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 1764 "pro_1.tab.c"
+    break;
+
+  case 24:
+#line 240 "pro_1.y"
+    {
+        Node temp;
+        temp.show = addLine("StmtList", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 1774 "pro_1.tab.c"
+    break;
+
+  case 25:
+#line 247 "pro_1.y"
+    {
+        string e = "Error type B at Line "+to_string((yyloc).first_line)+": Missing semicolon \';\'";
+        errList.push_back(e);
+    }
+#line 1783 "pro_1.tab.c"
+    break;
+
+  case 26:
+#line 252 "pro_1.y"
+    {
+        Node temp;
+        temp.subNode.push_back(yyvsp[-1]);
+        temp.subNode.push_back(createNode("SEMI"));
+        temp.show = addLine("Stmt", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 1795 "pro_1.tab.c"
+    break;
+
+  case 27:
+#line 259 "pro_1.y"
+    {
+        Node temp;
+        temp.subNode.push_back(yyvsp[0]);
+        temp.show = addLine("Stmt", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 1806 "pro_1.tab.c"
+    break;
+
+  case 28:
+#line 265 "pro_1.y"
+    {
+        Node temp, ret, semi;
+        ret.show = "RETURN";
+        semi.show = "SEMI";
+        temp.subNode.push_back(ret);
+        temp.subNode.push_back(yyvsp[-1]);
+        temp.subNode.push_back(semi);
+        temp.show = addLine("Stmt", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 1821 "pro_1.tab.c"
+    break;
+
+  case 29:
+#line 275 "pro_1.y"
+    {
+        Node temp, i, lp, rp;
+        i.show = "IF";
+        lp.show = "LP";
+        rp.show = "RP";
+        temp.subNode.push_back(i);
+        temp.subNode.push_back(lp);
+        temp.subNode.push_back(yyvsp[-2]);
+        temp.subNode.push_back(rp);
+        temp.subNode.push_back(yyvsp[0]);
+        temp.show = addLine("Stmt", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 1839 "pro_1.tab.c"
+    break;
+
+  case 30:
+#line 288 "pro_1.y"
+    {
+        Node temp, i, lp, rp, e;
+        i.show = "IF";
+        lp.show = "LP";
+        rp.show = "RP";
+        e.show = "ELSE";
+        temp.subNode.push_back(i);
+        temp.subNode.push_back(lp);
+        temp.subNode.push_back(yyvsp[-4]);
+        temp.subNode.push_back(rp);
+        temp.subNode.push_back(yyvsp[-2]);
+        temp.subNode.push_back(e);
+        temp.subNode.push_back(yyvsp[0]);
+        temp.show = addLine("Stmt", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 1860 "pro_1.tab.c"
+    break;
+
+  case 31:
+#line 304 "pro_1.y"
+    {
+        Node temp, w, lp, rp;
+        w.show = "WHILE";
+        lp.show = "LP";
+        rp.show = "RP";
+        temp.subNode.push_back(w);
+        temp.subNode.push_back(lp);
+        temp.subNode.push_back(yyvsp[-2]);
+        temp.subNode.push_back(rp);
+        temp.subNode.push_back(yyvsp[0]);
+        temp.show = addLine("Stmt", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 1878 "pro_1.tab.c"
+    break;
+
+  case 32:
+#line 319 "pro_1.y"
+    {
+        Node temp;
+        temp.subNode.push_back(yyvsp[-1]);
+        if (! yyvsp[0].subNode.empty())
+            temp.subNode.push_back(yyvsp[0]);
+        temp.show = addLine("DefList", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 1891 "pro_1.tab.c"
+    break;
+
+  case 33:
+#line 328 "pro_1.y"
+    {
+        Node temp;
+        temp.show = addLine("DefList", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 1901 "pro_1.tab.c"
+    break;
+
+  case 34:
+#line 335 "pro_1.y"
+    {
+        Node temp, semi;
+        semi.show = "SEMI";
+        temp.subNode.push_back(yyvsp[-2]);
+        temp.subNode.push_back(yyvsp[-1]);
+        temp.subNode.push_back(semi);
+        temp.show = addLine("Def", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 1915 "pro_1.tab.c"
+    break;
+
+  case 35:
+#line 346 "pro_1.y"
+    {
+        Node temp;
+        temp.subNode.push_back(yyvsp[0]);
+        temp.show = addLine("DecList", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 1926 "pro_1.tab.c"
+    break;
+
+  case 36:
+#line 352 "pro_1.y"
+    {
+        Node temp, comma;
+        comma.show= "COMMA";
+        temp.subNode.push_back(yyvsp[-2]);
+        temp.subNode.push_back(comma);
+        temp.subNode.push_back(yyvsp[0]);
+        yyval = temp;
+    }
+#line 1939 "pro_1.tab.c"
+    break;
+
+  case 37:
+#line 362 "pro_1.y"
+    {
+        Node temp;
+        temp.subNode.push_back(yyvsp[0]);
+        temp.show = addLine("Dec", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 1950 "pro_1.tab.c"
+    break;
+
+  case 38:
+#line 368 "pro_1.y"
+    {
+        Node temp, assign;
+        assign.show = "ASSIGN";
+        temp.subNode.push_back(yyvsp[-2]);
+        temp.subNode.push_back(assign);
+        temp.subNode.push_back(yyvsp[0]);
+        temp.show = addLine("Dec", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 1964 "pro_1.tab.c"
+    break;
+
+  case 39:
+#line 379 "pro_1.y"
+    {
+        string e = "Error type B at Line "+to_string((yyloc).first_line)+": Missing semicolon \')\'";
+        errList.push_back(e);
+    }
+#line 1973 "pro_1.tab.c"
+    break;
+
+  case 40:
+#line 384 "pro_1.y"
+    {
+        Node temp;
+        temp.subNode.push_back(yyvsp[-2]);
+        temp.subNode.push_back(createNode("ASSIGN"));
+        temp.subNode.push_back(yyvsp[0]);
+        temp.show = addLine("Exp", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 1986 "pro_1.tab.c"
+    break;
+
+  case 41:
+#line 392 "pro_1.y"
+    {
+        Node temp;
+        temp.subNode.push_back(yyvsp[-2]);
+        temp.subNode.push_back(createNode("AND"));
+        temp.subNode.push_back(yyvsp[0]);
+        temp.show = addLine("Exp", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 1999 "pro_1.tab.c"
+    break;
+
+  case 42:
+#line 400 "pro_1.y"
+    {
+        Node temp;
+        temp.subNode.push_back(yyvsp[-2]);
+        temp.subNode.push_back(createNode("OR"));
+        temp.subNode.push_back(yyvsp[0]);
+        temp.show = addLine("Exp", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 2012 "pro_1.tab.c"
+    break;
+
+  case 43:
+#line 408 "pro_1.y"
+    {
+        Node temp;
+        temp.subNode.push_back(yyvsp[-2]);
+        temp.subNode.push_back(createNode("LT"));
+        temp.subNode.push_back(yyvsp[0]);
+        temp.show = addLine("Exp", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 2025 "pro_1.tab.c"
+    break;
+
+  case 44:
+#line 416 "pro_1.y"
+    {
+        Node temp;
+        temp.subNode.push_back(yyvsp[-2]);
+        temp.subNode.push_back(createNode("LE"));
+        temp.subNode.push_back(yyvsp[0]);
+        temp.show = addLine("Exp", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 2038 "pro_1.tab.c"
+    break;
+
+  case 45:
+#line 424 "pro_1.y"
+    {
+        Node temp;
+        temp.subNode.push_back(yyvsp[-2]);
+        temp.subNode.push_back(createNode("GT"));
+        temp.subNode.push_back(yyvsp[0]);
+        temp.show = addLine("Exp", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 2051 "pro_1.tab.c"
+    break;
+
+  case 46:
+#line 432 "pro_1.y"
+    {
+        Node temp;
+        temp.subNode.push_back(yyvsp[-2]);
+        temp.subNode.push_back(createNode("GE"));
+        temp.subNode.push_back(yyvsp[0]);
+        temp.show = addLine("Exp", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 2064 "pro_1.tab.c"
+    break;
+
+  case 47:
+#line 440 "pro_1.y"
+    {
+        Node temp;
+        temp.subNode.push_back(yyvsp[-2]);
+        temp.subNode.push_back(createNode("NE"));
+        temp.subNode.push_back(yyvsp[0]);
+        temp.show = addLine("Exp", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 2077 "pro_1.tab.c"
+    break;
+
+  case 48:
+#line 448 "pro_1.y"
+    {
+        Node temp;
+        temp.subNode.push_back(yyvsp[-2]);
+        temp.subNode.push_back(createNode("EQ"));
+        temp.subNode.push_back(yyvsp[0]);
+        temp.show = addLine("Exp", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 2090 "pro_1.tab.c"
+    break;
+
+  case 49:
+#line 456 "pro_1.y"
+    {
+        Node temp;
+        temp.subNode.push_back(yyvsp[-2]);
+        temp.subNode.push_back(createNode("PLUS"));
+        temp.subNode.push_back(yyvsp[0]);
+        temp.show = addLine("Exp", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 2103 "pro_1.tab.c"
+    break;
+
+  case 50:
+#line 464 "pro_1.y"
+    {
+        Node temp;
+        temp.subNode.push_back(yyvsp[-2]);
+        temp.subNode.push_back(createNode("MINUS"));
+        temp.subNode.push_back(yyvsp[0]);
+        temp.show = addLine("Exp", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 2116 "pro_1.tab.c"
+    break;
+
+  case 51:
+#line 472 "pro_1.y"
+    {
+        Node temp;
+        temp.subNode.push_back(yyvsp[-2]);
+        temp.subNode.push_back(createNode("MUL"));
+        temp.subNode.push_back(yyvsp[0]);
+        temp.show = addLine("Exp", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 2129 "pro_1.tab.c"
+    break;
+
+  case 52:
+#line 480 "pro_1.y"
+    {
+        Node temp;
+        temp.subNode.push_back(yyvsp[-2]);
+        temp.subNode.push_back(createNode("DIV"));
+        temp.subNode.push_back(yyvsp[0]);
+        temp.show = addLine("Exp", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 2142 "pro_1.tab.c"
+    break;
+
+  case 53:
+#line 488 "pro_1.y"
+    {
+        Node temp;
+        temp.subNode.push_back(createNode("LP"));
+        temp.subNode.push_back(yyvsp[-1]);
+        temp.subNode.push_back(createNode("RP"));
+        temp.show = addLine("Exp", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 2155 "pro_1.tab.c"
+    break;
+
+  case 54:
+#line 496 "pro_1.y"
+    {
+        Node temp;
+        temp.subNode.push_back(createNode("MINUS"));
+        temp.subNode.push_back(yyvsp[0]);
+        temp.show = addLine("Exp", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 2167 "pro_1.tab.c"
+    break;
+
+  case 55:
+#line 503 "pro_1.y"
+    {
+        Node temp;
+        temp.subNode.push_back(createNode("NOT"));
+        temp.subNode.push_back(yyvsp[0]);
+        temp.show = addLine("Exp", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 2179 "pro_1.tab.c"
+    break;
+
+  case 56:
+#line 510 "pro_1.y"
+    {
+        Node temp;
+        temp.subNode.push_back(createNode("ID: "+yyvsp[-3].show));
+        temp.subNode.push_back(createNode("LP"));
+        temp.subNode.push_back(yyvsp[-1]);
+        temp.subNode.push_back(createNode("RP"));
+        temp.show = addLine("Exp", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 2193 "pro_1.tab.c"
+    break;
+
+  case 57:
+#line 519 "pro_1.y"
+    {
+        Node temp;
+        temp.subNode.push_back(createNode("ID: "+yyvsp[-2].show));
+        temp.subNode.push_back(createNode("LP"));
+        temp.subNode.push_back(createNode("RP"));
+        temp.show = addLine("Exp", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 2206 "pro_1.tab.c"
+    break;
+
+  case 58:
+#line 527 "pro_1.y"
+    {
+        Node temp;
+        temp.subNode.push_back(yyvsp[-3]);
+        temp.subNode.push_back(createNode("LB"));
+        temp.subNode.push_back(yyvsp[-1]);
+        temp.subNode.push_back(createNode("RB"));
+        temp.show = addLine("Exp", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 2220 "pro_1.tab.c"
+    break;
+
+  case 59:
+#line 536 "pro_1.y"
+    {
+        Node temp;
+        temp.subNode.push_back(yyvsp[-2]);
+        temp.subNode.push_back(createNode("DOT"));
+        temp.subNode.push_back(createNode("ID: "+yyvsp[0].show));
+        temp.show = addLine("Exp", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 2233 "pro_1.tab.c"
+    break;
+
+  case 60:
+#line 544 "pro_1.y"
+    {
+        Node temp;
+        temp.subNode.push_back(createNode("ID: "+yyvsp[0].show));
+        temp.show = addLine("Exp", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 2244 "pro_1.tab.c"
+    break;
+
+  case 61:
+#line 550 "pro_1.y"
+    {
+        Node temp;
+        temp.subNode.push_back(createNode("INT: "+yyvsp[0].show));
+        temp.show = addLine("Exp", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 2255 "pro_1.tab.c"
+    break;
+
   case 62:
-#line 101 "pro_1.y"
-    {ast.push(STMT("FunDec"));}
-#line 1707 "pro_1.tab.c"
+#line 556 "pro_1.y"
+    {
+        Node temp;
+        temp.subNode.push_back(createNode("FLOAT: "+yyvsp[0].show));
+        temp.show = addLine("Exp", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 2266 "pro_1.tab.c"
+    break;
+
+  case 63:
+#line 562 "pro_1.y"
+    {
+        Node temp;
+        temp.subNode.push_back(createNode("CHAR: "+yyvsp[0].show));
+        temp.show = addLine("Exp", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 2277 "pro_1.tab.c"
+    break;
+
+  case 64:
+#line 570 "pro_1.y"
+    {
+        Node temp;
+        temp.subNode.push_back(yyvsp[-2]);
+        temp.subNode.push_back(createNode("COMMA"));
+        temp.subNode.push_back(yyvsp[0]);
+        temp.show = addLine("Args", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 2290 "pro_1.tab.c"
+    break;
+
+  case 65:
+#line 578 "pro_1.y"
+    {
+        Node temp;
+        temp.subNode.push_back(yyvsp[0]);
+        temp.show = addLine("Args", (yyloc).first_line);
+        yyval = temp;
+    }
+#line 2301 "pro_1.tab.c"
     break;
 
 
-#line 1711 "pro_1.tab.c"
+#line 2305 "pro_1.tab.c"
 
       default: break;
     }
@@ -1729,6 +2323,7 @@ yyreduce:
   YY_STACK_PRINT (yyss, yyssp);
 
   *++yyvsp = yyval;
+  *++yylsp = yyloc;
 
   /* Now 'shift' the result of the reduction.  Determine what state
      that goes to, based on the state we popped back to and the rule
@@ -1792,7 +2387,7 @@ yyerrlab:
 #endif
     }
 
-
+  yyerror_range[1] = yylloc;
 
   if (yyerrstatus == 3)
     {
@@ -1808,7 +2403,7 @@ yyerrlab:
       else
         {
           yydestruct ("Error: discarding",
-                      yytoken, &yylval);
+                      yytoken, &yylval, &yylloc);
           yychar = YYEMPTY;
         }
     }
@@ -1860,9 +2455,9 @@ yyerrlab1:
       if (yyssp == yyss)
         YYABORT;
 
-
+      yyerror_range[1] = *yylsp;
       yydestruct ("Error: popping",
-                  yystos[yystate], yyvsp);
+                  yystos[yystate], yyvsp, yylsp);
       YYPOPSTACK (1);
       yystate = *yyssp;
       YY_STACK_PRINT (yyss, yyssp);
@@ -1872,6 +2467,11 @@ yyerrlab1:
   *++yyvsp = yylval;
   YY_IGNORE_MAYBE_UNINITIALIZED_END
 
+  yyerror_range[2] = yylloc;
+  /* Using YYLLOC is tempting, but would change the location of
+     the lookahead.  YYLOC is available though.  */
+  YYLLOC_DEFAULT (yyloc, yyerror_range, 2);
+  *++yylsp = yyloc;
 
   /* Shift the error token.  */
   YY_SYMBOL_PRINT ("Shifting", yystos[yyn], yyvsp, yylsp);
@@ -1917,7 +2517,7 @@ yyreturn:
          user semantic actions for why this is necessary.  */
       yytoken = YYTRANSLATE (yychar);
       yydestruct ("Cleanup: discarding lookahead",
-                  yytoken, &yylval);
+                  yytoken, &yylval, &yylloc);
     }
   /* Do not reclaim the symbols of the rule whose action triggered
      this YYABORT or YYACCEPT.  */
@@ -1926,7 +2526,7 @@ yyreturn:
   while (yyssp != yyss)
     {
       yydestruct ("Cleanup: popping",
-                  yystos[*yyssp], yyvsp);
+                  yystos[*yyssp], yyvsp, yylsp);
       YYPOPSTACK (1);
     }
 #ifndef yyoverflow
@@ -1939,7 +2539,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 103 "pro_1.y"
+#line 585 "pro_1.y"
 
  
  
@@ -1947,13 +2547,23 @@ void yyerror(const char *s){
     fprintf(stderr, "%s\n", s);
 }
 
+void output(Node node, int num){
+    int size = node.subNode.size();
+    string tab(num,' ');
+    cout<<tab<<node.show<<endl; 
+    for (int i=0;i<size;i++){
+        output(node.subNode[i],num+2);
+    }
+      
+}
 
+string addLine(string s, int line){
+    return s+" ("+to_string(line)+")";
+}
 
 int main(){
     yyparse();
-    while (! ast.empty()){
-        cout<<ast.top()<<endl;
-        ast.pop();
-    }
+    // cout<<endl;
+    output(program,0);
 }
 

@@ -13,6 +13,15 @@ string rp = ")";
 queue<string> ast;
 #define STMT(s) s + lp + to_string(lines) + rp
 
+void output(Node node){
+    int size = node.subNode.size();
+    cout<<node.show<<endl;
+    cout<<size<<endl;
+    cout<<(*node.subNode.front()).subNode.size()<<endl;
+    
+}
+
+
 int main()
 {
     Node temp;
@@ -20,5 +29,5 @@ int main()
     semi.show = "SEMI";
     temp.subNode.push_back(&semi);
     temp.show = STMT("ExtDef");
-    cout<< temp.subNode[0]->show << endl;
+    output(temp);
 }
