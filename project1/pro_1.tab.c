@@ -157,9 +157,8 @@ extern int yydebug;
     RB = 288,
     LC = 289,
     RC = 290,
-    LINE = 291,
-    ADD = 292,
-    SUB = 293
+    ADD = 291,
+    SUB = 292
   };
 #endif
 
@@ -428,10 +427,10 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  9
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   249
+#define YYLAST   295
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  39
+#define YYNTOKENS  38
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  20
 /* YYNRULES -- Number of rules.  */
@@ -440,7 +439,7 @@ union yyalloc
 #define YYNSTATES  123
 
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   293
+#define YYMAXUTOK   292
 
 /* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
    as returned by yylex, with out-of-bounds checking.  */
@@ -480,20 +479,20 @@ static const yytype_uint8 yytranslate[] =
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
       15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
       25,    26,    27,    28,    29,    30,    31,    32,    33,    34,
-      35,    36,    37,    38
+      35,    36,    37
 };
 
 #if YYDEBUG
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    30,    30,    36,    45,    52,    62,    71,    81,    87,
-      98,   106,   114,   128,   139,   146,   160,   172,   185,   194,
-     202,   211,   216,   231,   240,   247,   252,   259,   265,   275,
-     288,   304,   319,   328,   335,   346,   352,   362,   368,   379,
-     384,   392,   400,   408,   416,   424,   432,   440,   448,   456,
-     464,   472,   480,   488,   496,   503,   510,   519,   527,   536,
-     544,   550,   556,   562,   570,   578
+       0,    37,    37,    43,    52,    59,    69,    78,    88,    94,
+     105,   113,   121,   135,   146,   153,   167,   179,   192,   201,
+     209,   218,   223,   238,   247,   254,   260,   267,   273,   283,
+     296,   312,   327,   336,   343,   354,   360,   370,   376,   387,
+     392,   400,   408,   416,   424,   432,   440,   448,   456,   464,
+     472,   480,   488,   496,   504,   511,   518,   527,   535,   544,
+     552,   558,   564,   570,   578,   586
 };
 #endif
 
@@ -505,8 +504,8 @@ static const char *const yytname[] =
   "$end", "error", "$undefined", "INT", "FLOAT", "CHAR", "ID", "TYPE",
   "STRUCT", "IF", "ELSE", "WHILE", "RETURN", "DOT", "SEMI", "COMMA",
   "ASSIGN", "LT", "LE", "GT", "GE", "NE", "EQ", "PLUS", "MINUS", "MUL",
-  "DIV", "AND", "OR", "NOT", "LP", "RP", "LB", "RB", "LC", "RC", "LINE",
-  "ADD", "SUB", "$accept", "Program", "ExtDefList", "ExtDef", "ExtDecList",
+  "DIV", "AND", "OR", "NOT", "LP", "RP", "LB", "RB", "LC", "RC", "ADD",
+  "SUB", "$accept", "Program", "ExtDefList", "ExtDef", "ExtDecList",
   "Specifier", "StructSpecifier", "VarDec", "FunDec", "VarList",
   "ParamDec", "CompSt", "StmtList", "Stmt", "DefList", "Def", "DecList",
   "Dec", "Exp", "Args", YY_NULLPTR
@@ -521,14 +520,14 @@ static const yytype_uint16 yytoknum[] =
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
      265,   266,   267,   268,   269,   270,   271,   272,   273,   274,
      275,   276,   277,   278,   279,   280,   281,   282,   283,   284,
-     285,   286,   287,   288,   289,   290,   291,   292,   293
+     285,   286,   287,   288,   289,   290,   291,   292
 };
 # endif
 
-#define YYPACT_NINF -66
+#define YYPACT_NINF -50
 
 #define yypact_value_is_default(Yystate) \
-  (!!((Yystate) == (-66)))
+  (!!((Yystate) == (-50)))
 
 #define YYTABLE_NINF -1
 
@@ -539,19 +538,19 @@ static const yytype_uint16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int16 yypact[] =
 {
-      10,   -66,     5,    24,   -66,    10,    34,   -66,   -19,   -66,
-     -66,    14,   -66,    33,   -10,    18,    10,    12,   -66,    52,
-      56,    10,   -66,    52,    25,    10,   -66,    52,    46,    63,
-     -66,   -66,    53,    78,     7,    65,    70,   -66,   -66,    59,
-     -66,    10,   -66,   -66,   -66,   -66,    58,    71,    73,    93,
-      93,    93,    93,   -66,     6,    78,    48,    93,   -66,    52,
-     -66,    89,    93,    93,   129,   217,   217,   146,   -66,   -66,
-     -66,   -66,    94,   -66,    93,    93,    93,    93,    93,    93,
-      93,    93,    93,    93,    93,    93,    93,    93,   217,   -66,
-     -66,   166,    15,   183,   200,   -66,   -66,   -66,   217,    31,
-      31,    31,    31,    31,    31,   217,   217,    31,    31,    31,
-      31,   108,    93,   -66,   -66,    78,    78,   -66,   -66,    95,
-     -66,    78,   -66
+      10,   -50,     5,    24,   -50,    10,    41,   -50,   -19,   -50,
+     -50,    26,   -50,    40,   -10,    43,    10,    12,   -50,    51,
+      55,    10,   -50,    51,    25,    10,   -50,    51,    47,    64,
+     -50,   -50,    67,    78,     7,    74,    86,   -50,   -50,    71,
+     -50,    10,   -50,   -50,   -50,   -50,    75,    76,    79,    93,
+      93,    93,    93,   -50,     6,    78,    48,    93,   -50,    51,
+     -50,    89,    93,    93,   129,   217,   263,   146,   -50,   -50,
+     -50,   -50,    98,   -50,    93,    93,    93,    93,    93,    93,
+      93,    93,    93,    93,    93,    93,    93,    93,   217,   -50,
+     -50,   166,    15,   183,   200,   -50,   -50,   -50,   217,    27,
+      27,    27,    27,    27,    27,   217,   217,   263,   263,   249,
+     233,   108,    93,   -50,   -50,    78,    78,   -50,   -50,   100,
+     -50,    78,   -50
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -577,8 +576,8 @@ static const yytype_uint8 yydefact[] =
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -66,   -66,    99,   -66,    87,     4,   -66,   -17,   -66,    68,
-     -66,    96,    55,   -65,    32,   -66,    57,   -66,   -49,     2
+     -50,   -50,   106,   -50,    95,     4,   -50,   -17,   -50,    96,
+     -50,   101,    60,   -30,    23,   -50,    80,   -50,   -49,    32
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
@@ -597,17 +596,17 @@ static const yytype_uint8 yytable[] =
       39,     8,    91,    93,    94,    16,   113,     1,     2,     1,
        2,    27,    20,    57,     9,    98,    99,   100,   101,   102,
      103,   104,   105,   106,   107,   108,   109,   110,   111,    20,
-      11,    69,    34,    26,    17,    27,   114,    18,    12,    71,
-     119,   120,    21,    33,    81,    82,   122,    38,    30,    32,
+      72,    69,    34,    26,    33,    27,   114,    11,    38,    71,
+      81,    82,    83,    84,    18,    12,    17,    30,    32,    87,
       37,    72,    73,    91,    74,    75,    76,    77,    78,    79,
-      80,    81,    82,    83,    84,    85,    86,    40,    41,    58,
-      87,    43,    44,    45,    46,    59,    42,    47,    61,    48,
-      49,    20,    43,    44,    45,    46,    43,    44,    45,    46,
-      97,    62,    50,    63,    10,   121,    31,    51,    52,    60,
-      70,    22,    21,    50,   118,     0,    89,    50,    51,    52,
+      80,    81,    82,    83,    84,    85,    86,    21,    40,    41,
+      87,    43,    44,    45,    46,   119,   120,    47,    58,    48,
+      49,   122,    43,    44,    45,    46,    43,    44,    45,    46,
+      42,    59,    50,    20,    97,    61,    62,    51,    52,    63,
+     121,    10,    21,    50,    31,    70,    22,    50,    51,    52,
       90,    72,    51,    52,    74,    75,    76,    77,    78,    79,
-      80,    81,    82,    83,    84,    85,    86,     0,     0,     0,
-      87,   117,    72,    95,     0,    74,    75,    76,    77,    78,
+      80,    81,    82,    83,    84,    85,    86,    60,     0,    89,
+      87,   117,    72,    95,   118,    74,    75,    76,    77,    78,
       79,    80,    81,    82,    83,    84,    85,    86,     0,    72,
        0,    87,    74,    75,    76,    77,    78,    79,    80,    81,
       82,    83,    84,    85,    86,     0,     0,    96,    87,    72,
@@ -617,7 +616,12 @@ static const yytype_uint8 yytable[] =
       85,    86,     0,    72,   115,    87,    74,    75,    76,    77,
       78,    79,    80,    81,    82,    83,    84,    85,    86,     0,
       72,   116,    87,    74,    75,    76,    77,    78,    79,    80,
-      81,    82,    83,    84,    85,    86,     0,     0,     0,    87
+      81,    82,    83,    84,    85,    86,    72,     0,     0,    87,
+      75,    76,    77,    78,    79,    80,    81,    82,    83,    84,
+      85,     0,    72,     0,     0,    87,    75,    76,    77,    78,
+      79,    80,    81,    82,    83,    84,    72,     0,     0,     0,
+       0,    87,     0,     0,     0,     0,    81,    82,     0,     0,
+       0,     0,     0,     0,     0,    87
 };
 
 static const yytype_int8 yycheck[] =
@@ -626,17 +630,17 @@ static const yytype_int8 yycheck[] =
       27,     6,    61,    62,    63,    34,     1,     7,     8,     7,
        8,    17,    32,    16,     0,    74,    75,    76,    77,    78,
       79,    80,    81,    82,    83,    84,    85,    86,    87,    32,
-       6,    35,    59,    31,    30,    41,    31,    14,    14,     1,
-     115,   116,    34,    21,    23,    24,   121,    25,     6,     3,
+      13,    35,    59,    31,    21,    41,    31,     6,    25,     1,
+      23,    24,    25,    26,    14,    14,    30,     6,     3,    32,
       35,    13,    14,   112,    16,    17,    18,    19,    20,    21,
-      22,    23,    24,    25,    26,    27,    28,    31,    15,    14,
-      32,     3,     4,     5,     6,    15,    33,     9,    30,    11,
-      12,    32,     3,     4,     5,     6,     3,     4,     5,     6,
-       6,    30,    24,    30,     5,    10,    19,    29,    30,    41,
-      55,    15,    34,    24,   112,    -1,    59,    24,    29,    30,
+      22,    23,    24,    25,    26,    27,    28,    34,    31,    15,
+      32,     3,     4,     5,     6,   115,   116,     9,    14,    11,
+      12,   121,     3,     4,     5,     6,     3,     4,     5,     6,
+      33,    15,    24,    32,     6,    30,    30,    29,    30,    30,
+      10,     5,    34,    24,    19,    55,    15,    24,    29,    30,
       31,    13,    29,    30,    16,    17,    18,    19,    20,    21,
-      22,    23,    24,    25,    26,    27,    28,    -1,    -1,    -1,
-      32,    33,    13,    14,    -1,    16,    17,    18,    19,    20,
+      22,    23,    24,    25,    26,    27,    28,    41,    -1,    59,
+      32,    33,    13,    14,   112,    16,    17,    18,    19,    20,
       21,    22,    23,    24,    25,    26,    27,    28,    -1,    13,
       -1,    32,    16,    17,    18,    19,    20,    21,    22,    23,
       24,    25,    26,    27,    28,    -1,    -1,    31,    32,    13,
@@ -646,38 +650,43 @@ static const yytype_int8 yycheck[] =
       27,    28,    -1,    13,    31,    32,    16,    17,    18,    19,
       20,    21,    22,    23,    24,    25,    26,    27,    28,    -1,
       13,    31,    32,    16,    17,    18,    19,    20,    21,    22,
-      23,    24,    25,    26,    27,    28,    -1,    -1,    -1,    32
+      23,    24,    25,    26,    27,    28,    13,    -1,    -1,    32,
+      17,    18,    19,    20,    21,    22,    23,    24,    25,    26,
+      27,    -1,    13,    -1,    -1,    32,    17,    18,    19,    20,
+      21,    22,    23,    24,    25,    26,    13,    -1,    -1,    -1,
+      -1,    32,    -1,    -1,    -1,    -1,    23,    24,    -1,    -1,
+      -1,    -1,    -1,    -1,    -1,    32
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
      symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,     7,     8,    40,    41,    42,    44,    45,     6,     0,
-      41,     6,    14,    43,    46,    47,    34,    30,    14,    15,
-      32,    34,    50,    44,    53,    54,    31,    44,    48,    49,
-       6,    43,     3,    53,    46,    55,    56,    35,    53,    46,
+       0,     7,     8,    39,    40,    41,    43,    44,     6,     0,
+      40,     6,    14,    42,    45,    46,    34,    30,    14,    15,
+      32,    34,    49,    43,    52,    53,    31,    43,    47,    48,
+       6,    42,     3,    52,    45,    54,    55,    35,    52,    45,
       31,    15,    33,     3,     4,     5,     6,     9,    11,    12,
-      24,    29,    30,    50,    51,    52,    57,    16,    14,    15,
-      48,    30,    30,    30,    57,    57,    57,    57,     1,    35,
-      51,     1,    13,    14,    16,    17,    18,    19,    20,    21,
-      22,    23,    24,    25,    26,    27,    28,    32,    57,    55,
-      31,    57,    58,    57,    57,    14,    31,     6,    57,    57,
-      57,    57,    57,    57,    57,    57,    57,    57,    57,    57,
-      57,    57,    15,     1,    31,    31,    31,    33,    58,    52,
-      52,    10,    52
+      24,    29,    30,    49,    50,    51,    56,    16,    14,    15,
+      47,    30,    30,    30,    56,    56,    56,    56,     1,    35,
+      50,     1,    13,    14,    16,    17,    18,    19,    20,    21,
+      22,    23,    24,    25,    26,    27,    28,    32,    56,    54,
+      31,    56,    57,    56,    56,    14,    31,     6,    56,    56,
+      56,    56,    56,    56,    56,    56,    56,    56,    56,    56,
+      56,    56,    15,     1,    31,    31,    31,    33,    57,    51,
+      51,    10,    51
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
-       0,    39,    40,    41,    41,    42,    42,    42,    43,    43,
-      44,    44,    45,    45,    46,    46,    47,    47,    48,    48,
-      49,    50,    50,    51,    51,    52,    52,    52,    52,    52,
-      52,    52,    53,    53,    54,    55,    55,    56,    56,    57,
-      57,    57,    57,    57,    57,    57,    57,    57,    57,    57,
-      57,    57,    57,    57,    57,    57,    57,    57,    57,    57,
-      57,    57,    57,    57,    58,    58
+       0,    38,    39,    40,    40,    41,    41,    41,    42,    42,
+      43,    43,    44,    44,    45,    45,    46,    46,    47,    47,
+      48,    49,    49,    50,    50,    51,    51,    51,    51,    51,
+      51,    51,    52,    52,    53,    54,    54,    55,    55,    56,
+      56,    56,    56,    56,    56,    56,    56,    56,    56,    56,
+      56,    56,    56,    56,    56,    56,    56,    56,    56,    56,
+      56,    56,    56,    56,    57,    57
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
@@ -1469,16 +1478,16 @@ yyreduce:
   switch (yyn)
     {
   case 2:
-#line 30 "pro_1.y"
+#line 37 "pro_1.y"
     {
         program.show = addLine("Program", (yyloc).first_line);
         program.subNode.push_back(yyvsp[0]);
     }
-#line 1478 "pro_1.tab.c"
+#line 1487 "pro_1.tab.c"
     break;
 
   case 3:
-#line 36 "pro_1.y"
+#line 43 "pro_1.y"
     {
         Node temp; 
         temp.subNode.push_back(yyvsp[-1]);
@@ -1487,21 +1496,21 @@ yyreduce:
         temp.show = addLine("ExtDefList", (yyloc).first_line);
         yyval = temp;
     }
-#line 1491 "pro_1.tab.c"
+#line 1500 "pro_1.tab.c"
     break;
 
   case 4:
-#line 45 "pro_1.y"
+#line 52 "pro_1.y"
     {
         Node temp; 
         temp.show = addLine("ExtDefList", (yyloc).first_line);
         yyval = temp;
     }
-#line 1501 "pro_1.tab.c"
+#line 1510 "pro_1.tab.c"
     break;
 
   case 5:
-#line 52 "pro_1.y"
+#line 59 "pro_1.y"
     {
         Node temp;
         Node semi;
@@ -1512,11 +1521,11 @@ yyreduce:
         temp.show = addLine("ExtDef", (yyloc).first_line);
         yyval = temp;
     }
-#line 1516 "pro_1.tab.c"
+#line 1525 "pro_1.tab.c"
     break;
 
   case 6:
-#line 62 "pro_1.y"
+#line 69 "pro_1.y"
     {
         Node temp;
         Node semi;
@@ -1526,11 +1535,11 @@ yyreduce:
         temp.show = addLine("ExtDef", (yyloc).first_line);
         yyval = temp;
     }
-#line 1530 "pro_1.tab.c"
+#line 1539 "pro_1.tab.c"
     break;
 
   case 7:
-#line 71 "pro_1.y"
+#line 78 "pro_1.y"
     {
         Node temp;
         temp.subNode.push_back(yyvsp[-2]);
@@ -1539,22 +1548,22 @@ yyreduce:
         temp.show = addLine("ExtDef", (yyloc).first_line);
         yyval = temp;
     }
-#line 1543 "pro_1.tab.c"
+#line 1552 "pro_1.tab.c"
     break;
 
   case 8:
-#line 81 "pro_1.y"
+#line 88 "pro_1.y"
     {
         Node temp;
         temp.subNode.push_back(yyvsp[0]);
         temp.show = addLine("ExtDecList", (yyloc).first_line);
         yyval = temp;
     }
-#line 1554 "pro_1.tab.c"
+#line 1563 "pro_1.tab.c"
     break;
 
   case 9:
-#line 87 "pro_1.y"
+#line 94 "pro_1.y"
     {
         Node temp;
         Node comma;
@@ -1564,11 +1573,11 @@ yyreduce:
         temp.show = addLine("ExtDecList", (yyloc).first_line);
         yyval = temp;
     }
-#line 1568 "pro_1.tab.c"
+#line 1577 "pro_1.tab.c"
     break;
 
   case 10:
-#line 98 "pro_1.y"
+#line 105 "pro_1.y"
     {
         Node temp;
         Node type;
@@ -1577,22 +1586,22 @@ yyreduce:
         temp.show = addLine("Specifier", (yyloc).first_line);
         yyval = temp;
     }
-#line 1581 "pro_1.tab.c"
+#line 1590 "pro_1.tab.c"
     break;
 
   case 11:
-#line 106 "pro_1.y"
+#line 113 "pro_1.y"
     {
         Node temp;
         temp.subNode.push_back(yyvsp[0]);
         temp.show = addLine("Specifier", (yyloc).first_line);
         yyval = temp;
     }
-#line 1592 "pro_1.tab.c"
+#line 1601 "pro_1.tab.c"
     break;
 
   case 12:
-#line 114 "pro_1.y"
+#line 121 "pro_1.y"
     {
         Node temp, struc, id, lc, rc;
         struc.show = "STRUCT";
@@ -1607,11 +1616,11 @@ yyreduce:
         temp.show = addLine("StructSpecifier", (yyloc).first_line);
         yyval = temp;
     }
-#line 1611 "pro_1.tab.c"
+#line 1620 "pro_1.tab.c"
     break;
 
   case 13:
-#line 128 "pro_1.y"
+#line 135 "pro_1.y"
     {
         Node temp, struc, id;
         struc.show = "STRUCT";
@@ -1621,11 +1630,11 @@ yyreduce:
         temp.show = addLine("StructSpecifier", (yyloc).first_line);
         yyval = temp;
     }
-#line 1625 "pro_1.tab.c"
+#line 1634 "pro_1.tab.c"
     break;
 
   case 14:
-#line 139 "pro_1.y"
+#line 146 "pro_1.y"
     {
         Node temp, id;
         id.show = "ID: "+yyvsp[0].show;
@@ -1633,11 +1642,11 @@ yyreduce:
         temp.show = addLine("VarDec", (yyloc).first_line);
         yyval = temp;
     }
-#line 1637 "pro_1.tab.c"
+#line 1646 "pro_1.tab.c"
     break;
 
   case 15:
-#line 146 "pro_1.y"
+#line 153 "pro_1.y"
     {
         Node temp, lb, i, rb;
         lb.show = "LB";
@@ -1650,11 +1659,11 @@ yyreduce:
         temp.show = addLine("VarDec", (yyloc).first_line);
         yyval = temp;
     }
-#line 1654 "pro_1.tab.c"
+#line 1663 "pro_1.tab.c"
     break;
 
   case 16:
-#line 160 "pro_1.y"
+#line 167 "pro_1.y"
     {
         Node temp, id, lp, rp;
         id.show = "ID: "+yyvsp[-3].show;
@@ -1667,11 +1676,11 @@ yyreduce:
         temp.show = addLine("FunDec", (yyloc).first_line);
         yyval = temp;
     }
-#line 1671 "pro_1.tab.c"
+#line 1680 "pro_1.tab.c"
     break;
 
   case 17:
-#line 172 "pro_1.y"
+#line 179 "pro_1.y"
     {
         Node temp, id, lp, rp;
         id.show = "ID: "+yyvsp[-2].show;
@@ -1683,11 +1692,11 @@ yyreduce:
         temp.show = addLine("FunDec", (yyloc).first_line);
         yyval = temp;
     }
-#line 1687 "pro_1.tab.c"
+#line 1696 "pro_1.tab.c"
     break;
 
   case 18:
-#line 185 "pro_1.y"
+#line 192 "pro_1.y"
     {
         Node temp, comma;
         comma.show ="COMMA";
@@ -1697,22 +1706,22 @@ yyreduce:
         temp.show = addLine("VarList", (yyloc).first_line);
         yyval = temp;
     }
-#line 1701 "pro_1.tab.c"
+#line 1710 "pro_1.tab.c"
     break;
 
   case 19:
-#line 194 "pro_1.y"
+#line 201 "pro_1.y"
     {
         Node temp;
         temp.subNode.push_back(yyvsp[0]);
         temp.show = addLine("VarList", (yyloc).first_line);
         yyval = temp;
     }
-#line 1712 "pro_1.tab.c"
+#line 1721 "pro_1.tab.c"
     break;
 
   case 20:
-#line 202 "pro_1.y"
+#line 209 "pro_1.y"
     {
         Node temp;
         temp.subNode.push_back(yyvsp[-1]);
@@ -1720,20 +1729,20 @@ yyreduce:
         temp.show = addLine("ParamDec", (yyloc).first_line);
         yyval = temp;
     }
-#line 1724 "pro_1.tab.c"
+#line 1733 "pro_1.tab.c"
     break;
 
   case 21:
-#line 211 "pro_1.y"
+#line 218 "pro_1.y"
     {
         string e = "Error type B at Line "+to_string((yyloc).first_line)+": Missing semicolon \'}\'";
         errList.push_back(e);
     }
-#line 1733 "pro_1.tab.c"
+#line 1742 "pro_1.tab.c"
     break;
 
   case 22:
-#line 216 "pro_1.y"
+#line 223 "pro_1.y"
     {
         Node temp, lc, rc;
         lc.show = "LC";
@@ -1747,11 +1756,11 @@ yyreduce:
         temp.show = addLine("CompSt", (yyloc).first_line);
         yyval = temp;
     }
-#line 1751 "pro_1.tab.c"
+#line 1760 "pro_1.tab.c"
     break;
 
   case 23:
-#line 231 "pro_1.y"
+#line 238 "pro_1.y"
     {
         Node temp;
         temp.subNode.push_back(yyvsp[-1]);
@@ -1760,30 +1769,31 @@ yyreduce:
         temp.show = addLine("StmtList", (yyloc).first_line);
         yyval = temp;
     }
-#line 1764 "pro_1.tab.c"
+#line 1773 "pro_1.tab.c"
     break;
 
   case 24:
-#line 240 "pro_1.y"
+#line 247 "pro_1.y"
     {
         Node temp;
         temp.show = addLine("StmtList", (yyloc).first_line);
         yyval = temp;
     }
-#line 1774 "pro_1.tab.c"
-    break;
-
-  case 25:
-#line 247 "pro_1.y"
-    {
-        string e = "Error type B at Line "+to_string((yyloc).first_line)+": Missing semicolon \';\'";
-        errList.push_back(e);
-    }
 #line 1783 "pro_1.tab.c"
     break;
 
+  case 25:
+#line 254 "pro_1.y"
+    {
+        string e = "Error type B at Line "+to_string((yyloc).first_line)+": Missing semicolon \';\'";
+        cout<<e<<endl;
+        errList.push_back(e);
+    }
+#line 1793 "pro_1.tab.c"
+    break;
+
   case 26:
-#line 252 "pro_1.y"
+#line 260 "pro_1.y"
     {
         Node temp;
         temp.subNode.push_back(yyvsp[-1]);
@@ -1791,22 +1801,22 @@ yyreduce:
         temp.show = addLine("Stmt", (yyloc).first_line);
         yyval = temp;
     }
-#line 1795 "pro_1.tab.c"
+#line 1805 "pro_1.tab.c"
     break;
 
   case 27:
-#line 259 "pro_1.y"
+#line 267 "pro_1.y"
     {
         Node temp;
         temp.subNode.push_back(yyvsp[0]);
         temp.show = addLine("Stmt", (yyloc).first_line);
         yyval = temp;
     }
-#line 1806 "pro_1.tab.c"
+#line 1816 "pro_1.tab.c"
     break;
 
   case 28:
-#line 265 "pro_1.y"
+#line 273 "pro_1.y"
     {
         Node temp, ret, semi;
         ret.show = "RETURN";
@@ -1817,11 +1827,11 @@ yyreduce:
         temp.show = addLine("Stmt", (yyloc).first_line);
         yyval = temp;
     }
-#line 1821 "pro_1.tab.c"
+#line 1831 "pro_1.tab.c"
     break;
 
   case 29:
-#line 275 "pro_1.y"
+#line 283 "pro_1.y"
     {
         Node temp, i, lp, rp;
         i.show = "IF";
@@ -1835,11 +1845,11 @@ yyreduce:
         temp.show = addLine("Stmt", (yyloc).first_line);
         yyval = temp;
     }
-#line 1839 "pro_1.tab.c"
+#line 1849 "pro_1.tab.c"
     break;
 
   case 30:
-#line 288 "pro_1.y"
+#line 296 "pro_1.y"
     {
         Node temp, i, lp, rp, e;
         i.show = "IF";
@@ -1856,11 +1866,11 @@ yyreduce:
         temp.show = addLine("Stmt", (yyloc).first_line);
         yyval = temp;
     }
-#line 1860 "pro_1.tab.c"
+#line 1870 "pro_1.tab.c"
     break;
 
   case 31:
-#line 304 "pro_1.y"
+#line 312 "pro_1.y"
     {
         Node temp, w, lp, rp;
         w.show = "WHILE";
@@ -1874,11 +1884,11 @@ yyreduce:
         temp.show = addLine("Stmt", (yyloc).first_line);
         yyval = temp;
     }
-#line 1878 "pro_1.tab.c"
+#line 1888 "pro_1.tab.c"
     break;
 
   case 32:
-#line 319 "pro_1.y"
+#line 327 "pro_1.y"
     {
         Node temp;
         temp.subNode.push_back(yyvsp[-1]);
@@ -1887,21 +1897,21 @@ yyreduce:
         temp.show = addLine("DefList", (yyloc).first_line);
         yyval = temp;
     }
-#line 1891 "pro_1.tab.c"
+#line 1901 "pro_1.tab.c"
     break;
 
   case 33:
-#line 328 "pro_1.y"
+#line 336 "pro_1.y"
     {
         Node temp;
         temp.show = addLine("DefList", (yyloc).first_line);
         yyval = temp;
     }
-#line 1901 "pro_1.tab.c"
+#line 1911 "pro_1.tab.c"
     break;
 
   case 34:
-#line 335 "pro_1.y"
+#line 343 "pro_1.y"
     {
         Node temp, semi;
         semi.show = "SEMI";
@@ -1911,22 +1921,22 @@ yyreduce:
         temp.show = addLine("Def", (yyloc).first_line);
         yyval = temp;
     }
-#line 1915 "pro_1.tab.c"
+#line 1925 "pro_1.tab.c"
     break;
 
   case 35:
-#line 346 "pro_1.y"
+#line 354 "pro_1.y"
     {
         Node temp;
         temp.subNode.push_back(yyvsp[0]);
         temp.show = addLine("DecList", (yyloc).first_line);
         yyval = temp;
     }
-#line 1926 "pro_1.tab.c"
+#line 1936 "pro_1.tab.c"
     break;
 
   case 36:
-#line 352 "pro_1.y"
+#line 360 "pro_1.y"
     {
         Node temp, comma;
         comma.show= "COMMA";
@@ -1935,22 +1945,22 @@ yyreduce:
         temp.subNode.push_back(yyvsp[0]);
         yyval = temp;
     }
-#line 1939 "pro_1.tab.c"
+#line 1949 "pro_1.tab.c"
     break;
 
   case 37:
-#line 362 "pro_1.y"
+#line 370 "pro_1.y"
     {
         Node temp;
         temp.subNode.push_back(yyvsp[0]);
         temp.show = addLine("Dec", (yyloc).first_line);
         yyval = temp;
     }
-#line 1950 "pro_1.tab.c"
+#line 1960 "pro_1.tab.c"
     break;
 
   case 38:
-#line 368 "pro_1.y"
+#line 376 "pro_1.y"
     {
         Node temp, assign;
         assign.show = "ASSIGN";
@@ -1960,20 +1970,20 @@ yyreduce:
         temp.show = addLine("Dec", (yyloc).first_line);
         yyval = temp;
     }
-#line 1964 "pro_1.tab.c"
+#line 1974 "pro_1.tab.c"
     break;
 
   case 39:
-#line 379 "pro_1.y"
+#line 387 "pro_1.y"
     {
         string e = "Error type B at Line "+to_string((yyloc).first_line)+": Missing semicolon \')\'";
         errList.push_back(e);
     }
-#line 1973 "pro_1.tab.c"
+#line 1983 "pro_1.tab.c"
     break;
 
   case 40:
-#line 384 "pro_1.y"
+#line 392 "pro_1.y"
     {
         Node temp;
         temp.subNode.push_back(yyvsp[-2]);
@@ -1982,11 +1992,11 @@ yyreduce:
         temp.show = addLine("Exp", (yyloc).first_line);
         yyval = temp;
     }
-#line 1986 "pro_1.tab.c"
+#line 1996 "pro_1.tab.c"
     break;
 
   case 41:
-#line 392 "pro_1.y"
+#line 400 "pro_1.y"
     {
         Node temp;
         temp.subNode.push_back(yyvsp[-2]);
@@ -1995,11 +2005,11 @@ yyreduce:
         temp.show = addLine("Exp", (yyloc).first_line);
         yyval = temp;
     }
-#line 1999 "pro_1.tab.c"
+#line 2009 "pro_1.tab.c"
     break;
 
   case 42:
-#line 400 "pro_1.y"
+#line 408 "pro_1.y"
     {
         Node temp;
         temp.subNode.push_back(yyvsp[-2]);
@@ -2008,11 +2018,11 @@ yyreduce:
         temp.show = addLine("Exp", (yyloc).first_line);
         yyval = temp;
     }
-#line 2012 "pro_1.tab.c"
+#line 2022 "pro_1.tab.c"
     break;
 
   case 43:
-#line 408 "pro_1.y"
+#line 416 "pro_1.y"
     {
         Node temp;
         temp.subNode.push_back(yyvsp[-2]);
@@ -2021,11 +2031,11 @@ yyreduce:
         temp.show = addLine("Exp", (yyloc).first_line);
         yyval = temp;
     }
-#line 2025 "pro_1.tab.c"
+#line 2035 "pro_1.tab.c"
     break;
 
   case 44:
-#line 416 "pro_1.y"
+#line 424 "pro_1.y"
     {
         Node temp;
         temp.subNode.push_back(yyvsp[-2]);
@@ -2034,11 +2044,11 @@ yyreduce:
         temp.show = addLine("Exp", (yyloc).first_line);
         yyval = temp;
     }
-#line 2038 "pro_1.tab.c"
+#line 2048 "pro_1.tab.c"
     break;
 
   case 45:
-#line 424 "pro_1.y"
+#line 432 "pro_1.y"
     {
         Node temp;
         temp.subNode.push_back(yyvsp[-2]);
@@ -2047,11 +2057,11 @@ yyreduce:
         temp.show = addLine("Exp", (yyloc).first_line);
         yyval = temp;
     }
-#line 2051 "pro_1.tab.c"
+#line 2061 "pro_1.tab.c"
     break;
 
   case 46:
-#line 432 "pro_1.y"
+#line 440 "pro_1.y"
     {
         Node temp;
         temp.subNode.push_back(yyvsp[-2]);
@@ -2060,11 +2070,11 @@ yyreduce:
         temp.show = addLine("Exp", (yyloc).first_line);
         yyval = temp;
     }
-#line 2064 "pro_1.tab.c"
+#line 2074 "pro_1.tab.c"
     break;
 
   case 47:
-#line 440 "pro_1.y"
+#line 448 "pro_1.y"
     {
         Node temp;
         temp.subNode.push_back(yyvsp[-2]);
@@ -2073,11 +2083,11 @@ yyreduce:
         temp.show = addLine("Exp", (yyloc).first_line);
         yyval = temp;
     }
-#line 2077 "pro_1.tab.c"
+#line 2087 "pro_1.tab.c"
     break;
 
   case 48:
-#line 448 "pro_1.y"
+#line 456 "pro_1.y"
     {
         Node temp;
         temp.subNode.push_back(yyvsp[-2]);
@@ -2086,11 +2096,11 @@ yyreduce:
         temp.show = addLine("Exp", (yyloc).first_line);
         yyval = temp;
     }
-#line 2090 "pro_1.tab.c"
+#line 2100 "pro_1.tab.c"
     break;
 
   case 49:
-#line 456 "pro_1.y"
+#line 464 "pro_1.y"
     {
         Node temp;
         temp.subNode.push_back(yyvsp[-2]);
@@ -2099,11 +2109,11 @@ yyreduce:
         temp.show = addLine("Exp", (yyloc).first_line);
         yyval = temp;
     }
-#line 2103 "pro_1.tab.c"
+#line 2113 "pro_1.tab.c"
     break;
 
   case 50:
-#line 464 "pro_1.y"
+#line 472 "pro_1.y"
     {
         Node temp;
         temp.subNode.push_back(yyvsp[-2]);
@@ -2112,11 +2122,11 @@ yyreduce:
         temp.show = addLine("Exp", (yyloc).first_line);
         yyval = temp;
     }
-#line 2116 "pro_1.tab.c"
+#line 2126 "pro_1.tab.c"
     break;
 
   case 51:
-#line 472 "pro_1.y"
+#line 480 "pro_1.y"
     {
         Node temp;
         temp.subNode.push_back(yyvsp[-2]);
@@ -2125,11 +2135,11 @@ yyreduce:
         temp.show = addLine("Exp", (yyloc).first_line);
         yyval = temp;
     }
-#line 2129 "pro_1.tab.c"
+#line 2139 "pro_1.tab.c"
     break;
 
   case 52:
-#line 480 "pro_1.y"
+#line 488 "pro_1.y"
     {
         Node temp;
         temp.subNode.push_back(yyvsp[-2]);
@@ -2138,11 +2148,11 @@ yyreduce:
         temp.show = addLine("Exp", (yyloc).first_line);
         yyval = temp;
     }
-#line 2142 "pro_1.tab.c"
+#line 2152 "pro_1.tab.c"
     break;
 
   case 53:
-#line 488 "pro_1.y"
+#line 496 "pro_1.y"
     {
         Node temp;
         temp.subNode.push_back(createNode("LP"));
@@ -2151,11 +2161,11 @@ yyreduce:
         temp.show = addLine("Exp", (yyloc).first_line);
         yyval = temp;
     }
-#line 2155 "pro_1.tab.c"
+#line 2165 "pro_1.tab.c"
     break;
 
   case 54:
-#line 496 "pro_1.y"
+#line 504 "pro_1.y"
     {
         Node temp;
         temp.subNode.push_back(createNode("MINUS"));
@@ -2163,11 +2173,11 @@ yyreduce:
         temp.show = addLine("Exp", (yyloc).first_line);
         yyval = temp;
     }
-#line 2167 "pro_1.tab.c"
+#line 2177 "pro_1.tab.c"
     break;
 
   case 55:
-#line 503 "pro_1.y"
+#line 511 "pro_1.y"
     {
         Node temp;
         temp.subNode.push_back(createNode("NOT"));
@@ -2175,11 +2185,11 @@ yyreduce:
         temp.show = addLine("Exp", (yyloc).first_line);
         yyval = temp;
     }
-#line 2179 "pro_1.tab.c"
+#line 2189 "pro_1.tab.c"
     break;
 
   case 56:
-#line 510 "pro_1.y"
+#line 518 "pro_1.y"
     {
         Node temp;
         temp.subNode.push_back(createNode("ID: "+yyvsp[-3].show));
@@ -2189,11 +2199,11 @@ yyreduce:
         temp.show = addLine("Exp", (yyloc).first_line);
         yyval = temp;
     }
-#line 2193 "pro_1.tab.c"
+#line 2203 "pro_1.tab.c"
     break;
 
   case 57:
-#line 519 "pro_1.y"
+#line 527 "pro_1.y"
     {
         Node temp;
         temp.subNode.push_back(createNode("ID: "+yyvsp[-2].show));
@@ -2202,11 +2212,11 @@ yyreduce:
         temp.show = addLine("Exp", (yyloc).first_line);
         yyval = temp;
     }
-#line 2206 "pro_1.tab.c"
+#line 2216 "pro_1.tab.c"
     break;
 
   case 58:
-#line 527 "pro_1.y"
+#line 535 "pro_1.y"
     {
         Node temp;
         temp.subNode.push_back(yyvsp[-3]);
@@ -2216,11 +2226,11 @@ yyreduce:
         temp.show = addLine("Exp", (yyloc).first_line);
         yyval = temp;
     }
-#line 2220 "pro_1.tab.c"
+#line 2230 "pro_1.tab.c"
     break;
 
   case 59:
-#line 536 "pro_1.y"
+#line 544 "pro_1.y"
     {
         Node temp;
         temp.subNode.push_back(yyvsp[-2]);
@@ -2229,55 +2239,55 @@ yyreduce:
         temp.show = addLine("Exp", (yyloc).first_line);
         yyval = temp;
     }
-#line 2233 "pro_1.tab.c"
+#line 2243 "pro_1.tab.c"
     break;
 
   case 60:
-#line 544 "pro_1.y"
+#line 552 "pro_1.y"
     {
         Node temp;
         temp.subNode.push_back(createNode("ID: "+yyvsp[0].show));
         temp.show = addLine("Exp", (yyloc).first_line);
         yyval = temp;
     }
-#line 2244 "pro_1.tab.c"
+#line 2254 "pro_1.tab.c"
     break;
 
   case 61:
-#line 550 "pro_1.y"
+#line 558 "pro_1.y"
     {
         Node temp;
         temp.subNode.push_back(createNode("INT: "+yyvsp[0].show));
         temp.show = addLine("Exp", (yyloc).first_line);
         yyval = temp;
     }
-#line 2255 "pro_1.tab.c"
+#line 2265 "pro_1.tab.c"
     break;
 
   case 62:
-#line 556 "pro_1.y"
+#line 564 "pro_1.y"
     {
         Node temp;
         temp.subNode.push_back(createNode("FLOAT: "+yyvsp[0].show));
         temp.show = addLine("Exp", (yyloc).first_line);
         yyval = temp;
     }
-#line 2266 "pro_1.tab.c"
+#line 2276 "pro_1.tab.c"
     break;
 
   case 63:
-#line 562 "pro_1.y"
+#line 570 "pro_1.y"
     {
         Node temp;
         temp.subNode.push_back(createNode("CHAR: "+yyvsp[0].show));
         temp.show = addLine("Exp", (yyloc).first_line);
         yyval = temp;
     }
-#line 2277 "pro_1.tab.c"
+#line 2287 "pro_1.tab.c"
     break;
 
   case 64:
-#line 570 "pro_1.y"
+#line 578 "pro_1.y"
     {
         Node temp;
         temp.subNode.push_back(yyvsp[-2]);
@@ -2286,22 +2296,22 @@ yyreduce:
         temp.show = addLine("Args", (yyloc).first_line);
         yyval = temp;
     }
-#line 2290 "pro_1.tab.c"
+#line 2300 "pro_1.tab.c"
     break;
 
   case 65:
-#line 578 "pro_1.y"
+#line 586 "pro_1.y"
     {
         Node temp;
         temp.subNode.push_back(yyvsp[0]);
         temp.show = addLine("Args", (yyloc).first_line);
         yyval = temp;
     }
-#line 2301 "pro_1.tab.c"
+#line 2311 "pro_1.tab.c"
     break;
 
 
-#line 2305 "pro_1.tab.c"
+#line 2315 "pro_1.tab.c"
 
       default: break;
     }
@@ -2539,7 +2549,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 585 "pro_1.y"
+#line 593 "pro_1.y"
 
  
  

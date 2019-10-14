@@ -22,8 +22,15 @@ Node program;
 
 %type  Program ExtDefList ExtDef ExtDecList Specifier StructSpecifier VarDec FunDec VarList ParamDec CompSt StmtList Stmt DefList Def DecList Dec Exp Args
 
-%right ASSIGN NOT
-%left OR AND LT LE GT GE EQ NE ADD SUB MUL DIV DOT LB RB LP RP
+%right ASSIGN
+%left OR
+%left AND
+%left LT LE GT GE EQ NE
+%left ADD SUB
+%left MUL DIV
+%right NOT
+%left LP RP LB RB DOT
+
 
 %%
 Program 
@@ -246,6 +253,7 @@ StmtList
 Stmt 
     : Exp error {
         string e = "Error type B at Line "+to_string(@$.first_line)+": Missing semicolon \';\'";
+        cout<<e<<endl;
         errList.push_back(e);
     }
     |
