@@ -55,7 +55,7 @@
 \n                      {lines++;}
 " "                     {}
 "\t"                    {}
-.                       {string e = "Error type A at Line "+to_string(yylineno)+": Unknown characters "+yytext; errList.push_back(e); cout<<e<<endl;}
+.                       {string e = "Error type A at Line "+to_string(yylineno)+": Unknown characters "+yytext; errList.push_back(e); cout<<e<<endl;return LEXERR;}
 
 %%
 int yywrap()

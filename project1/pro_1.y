@@ -18,7 +18,7 @@ Node program;
 %}
 
 %token INT FLOAT CHAR ID TYPE
-%token STRUCT IF ELSE WHILE RETURN DOT SEMI COMMA ASSIGN LT LE GT GE NE EQ PLUS MINUS MUL DIV AND OR NOT LP RP LB RB LC RC
+%token STRUCT IF ELSE WHILE RETURN DOT SEMI COMMA ASSIGN LT LE GT GE NE EQ PLUS MINUS MUL DIV AND OR NOT LP RP LB RB LC RC LEXERR
 
 %type  Program ExtDefList ExtDef ExtDecList Specifier StructSpecifier VarDec FunDec VarList ParamDec CompSt StmtList Stmt DefList Def DecList Dec Exp Args
 
@@ -385,12 +385,12 @@ Dec
 	;
 Exp 
     : 
-    // error {
-    //     string e = "Error type B at Line "+to_string(@$.first_line)+": error";
-    //     cout<<e<<endl;
-    //     errList.push_back(e);
-    // } 
-    // |
+    LEXERR {
+        string e = "Error type B at Line "+to_string(@$.first_line)+": error";
+        cout<<e<<endl;
+        errList.push_back(e);
+    } 
+    |
     ID LP Args error {
         string e = "Error type B at Line "+to_string(@$.first_line)+": Missing semicolon \')\'";
         errList.push_back(e);

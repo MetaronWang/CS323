@@ -1001,7 +1001,7 @@ YY_RULE_SETUP
 case 37:
 YY_RULE_SETUP
 #line 58 "lex.l"
-{string e = "Error type A at Line "+to_string(yylineno)+": Unknown characters "+yytext; errList.push_back(e); cout<<e<<endl;}
+{string e = "Error type A at Line "+to_string(yylineno)+": Unknown characters "+yytext; errList.push_back(e); cout<<e<<endl;return ID;}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
