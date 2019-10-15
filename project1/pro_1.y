@@ -26,7 +26,7 @@ Node program;
 %left OR
 %left AND
 %left LT LE GT GE EQ NE
-%left ADD SUB
+%left PLUS MINUS
 %left MUL DIV
 %right NOT
 %left LP RP LB RB DOT
@@ -384,7 +384,14 @@ Dec
     }
 	;
 Exp 
-    : ID LP Args error {
+    : 
+    // error {
+    //     string e = "Error type B at Line "+to_string(@$.first_line)+": error";
+    //     cout<<e<<endl;
+    //     errList.push_back(e);
+    // } 
+    // |
+    ID LP Args error {
         string e = "Error type B at Line "+to_string(@$.first_line)+": Missing semicolon \')\'";
         errList.push_back(e);
     } 

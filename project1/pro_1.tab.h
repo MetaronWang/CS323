@@ -81,9 +81,7 @@ extern int yydebug;
     LB = 287,
     RB = 288,
     LC = 289,
-    RC = 290,
-    ADD = 291,
-    SUB = 292
+    RC = 290
   };
 #endif
 
