@@ -278,6 +278,7 @@ Stmt
         temp.subNode.push_back($2);
         temp.subNode.push_back(semi);
         temp.show = addLine("Stmt", @$.first_line);
+        cout<<$2.show<<endl;
         $$ = temp;
     }
     | IF LP Exp RP Stmt {
@@ -384,13 +385,7 @@ Dec
     }
 	;
 Exp 
-    : 
-    LEXERR {
-        string e = "Error type B at Line "+to_string(@$.first_line)+": error";
-        cout<<e<<endl;
-        errList.push_back(e);
-    } 
-    |
+    :
     ID LP Args error {
         string e = "Error type B at Line "+to_string(@$.first_line)+": Missing semicolon \')\'";
         errList.push_back(e);
@@ -566,6 +561,7 @@ Exp
         Node temp;
         temp.subNode.push_back(createNode("INT: "+$1.show));
         temp.show = addLine("Exp", @$.first_line);
+        cout<<$1.show<<endl;
         $$ = temp;
     }
     | FLOAT{
@@ -579,6 +575,18 @@ Exp
         temp.subNode.push_back(createNode("CHAR: "+$1.show));
         temp.show = addLine("Exp", @$.first_line);
         $$ = temp;
+    }
+    | LEXERR {
+        string e = "Error type A at Line "+to_string(@$.first_line)+": Unknown lexeme \'"+$1.show+"\'";
+        cout<<e<<endl;
+        errList.push_back(e);
+    } 
+    | error {
+        string e = "Error type A at Line "+to_string(@$.first_line)+": Unknown error";
+        cout<<e<<endl;
+        errList.push_back(e);
+        cout<<$1.show<<endl;
+        $$ = createNode("error");
     }
 	;
 Args 
