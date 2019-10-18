@@ -270,6 +270,11 @@ Stmt
         temp.show = addLine("Stmt", @$.first_line);
         $$ = temp;
     }
+    |RETURN Exp error{
+        string e = "Error type B at Line "+to_string(@$.first_line)+": Missing semicolon \';\'";
+        cout<<e<<endl;
+        errList.push_back(e);
+    }
     | RETURN Exp SEMI {
         Node temp, ret, semi;
         ret.show = "RETURN";
@@ -278,7 +283,6 @@ Stmt
         temp.subNode.push_back($2);
         temp.subNode.push_back(semi);
         temp.show = addLine("Stmt", @$.first_line);
-        cout<<$2.show<<endl;
         $$ = temp;
     }
     | IF LP Exp RP Stmt {
@@ -561,7 +565,6 @@ Exp
         Node temp;
         temp.subNode.push_back(createNode("INT: "+$1.show));
         temp.show = addLine("Exp", @$.first_line);
-        cout<<$1.show<<endl;
         $$ = temp;
     }
     | FLOAT{
@@ -581,13 +584,6 @@ Exp
         cout<<e<<endl;
         errList.push_back(e);
     } 
-    | error {
-        string e = "Error type A at Line "+to_string(@$.first_line)+": Unknown error";
-        cout<<e<<endl;
-        errList.push_back(e);
-        cout<<$1.show<<endl;
-        $$ = createNode("error");
-    }
 	;
 Args 
     : Exp COMMA Args{
@@ -609,7 +605,7 @@ Args
  
  
 void yyerror(const char *s){
-    fprintf(stderr, "%s\n", s);
+    // fprintf(stderr, "%s\n", s);
 }
 
 void output(Node node, int num){
@@ -629,6 +625,10 @@ string addLine(string s, int line){
 int main(){
     yyparse();
     // cout<<endl;
-    output(program,0);
+    if (errList.empty())
+        output(program,0);
+    else{
+        cout<<"ERROR"<<endl;
+    }
 }
 
