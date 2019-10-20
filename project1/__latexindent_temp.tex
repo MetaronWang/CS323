@@ -1,0 +1,65 @@
+\documentclass{article}
+\usepackage[a4paper,scale=0.8,hcentering,bindingoffset=8mm]{geometry} % A4纸大小，缩放80%，设置奇数页右边留空多一点
+\usepackage{hyperref}      % 超链接
+\usepackage{listings}      % 代码块
+\usepackage{courier}       % 字体
+\usepackage{fontspec}      % 字体
+\usepackage{fancyhdr}      % 页眉页脚相关宏包
+\usepackage{lastpage}      % 引用最后一页
+\usepackage{amsmath,amsthm,amsfonts,amssymb,bm} %数学
+\usepackage{graphicx}      % 图片
+\usepackage{subcaption}    % 图片描述
+\usepackage{longtable,booktabs} % 表格
+\usepackage{ctex}
+\lstset{                  %设置代码块
+         basicstyle=\footnotesize\ttfamily,% 基本风格
+         numbers=left,    % 行号
+         numbersep=10pt,  % 行号间隔 
+         tabsize=4,       % 缩进
+         extendedchars=true, % 扩展符号？
+         breaklines=true, % 自动换行
+         language=C,
+         frame=leftline,  % 框架左边竖线
+         xleftmargin=5pt,% 竖线左边间距
+         showspaces=false,% 空格字符加下划线
+         showstringspaces=false,% 字符串中的空格加下划线
+         showtabs=false,  % 字符串中的tab加下划线
+ }
+\pagestyle{fancy}         % 页眉页脚风格
+\fancyhf{}                % 清空当前设置
+\fancyfoot[C]{\thepage\ / \pageref{LastPage}}%页脚中间显示 当前页 / 总页数，把\label{LastPage}放在最后
+\begin{document} 
+    \begin{titlepage}       % 封面
+        \centering
+        \includegraphics[width=\textwidth]{../SUSTC_LOGO.png}
+        % \vspace*{\baselineskip}
+        \rule{\textwidth}{1.6pt}\vspace*{-\baselineskip}\vspace*{2pt}
+        \rule{\textwidth}{0.4pt}\\[\baselineskip]
+        {\LARGE COMPILIER @Liu Yepang 2019\\[\baselineskip]\small for SUSTech CSE}
+        \\[0.2\baselineskip]
+        \rule{\textwidth}{0.4pt}\vspace*{-\baselineskip}\vspace{3.2pt}
+        \rule{\textwidth}{1.6pt}\\[\baselineskip]
+        \scshape
+        \vspace*{\baselineskip}
+        {\Large Project 1\par }
+        Edited by \\[\baselineskip] {汪至圆\par}
+        {\Large 11610634\par }
+        \vfill
+        {\scshape 2019} \\{\large SHENZHEN}\par
+    \end{titlepage}
+
+    \section{Lab Demand}
+        In this project, I'm required to implement a SPL parser, specifically, your parser
+    will perform lexical analysis and syntax analysis on the SPL source code. The parser was
+    written by C++/Flex/Bison, and it can output a syntax tree and find some easy grammatical 
+    errors for a SPL code.
+
+    \section{Environment}
+        The environment for my project is g++ 9.1, flex 2.6, bison 3.4. All the work of coding
+        and test was finished in the Manjaro 18.1 which based on Linux 4.19.
+    
+    \section{Lex}
+        The lexical analyzer generator I used is GNU Flex, which is the open source version for the
+        lex. In the lex, I define some token following the guide provided by the TA. And I also define some
+        token by myself to satisfy the requirements of the grammar analyzer. The 
+\end{document}

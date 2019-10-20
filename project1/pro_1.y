@@ -56,7 +56,18 @@ ExtDefList
     }
 	;
 ExtDef 
-    : Specifier ExtDecList SEMI {
+    : 
+    Specifier ExtDecList error {
+        string e = "Error type B at Line "+to_string(@$.first_line)+": Missing semicolon \';\'";
+        errList.push_back(e);
+    }
+    |
+    Specifier error {
+        string e = "Error type B at Line "+to_string(@$.first_line)+": Missing semicolon \';\'";
+        errList.push_back(e);
+    }
+    |
+    Specifier ExtDecList SEMI {
         Node temp;
         Node semi;
         semi.show = "SEMI";
@@ -132,6 +143,10 @@ StructSpecifier
         temp.show = addLine("StructSpecifier", @$.first_line);
         $$ = temp;
     }
+    | STRUCT LEXERR LC DefList RC {
+        string e = "Error type A at Line "+to_string(@$.first_line)+": unknown lexeme "+$2.show;
+        errList.push_back(e);
+    }
     | STRUCT ID {
         Node temp, struc, id;
         struc.show = "STRUCT";
@@ -141,14 +156,23 @@ StructSpecifier
         temp.show = addLine("StructSpecifier", @$.first_line);
         $$ = temp;
     }
+    | STRUCT LEXERR {
+        string e = "Error type A at Line "+to_string(@$.first_line)+": unknown lexeme "+$2.show;
+        errList.push_back(e);
+    }
 	;
 VarDec 
-    : ID {
+    :
+    ID {
         Node temp, id;
         id.show = "ID: "+$1.show;
         temp.subNode.push_back(id);
         temp.show = addLine("VarDec", @$.first_line);
         $$ = temp;
+    }
+    | LEXERR {
+        string e = "Error type A at Line "+to_string(@$.first_line)+": unknown lexeme "+$1.show;
+        errList.push_back(e);
     }
     | VarDec LB INT RB {
         Node temp, lb, i, rb;
@@ -164,7 +188,16 @@ VarDec
     }
 	;
 FunDec 
-    : ID LP VarList RP {
+    : ID LP error {
+        string e = "Error type B at Line "+to_string(@$.first_line)+": Missing Right Parentheses \')\'";
+        errList.push_back(e);
+    }
+    | ID LP VarList error {
+        string e = "Error type B at Line "+to_string(@$.first_line)+": Missing Right Parentheses \')\'";
+        errList.push_back(e);
+    }
+    |
+    ID LP VarList RP {
         Node temp, id, lp, rp;
         id.show = "ID: "+$1.show;
         lp.show = "LP";
@@ -176,6 +209,10 @@ FunDec
         temp.show = addLine("FunDec", @$.first_line);
         $$ = temp;
     }
+    | LEXERR LP VarList RP {
+        string e = "Error type A at Line "+to_string(@$.first_line)+": unknown lexeme "+$1.show;
+        errList.push_back(e);
+    }
     | ID LP RP {
         Node temp, id, lp, rp;
         id.show = "ID: "+$1.show;
@@ -186,6 +223,10 @@ FunDec
         temp.subNode.push_back(rp);
         temp.show = addLine("FunDec", @$.first_line);
         $$ = temp;
+    }
+    | LEXERR LP RP {
+        string e = "Error type A at Line "+to_string(@$.first_line)+": unknown lexeme "+$1.show;
+        errList.push_back(e);
     }
 	;
 VarList 
@@ -216,7 +257,7 @@ ParamDec
 	;
 CompSt 
     : LC DefList StmtList error{
-        string e = "Error type B at Line "+to_string(@$.first_line)+": Missing semicolon \'}\'";
+        string e = "Error type B at Line "+to_string(@$.first_line)+": Missing Right Curly Braces \'}\'";
         errList.push_back(e);
     }
     |
@@ -253,7 +294,6 @@ StmtList
 Stmt 
     : Exp error {
         string e = "Error type B at Line "+to_string(@$.first_line)+": Missing semicolon \';\'";
-        cout<<e<<endl;
         errList.push_back(e);
     }
     |
@@ -272,7 +312,6 @@ Stmt
     }
     |RETURN Exp error{
         string e = "Error type B at Line "+to_string(@$.first_line)+": Missing semicolon \';\'";
-        cout<<e<<endl;
         errList.push_back(e);
     }
     | RETURN Exp SEMI {
@@ -345,7 +384,12 @@ DefList
     }
 	;
 Def 
-    : Specifier DecList SEMI {
+    :
+    Specifier DecList error{
+        string e = "Error type B at Line "+to_string(@$.first_line)+": Missing semicolon \';\'";
+        errList.push_back(e);
+    }
+    |Specifier DecList SEMI {
         Node temp, semi;
         semi.show = "SEMI";
         temp.subNode.push_back($1);
@@ -368,6 +412,7 @@ DecList
         temp.subNode.push_back($1);
         temp.subNode.push_back(comma);
         temp.subNode.push_back($3);
+        temp.show = addLine("DecList", @$.first_line);
         $$ = temp;
     }
 	;
@@ -391,17 +436,28 @@ Dec
 Exp 
     :
     ID LP Args error {
-        string e = "Error type B at Line "+to_string(@$.first_line)+": Missing semicolon \')\'";
+        string e = "Error type B at Line "+to_string(@$.first_line)+": Missing Right Parentheses \')\'";
         errList.push_back(e);
-    } 
-    |
-    Exp ASSIGN Exp {
+    }
+    | ID LP error {
+        string e = "Error type B at Line "+to_string(@$.first_line)+": Missing Right Parentheses \')\'";
+        errList.push_back(e);
+    }
+    | LEXERR LP Args error {
+        string e = "Error type A at Line "+to_string(@$.first_line)+": unknown lexeme "+$1.show;
+        errList.push_back(e);
+    }
+    | Exp ASSIGN Exp {
         Node temp;
         temp.subNode.push_back($1);
         temp.subNode.push_back(createNode("ASSIGN"));
         temp.subNode.push_back($3);
         temp.show = addLine("Exp", @$.first_line);
         $$ = temp;
+    }
+    | Exp LEXERR Exp {
+        string e = "Error type A at Line "+to_string(@$.first_line)+": unknown lexeme "+$2.show;
+        errList.push_back(e);
     }
     | Exp AND Exp{
         Node temp;
@@ -461,7 +517,7 @@ Exp
     }
     | Exp EQ Exp{
         Node temp;
-        temp.subNode.push_back($1);
+        temp.subNode.push_back($1);cout<<yytext<<endl;
         temp.subNode.push_back(createNode("EQ"));
         temp.subNode.push_back($3);
         temp.show = addLine("Exp", @$.first_line);
@@ -530,6 +586,10 @@ Exp
         temp.show = addLine("Exp", @$.first_line);
         $$ = temp;
     }
+    | LEXERR LP Args RP {
+        string e = "Error type A at Line "+to_string(@$.first_line)+": unknown lexeme "+$1.show;
+        errList.push_back(e);
+    }
     | ID LP RP{
         Node temp;
         temp.subNode.push_back(createNode("ID: "+$1.show));
@@ -537,6 +597,10 @@ Exp
         temp.subNode.push_back(createNode("RP"));
         temp.show = addLine("Exp", @$.first_line);
         $$ = temp;
+    }
+    | LEXERR LP RP {
+        string e = "Error type A at Line "+to_string(@$.first_line)+": unknown lexeme "+$1.show;
+        errList.push_back(e);
     }
     | Exp LB Exp RB{
         Node temp;
@@ -554,6 +618,10 @@ Exp
         temp.subNode.push_back(createNode("ID: "+$3.show));
         temp.show = addLine("Exp", @$.first_line);
         $$ = temp;
+    } 
+    | Exp DOT LEXERR {
+        string e = "Error type A at Line "+to_string(@$.first_line)+": unknown lexeme "+$3.show;
+        errList.push_back(e);
     }
     | ID{
         Node temp;
@@ -580,8 +648,7 @@ Exp
         $$ = temp;
     }
     | LEXERR {
-        string e = "Error type A at Line "+to_string(@$.first_line)+": Unknown lexeme \'"+$1.show+"\'";
-        cout<<e<<endl;
+        string e = "Error type A at Line "+to_string(@$.first_line)+": unknown lexeme "+$1.show;
         errList.push_back(e);
     } 
 	;
@@ -608,6 +675,13 @@ void yyerror(const char *s){
     // fprintf(stderr, "%s\n", s);
 }
 
+void errOut(){
+    int size = errList.size();
+    for (int i=0;i<size;i++){
+        cout<<errList[i]<<endl;
+    }
+}
+
 void output(Node node, int num){
     int size = node.subNode.size();
     string tab(num,' ');
@@ -624,11 +698,10 @@ string addLine(string s, int line){
 
 int main(){
     yyparse();
-    // cout<<endl;
     if (errList.empty())
         output(program,0);
-    else{
-        cout<<"ERROR"<<endl;
-    }
+    else
+        errOut();
+
 }
 

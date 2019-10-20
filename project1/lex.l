@@ -15,8 +15,19 @@
       yycolno += yyleng;
 %}
 %option yylineno
+A [/]
+B [*]
+C [^*/]
+comment "/*"{A}*({C}{A}*|{B}|{C})*"*/"
 %%
-('.')|('\\x[0-9a-fA-F]{2}') {yylval=createNode(yytext); cout<<yytext<<endl;return CHAR;}
+\/\/.*                        {}
+"/*"{A}*({C}{A}*|{B}|{C})*{comment}(.|\n)*"*/"  {
+  string e = "Error type B at Line "+to_string(yylineno)+":  nested multi-line comments";
+  cout<<e<<endl;
+  errList.push_back(e);
+}
+{comment} {}
+('.')|('\\x[0-9a-fA-F]{2}') {yylval=createNode(yytext);return CHAR;}
 (int)|(float)|(char)    {yylval = createNode(yytext); return TYPE;}
 "struct"                {return STRUCT;}
 "if"                    {return IF;}
@@ -51,10 +62,11 @@
     return FLOAT;
 }
 ([0-9]+)|(0x[0-9A-Fa-f]+) {yylval=createNode(yytext); return INT; }
-0x[0-9A-Za-z]+            {yylval=createNode(yytext);cout<<yytext<<endl; return INT; }
 [a-zA-Z_][a-zA-Z_0-9]*  {yylval=createNode(yytext); return ID;}
+0x[0-9A-Za-z]+          {yylval=createNode(yytext); return LEXERR; }
+('\\x[0-9a-zA-Z]*')     {yylval=createNode(yytext); return LEXERR; }
+[0-9][a-zA-Z_0-9]*      {yylval=createNode(yytext); return LEXERR; }
 \n                      {lines++;}
-" "                     {}
 [ \f\n\r\t\v]           {}
 .                       {yylval=createNode(yytext); return LEXERR;}
 
