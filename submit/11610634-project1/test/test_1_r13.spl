@@ -1,0 +1,14 @@
+int global;
+struct my_struct
+{
+  int code;
+  char data;
+};
+int test_1_r02()
+{
+  struct my_struct obj;
+  obj.code = global;
+  for (; global<10 ; i=i+1){
+    global = global + 1;
+  }
+}

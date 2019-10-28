@@ -12,6 +12,7 @@
 \usepackage{longtable,booktabs} % 表格
 \usepackage{ctex}
 \usepackage{soul}
+\usepackage{hyperref}
 \lstset{                  %设置代码块
          basicstyle=\footnotesize\ttfamily,% 基本风格
          numbers=left,    % 行号
@@ -50,7 +51,7 @@
     \end{titlepage}
 
     \section{Lab Demand}
-        In this project, I'm required to implement a SPL parser, specifically, your parser
+        In this project, I'm required to implement a SPL parser, specifically, my parser
         will perform lexical analysis and syntax analysis on the SPL source code. The parser was
         written by C++/Flex/Bison, and it can output a syntax tree and find some easy grammatical 
         errors for a SPL code.
@@ -58,8 +59,12 @@
     \section{Environment}
         The environment for my project is g++ 9.1, flex 2.6, bison 3.4. All the work of coding
         and test was finished in the Manjaro 18.1 which based on Linux 4.19.
-    
+    \section{Run}
+        My project was compiled by the make. If you want to compile the project, you just need run `\hl{make splc}'. And then it will output a executable file splc.out. 
+        The result of running splc.out will print in the stdout of console, if you want to input a spl code file and get an out file, you can use `splc.py' in the bin/, input
+        the path of the code file which will be inputted and the result will be outputted to the file with the name replace the `.spl' in the path to the `.out'.
     \section{Lexical Analyzer Generator}
+        \label{sec:lex}
         The lexical analyzer generator I used is GNU Flex, which is the open source version for the
         lex. In the lex, I define some token following the guide provided by the TA. And I also define some
         token by myself to satisfy the requirements of the grammar analyzer. The token I defined are 
@@ -76,6 +81,7 @@ comment "/*"{A}*({C}{A}*|{B}|{C})*"*/"
 \/\/.*                  {comment line}
 "/*"{A}*({C}{A}*|{B}|{C})*{comment}(.|\n)*"*/"  {nested comment block}
 {comment}               {comment block}
+"for"                   {return FOR;}
 0x[0-9A-Za-z]+          {yylval=createNode(yytext); return LEXERR; }
 ('\\x[0-9a-zA-Z]*')     {yylval=createNode(yytext); return LEXERR; }
 [0-9][a-zA-Z_0-9]*      {yylval=createNode(yytext); return LEXERR; }
@@ -133,9 +139,41 @@ Node createNode(string s){
                     \item LEXERR
                 \end{itemize}
             \end{itemize}
-    \section{Run}
-        My project was compiled by the make. If you want to compile the project, you just need run `\hl{make splc}'. And then it will output a executable file splc.out. 
-        The result of running splc.out will print in the stdout of console, if you want to input a spl code file and get an out file, you can use `splc.py' in the bin/, input
-        the path of the code file which will be inputted and the result will be outputted to the file with the name replace the `.spl' in the path to the `.out'.
+   
+    \section{Optional features}
+        For the four optional features, I have implemented all of them. 
+        
+        The first and the last optional features are about comments, I implement them by lex and show how to do that in the section Lexical Analyzer Generator \ref{sec:lex}.
+
+        The second and the third optional features are about hex int and char, I have implemented them by the lex too, the regular expressions I use are:
+        \begin{lstlisting}
+('.')|('\\x[0-9a-fA-F]{2}') {yylval=createNode(yytext);return CHAR;}
+([0-9]+)|(0x[0-9A-Fa-f]+) {yylval=createNode(yytext); return INT; }
+        \end{lstlisting}
+        
+        The test case for these four features is \hl{test\_1\_o01.spl}, \hl{test\_1\_o02.spl}, \hl{test\_1\_o03.spl}, \hl{test\_1\_o04.spl}, their corresponding result is also in
+        the test file with the .out extension name.
     \section{bonus}
+        I implement a bonous feature on my project, I add for statement in my project. Like the while statement, the for statement was also written in the Stmt rule, and I use a new rule called
+        ForExps to math the Exps in the parentheses and there is a Stmt after the parentheses. The rules I add for the bonus feature are:
+        \begin{itemize}
+            \item Stmt:
+            \begin{itemize}
+                \item FOR LP ForExps RP Stmt
+            \end{itemize}
+            \item ForExps:
+            \begin{itemize}
+                \item Def Exp SEMI Exp
+                \item SEMI Exp SEMI Exp
+                \item Def SEMI Exp
+                \item Def Exp SEMI
+                \item SEMI Exp SEMI
+                \item Def SEMI
+                \item SEMI SEMI Exp
+                \item SEMI SEMI 
+            \end{itemize}
+        \end{itemize}
+        
+        And the test case for this bonus feature in test folder, the file name is \hl{test\_1\_r11.spl}, \hl{test\_1\_r12.spl} and \hl{test\_1\_r13.spl}, their corresponding result is also in
+        the test file with the .out extension name.
 \end{document}
