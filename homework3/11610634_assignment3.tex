@@ -54,5 +54,9 @@
             No, it isn't in L(G). For this grammar, the first two character of the string
             must be aa or the string just have a single character a.
         \subsection{Give a leftmost derivation for the string aa∗aa+∗. [20 points]:}
-            $$S$$
+            $$S\rightarrow SS*\rightarrow SS*S*\rightarrow aS*S*\rightarrow aa*S*\rightarrow aa*SS+*\rightarrow aa*aS+*\rightarrow aa*aa+*$$
+        \subsection{Give a rightmost derivation for the stringaa∗aa+∗. [20 points]:}
+            $$S\rightarrow SS*\rightarrow SSS+*\rightarrow SSa+*\rightarrow Saa+*\rightarrow SS*aa+*\rightarrow Sa*aa+*\rightarrow aa*aa+*$$
+        \subsection{ Give a parse tree for the string aa ∗ aa + ∗. [20 points]:}
+            
 \end{document}
