@@ -894,12 +894,12 @@ YY_RULE_SETUP
 case 4:
 YY_RULE_SETUP
 #line 30 "lex.l"
-{yylval=createNode(yytext);return CHAR;}
+{yylval=createNode(yytext,"CHAR");return CHAR;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
 #line 31 "lex.l"
-{yylval = createNode(yytext); return TYPE;}
+{yylval = createNode(yytext,"TYPE"); return TYPE;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
@@ -1045,34 +1045,34 @@ case 34:
 YY_RULE_SETUP
 #line 60 "lex.l"
 {
-    yylval=createNode(yytext);
+    yylval=createNode(yytext,"FLOAT");
     return FLOAT;
 }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
 #line 64 "lex.l"
-{yylval=createNode(yytext); return INT; }
+{yylval=createNode(yytext,"INT"); return INT; }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
 #line 65 "lex.l"
-{yylval=createNode(yytext); return ID;}
+{yylval=createNode(yytext,"ID"); return ID;}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
 #line 66 "lex.l"
-{yylval=createNode(yytext); return LEXERR; }
+{yylval=createNode(yytext,"LEXERR"); return LEXERR; }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
 #line 67 "lex.l"
-{yylval=createNode(yytext); return LEXERR; }
+{yylval=createNode(yytext,"LEXERR"); return LEXERR; }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
 #line 68 "lex.l"
-{yylval=createNode(yytext); return LEXERR; }
+{yylval=createNode(yytext,"LEXERR"); return LEXERR; }
 	YY_BREAK
 case 40:
 /* rule 40 can match eol */
@@ -1089,7 +1089,7 @@ YY_RULE_SETUP
 case 42:
 YY_RULE_SETUP
 #line 71 "lex.l"
-{yylval=createNode(yytext); return LEXERR;}
+{yylval=createNode(yytext,"LEXERR"); return LEXERR;}
 	YY_BREAK
 case 43:
 YY_RULE_SETUP

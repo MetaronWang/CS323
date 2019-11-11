@@ -37,21 +37,20 @@ Program
     : ExtDefList {
         program.show = addLine("Program", @$.first_line);
         program.subNode.push_back($1);
+        program.type = "Program";
     }
 	;
 ExtDefList 
     : ExtDef ExtDefList {
-        Node temp; 
+        Node temp = createNode(addLine("ExtDefList", @$.first_line), "ExtDefList"); 
         temp.subNode.push_back($1);
         if (! $2.subNode.empty())
             temp.subNode.push_back($2);
-        temp.show = addLine("ExtDefList", @$.first_line);
         $$ = temp;
     }
     | 
     {
-        Node temp; 
-        temp.show = addLine("ExtDefList", @$.first_line);
+        Node temp = createNode(addLine("ExtDefList", @$.first_line), "ExtDefList");         
         $$ = temp;
     }
 	;
@@ -68,79 +67,60 @@ ExtDef
     }
     |
     Specifier ExtDecList SEMI {
-        Node temp;
-        Node semi;
-        semi.show = "SEMI";
+        Node temp = createNode( addLine("ExtDef", @$.first_line),"ExtDef");
         temp.subNode.push_back($1);
         temp.subNode.push_back($2);
-        temp.subNode.push_back(semi);
-        temp.show = addLine("ExtDef", @$.first_line);
+        temp.subNode.push_back(createNode("SEMI","SEMI"));
         $$ = temp;
     }
     | Specifier SEMI {
-        Node temp;
-        Node semi;
-        semi.show = "SEMI";
+        Node temp = createNode( addLine("ExtDef", @$.first_line),"ExtDef");
         temp.subNode.push_back($1);
-        temp.subNode.push_back(semi);
-        temp.show = addLine("ExtDef", @$.first_line);
+        temp.subNode.push_back(createNode("SEMI","SEMI")); 
         $$ = temp;
     }
     | Specifier FunDec CompSt {
-        Node temp;
+        Node temp = createNode( addLine("ExtDef", @$.first_line),"ExtDef");
         temp.subNode.push_back($1);
         temp.subNode.push_back($2);
         temp.subNode.push_back($3);
-        temp.show = addLine("ExtDef", @$.first_line);
         $$ = temp;
     }
 	;
 ExtDecList 
     : VarDec {
-        Node temp;
+        Node temp = createNode(addLine("ExtDecList", @$.first_line),"ExtDecList");
         temp.subNode.push_back($1);
-        temp.show = addLine("ExtDecList", @$.first_line);
         $$ = temp;
     }
     | VarDec COMMA ExtDecList {
-        Node temp;
-        Node comma;
+        Node temp = createNode(addLine("ExtDecList", @$.first_line),"ExtDecList");
         temp.subNode.push_back($1);
-        comma.show = "COMMA";
+        temp.subNode.push_back(createNode("COMMA","COMMA"));
         temp.subNode.push_back($3);
-        temp.show = addLine("ExtDecList", @$.first_line);
         $$ = temp;
     }
 	;
 Specifier 
     : TYPE {
-        Node temp;
-        Node type;
-        type.show = "TYPE: "+$1.show;
-        temp.subNode.push_back(type);
-        temp.show = addLine("Specifier", @$.first_line);
+        Node temp = createNode( addLine("Specifier", @$.first_line),"Specifier");
+        temp.subNode.push_back(createNode("TYPE: "+$1.show, "TYPE"));
         $$ = temp;
     }
     | StructSpecifier {
-        Node temp;
+        Node temp = createNode( addLine("Specifier", @$.first_line),"Specifier");
         temp.subNode.push_back($1);
-        temp.show = addLine("Specifier", @$.first_line);
         $$ = temp;
     }
 	;
 StructSpecifier 
     : STRUCT ID LC DefList RC {
-        Node temp, struc, id, lc, rc;
-        struc.show = "STRUCT";
-        id.show = "ID: "+$2.show;
-        lc.show = "LC";
-        rc.show = "RC";
-        temp.subNode.push_back(struc);
-        temp.subNode.push_back(id);
-        temp.subNode.push_back(lc);
+        Node temp = createNode( addLine("StructSpecifier", @$.first_line),"StructSpecifier");
+        temp.subNode.push_back(createNode("STRUCT","STRUCT"));
+        temp.subNode.push_back(createNode("ID: "+$2.show, "ID"));
+        temp.subNode.push_back(createNode("LC","RC"));
         temp.subNode.push_back($4);
-        temp.subNode.push_back(rc);
-        temp.show = addLine("StructSpecifier", @$.first_line);
+        temp.subNode.push_back(createNode("RC","RC"));
         $$ = temp;
     }
     | STRUCT LEXERR LC DefList RC {
@@ -148,12 +128,9 @@ StructSpecifier
         errList.push_back(e);
     }
     | STRUCT ID {
-        Node temp, struc, id;
-        struc.show = "STRUCT";
-        id.show = "ID: "+$2.show;
-        temp.subNode.push_back(struc);
-        temp.subNode.push_back(id);
-        temp.show = addLine("StructSpecifier", @$.first_line);
+        Node temp = createNode( addLine("StructSpecifier", @$.first_line),"StructSpecifier");
+        temp.subNode.push_back(createNode("STRUCT","STRUCT"));
+        temp.subNode.push_back(createNode("ID: "+$2.show,"ID"));
         $$ = temp;
     }
     | STRUCT LEXERR {
@@ -164,10 +141,8 @@ StructSpecifier
 VarDec 
     :
     ID {
-        Node temp, id;
-        id.show = "ID: "+$1.show;
-        temp.subNode.push_back(id);
-        temp.show = addLine("VarDec", @$.first_line);
+        Node temp = createNode(addLine("VarDec", @$.first_line),"VarDec");
+        temp.subNode.push_back(createNode("ID: "+$1.show, "ID"));
         $$ = temp;
     }
     | LEXERR {
@@ -175,15 +150,11 @@ VarDec
         errList.push_back(e);
     }
     | VarDec LB INT RB {
-        Node temp, lb, i, rb;
-        lb.show = "LB";
-        rb.show = "RB";
-        i.show = "INT: "+$3.show;
+        Node temp = createNode(addLine("VarDec", @$.first_line), "VarDec");
         temp.subNode.push_back($1);
-        temp.subNode.push_back(lb);
-        temp.subNode.push_back(i);
-        temp.subNode.push_back(rb);
-        temp.show = addLine("VarDec", @$.first_line);
+        temp.subNode.push_back(createNode("LB","LB"));
+        temp.subNode.push_back(createNode("INT: "+$3.show,"INT"));
+        temp.subNode.push_back(createNode("RB","RB"));
         $$ = temp;
     }
 	;
@@ -198,15 +169,11 @@ FunDec
     }
     |
     ID LP VarList RP {
-        Node temp, id, lp, rp;
-        id.show = "ID: "+$1.show;
-        lp.show = "LP";
-        rp.show = "RP";
-        temp.subNode.push_back(id);
-        temp.subNode.push_back(lp);
+        Node temp = createNode( addLine("FunDec", @$.first_line), "FunDec");
+        temp.subNode.push_back(createNode("ID: "+$1.show, "ID"));
+        temp.subNode.push_back(createNode("LP","LP"));
         temp.subNode.push_back($3);
-        temp.subNode.push_back(rp);
-        temp.show = addLine("FunDec", @$.first_line);
+        temp.subNode.push_back(createNode("RP","RP"));
         $$ = temp;
     }
     | LEXERR LP VarList RP {
@@ -214,14 +181,10 @@ FunDec
         errList.push_back(e);
     }
     | ID LP RP {
-        Node temp, id, lp, rp;
-        id.show = "ID: "+$1.show;
-        lp.show = "LP";
-        rp.show = "RP";
-        temp.subNode.push_back(id);
-        temp.subNode.push_back(lp);
-        temp.subNode.push_back(rp);
-        temp.show = addLine("FunDec", @$.first_line);
+        Node temp = createNode( addLine("FunDec", @$.first_line), "FunDec");
+        temp.subNode.push_back(createNode("ID: "+$1.show, "ID"));
+        temp.subNode.push_back(createNode("LP","LP"));
+        temp.subNode.push_back(createNode("RP","RP"));
         $$ = temp;
     }
     | LEXERR LP RP {
@@ -231,27 +194,23 @@ FunDec
 	;
 VarList 
     : ParamDec COMMA VarList {
-        Node temp, comma;
-        comma.show ="COMMA";
+        Node temp = createNode(addLine("VarList", @$.first_line),"VarList");
         temp.subNode.push_back($1);
-        temp.subNode.push_back(comma);
+        temp.subNode.push_back(createNode("COMMA","COMMA"));
         temp.subNode.push_back($3);
-        temp.show = addLine("VarList", @$.first_line);
         $$ = temp;
     }
     | ParamDec {
-        Node temp;
+        Node temp = createNode(addLine("VarList", @$.first_line),"VarList");
         temp.subNode.push_back($1);
-        temp.show = addLine("VarList", @$.first_line);
         $$ = temp;
     }
 	;
 ParamDec 
     : Specifier VarDec{
-        Node temp;
+        Node temp = createNode(addLine("ParamDec", @$.first_line),"ParamDec");
         temp.subNode.push_back($1);
         temp.subNode.push_back($2);
-        temp.show = addLine("ParamDec", @$.first_line);
         $$ = temp;
     }
 	;
@@ -262,32 +221,27 @@ CompSt
     }
     |
     LC DefList StmtList RC {
-        Node temp, lc, rc;
-        lc.show = "LC";
-        rc.show = "RC";
-        temp.subNode.push_back(lc);
+        Node temp = createNode(addLine("CompSt", @$.first_line),"CompSt");
+        temp.subNode.push_back(createNode("LC", "LC"));
         if (! $2.subNode.empty())
             temp.subNode.push_back($2);
         if (! $3.subNode.empty())
             temp.subNode.push_back($3);
-        temp.subNode.push_back(rc);
-        temp.show = addLine("CompSt", @$.first_line);
+        temp.subNode.push_back(createNode("RC","RC"));
         $$ = temp;
     }
 	;
 StmtList 
     : Stmt StmtList {
-        Node temp;
+        Node temp = createNode(addLine("StmtList", @$.first_line),"StmtList");
         temp.subNode.push_back($1);
         if (! $2.subNode.empty())
             temp.subNode.push_back($2);
-        temp.show = addLine("StmtList", @$.first_line);
         $$ = temp;
     }
     | 
     {
-        Node temp;
-        temp.show = addLine("StmtList", @$.first_line);
+        Node temp = createNode(addLine("StmtList", @$.first_line),"StmtList");
         $$ = temp;
     }
 	;
@@ -298,16 +252,14 @@ Stmt
     }
     |
     Exp SEMI {
-        Node temp;
+        Node temp = createNode(addLine("Stmt", @$.first_line),"Stmt");
         temp.subNode.push_back($1);
-        temp.subNode.push_back(createNode("SEMI"));
-        temp.show = addLine("Stmt", @$.first_line);
+        temp.subNode.push_back(createNode("SEMI","SEMI"));
         $$ = temp;
     }
     | CompSt {
-        Node temp;
+        Node temp = createNode(addLine("Stmt", @$.first_line),"Stmt");
         temp.subNode.push_back($1);
-        temp.show = addLine("Stmt", @$.first_line);
         $$ = temp;
     }
     |RETURN Exp error{
@@ -315,71 +267,53 @@ Stmt
         errList.push_back(e);
     }
     | RETURN Exp SEMI {
-        Node temp, ret, semi;
-        ret.show = "RETURN";
-        semi.show = "SEMI";
-        temp.subNode.push_back(ret);
+        Node temp = createNode(addLine("Stmt", @$.first_line),"Stmt");
+        temp.subNode.push_back(createNode("RETURN","RETURN"));
         temp.subNode.push_back($2);
-        temp.subNode.push_back(semi);
-        temp.show = addLine("Stmt", @$.first_line);
+        temp.subNode.push_back(createNode("SEMI","SEMI"));
         $$ = temp;
     }
     | IF LP Exp RP Stmt {
-        Node temp, i, lp, rp;
-        i.show = "IF";
-        lp.show = "LP";
-        rp.show = "RP";
-        temp.subNode.push_back(i);
-        temp.subNode.push_back(lp);
+        Node temp = createNode(addLine("Stmt", @$.first_line),"Stmt");
+        temp.subNode.push_back(createNode("IF","IF"));
+        temp.subNode.push_back(createNode("LP","LP"));
         temp.subNode.push_back($3);
-        temp.subNode.push_back(rp);
+        temp.subNode.push_back(createNode("RP","RP"));
         temp.subNode.push_back($5);
-        temp.show = addLine("Stmt", @$.first_line);
         $$ = temp;
     }
     | IF LP Exp RP Stmt ELSE Stmt {
-        Node temp, i, lp, rp, e;
-        i.show = "IF";
-        lp.show = "LP";
-        rp.show = "RP";
-        e.show = "ELSE";
-        temp.subNode.push_back(i);
-        temp.subNode.push_back(lp);
+        Node temp = createNode(addLine("Stmt", @$.first_line),"Stmt");
+        temp.subNode.push_back(createNode("IF","IF"));
+        temp.subNode.push_back(createNode("LP","LP"));
         temp.subNode.push_back($3);
-        temp.subNode.push_back(rp);
+        temp.subNode.push_back(createNode("RP","RP"));
         temp.subNode.push_back($5);
-        temp.subNode.push_back(e);
+        temp.subNode.push_back(createNode("ELSE","ELSE"));
         temp.subNode.push_back($7);
-        temp.show = addLine("Stmt", @$.first_line);
         $$ = temp;
     }
     | WHILE LP Exp RP Stmt {
-        Node temp, w, lp, rp;
-        w.show = "WHILE";
-        lp.show = "LP";
-        rp.show = "RP";
-        temp.subNode.push_back(w);
-        temp.subNode.push_back(lp);
+        Node temp = createNode(addLine("Stmt", @$.first_line),"Stmt");
+        temp.subNode.push_back(createNode("WHILE","WHILE"));
+        temp.subNode.push_back(createNode("LP","LP"));
         temp.subNode.push_back($3);
-        temp.subNode.push_back(rp);
+        temp.subNode.push_back(createNode("RP","RP"));
         temp.subNode.push_back($5);
-        temp.show = addLine("Stmt", @$.first_line);
         $$ = temp;
     }
 	;
 DefList 
     : Def DefList {
-        Node temp;
+        Node temp = createNode(addLine("DefList", @$.first_line), "DefList");
         temp.subNode.push_back($1);
         if (! $2.subNode.empty())
             temp.subNode.push_back($2);
-        temp.show = addLine("DefList", @$.first_line);
         $$ = temp;
     }
     | 
     {
-        Node temp;
-        temp.show = addLine("DefList", @$.first_line);
+        Node temp = createNode(addLine("DefList", @$.first_line), "DefList");
         $$ = temp;
     }
 	;
@@ -390,46 +324,38 @@ Def
         errList.push_back(e);
     }
     |Specifier DecList SEMI {
-        Node temp, semi;
-        semi.show = "SEMI";
+        Node temp = createNode(addLine("Def", @$.first_line),"Def");
         temp.subNode.push_back($1);
         temp.subNode.push_back($2);
-        temp.subNode.push_back(semi);
-        temp.show = addLine("Def", @$.first_line);
+        temp.subNode.push_back(createNode("SEMI","SEMI"));
         $$ = temp;
     }
 	;
 DecList 
     : Dec {
-        Node temp;
+        Node temp = createNode(addLine("DecList", @$.first_line),"DecList");
         temp.subNode.push_back($1);
-        temp.show = addLine("DecList", @$.first_line);
         $$ = temp;
     }
     | Dec COMMA DecList {
-        Node temp, comma;
-        comma.show= "COMMA";
+        Node temp = createNode(addLine("DecList", @$.first_line),"DecList");
         temp.subNode.push_back($1);
-        temp.subNode.push_back(comma);
+        temp.subNode.push_back(createNode("COMMA","COMMA"));
         temp.subNode.push_back($3);
-        temp.show = addLine("DecList", @$.first_line);
         $$ = temp;
     }
 	;
 Dec 
     : VarDec {
-        Node temp;
+        Node temp = createNode(addLine("Dec", @$.first_line),"Dec");
         temp.subNode.push_back($1);
-        temp.show = addLine("Dec", @$.first_line);
         $$ = temp;
     }
     | VarDec ASSIGN Exp {
-        Node temp, assign;
-        assign.show = "ASSIGN";
+        Node temp = createNode(addLine("Dec", @$.first_line),"Dec");
         temp.subNode.push_back($1);
-        temp.subNode.push_back(assign);
+        temp.subNode.push_back(createNode("ASSIGN","ASSIGN"));
         temp.subNode.push_back($3);
-        temp.show = addLine("Dec", @$.first_line);
         $$ = temp;
     }
 	;
@@ -448,11 +374,10 @@ Exp
         errList.push_back(e);
     }
     | Exp ASSIGN Exp {
-        Node temp;
+        Node temp = createNode(addLine("Exp", @$.first_line),"Exp");
         temp.subNode.push_back($1);
-        temp.subNode.push_back(createNode("ASSIGN"));
+        temp.subNode.push_back(createNode("ASSIGN","ASSIGN"));
         temp.subNode.push_back($3);
-        temp.show = addLine("Exp", @$.first_line);
         $$ = temp;
     }
     | Exp LEXERR Exp {
@@ -460,130 +385,114 @@ Exp
         errList.push_back(e);
     }
     | Exp AND Exp{
-        Node temp;
+        Node temp = createNode(addLine("Exp", @$.first_line),"Exp");
         temp.subNode.push_back($1);
-        temp.subNode.push_back(createNode("AND"));
+        temp.subNode.push_back(createNode("AND","AND"));
         temp.subNode.push_back($3);
-        temp.show = addLine("Exp", @$.first_line);
         $$ = temp;
     }
     | Exp OR Exp{
-        Node temp;
+        Node temp = createNode(addLine("Exp", @$.first_line),"Exp");
         temp.subNode.push_back($1);
-        temp.subNode.push_back(createNode("OR"));
+        temp.subNode.push_back(createNode("OR","OR"));
         temp.subNode.push_back($3);
-        temp.show = addLine("Exp", @$.first_line);
         $$ = temp;
     }
     | Exp LT Exp{
-        Node temp;
+        Node temp = createNode(addLine("Exp", @$.first_line),"Exp");
         temp.subNode.push_back($1);
-        temp.subNode.push_back(createNode("LT"));
+        temp.subNode.push_back(createNode("LT","LT"));
         temp.subNode.push_back($3);
-        temp.show = addLine("Exp", @$.first_line);
         $$ = temp;
     }
     | Exp LE Exp{
-        Node temp;
+        Node temp = createNode(addLine("Exp", @$.first_line),"Exp");
         temp.subNode.push_back($1);
-        temp.subNode.push_back(createNode("LE"));
+        temp.subNode.push_back(createNode("LE","LE"));
         temp.subNode.push_back($3);
-        temp.show = addLine("Exp", @$.first_line);
         $$ = temp;
     }
     | Exp GT Exp{
-        Node temp;
+        Node temp = createNode(addLine("Exp", @$.first_line),"Exp");
         temp.subNode.push_back($1);
-        temp.subNode.push_back(createNode("GT"));
+        temp.subNode.push_back(createNode("GT","GT"));
         temp.subNode.push_back($3);
-        temp.show = addLine("Exp", @$.first_line);
         $$ = temp;
     }
     | Exp GE Exp{
-        Node temp;
+        Node temp = createNode(addLine("Exp", @$.first_line),"Exp");
         temp.subNode.push_back($1);
-        temp.subNode.push_back(createNode("GE"));
+        temp.subNode.push_back(createNode("GE","GE"));
         temp.subNode.push_back($3);
-        temp.show = addLine("Exp", @$.first_line);
         $$ = temp;
     }
     | Exp NE Exp{
-        Node temp;
+        Node temp = createNode(addLine("Exp", @$.first_line),"Exp");
         temp.subNode.push_back($1);
-        temp.subNode.push_back(createNode("NE"));
+        temp.subNode.push_back(createNode("NE","NE"));
         temp.subNode.push_back($3);
-        temp.show = addLine("Exp", @$.first_line);
         $$ = temp;
     }
     | Exp EQ Exp{
-        Node temp;
-        temp.subNode.push_back($1);cout<<yytext<<endl;
-        temp.subNode.push_back(createNode("EQ"));
+        Node temp = createNode(addLine("Exp", @$.first_line),"Exp");
+        temp.subNode.push_back($1);
+        temp.subNode.push_back(createNode("EQ","EQ"));
         temp.subNode.push_back($3);
-        temp.show = addLine("Exp", @$.first_line);
         $$ = temp;
     }
     | Exp PLUS Exp{
-        Node temp;
+        Node temp = createNode(addLine("Exp", @$.first_line),"Exp");
         temp.subNode.push_back($1);
-        temp.subNode.push_back(createNode("PLUS"));
+        temp.subNode.push_back(createNode("PLUS","PLUS"));
         temp.subNode.push_back($3);
-        temp.show = addLine("Exp", @$.first_line);
         $$ = temp;
     }
     | Exp MINUS Exp{
-        Node temp;
+        Node temp = createNode(addLine("Exp", @$.first_line),"Exp");
         temp.subNode.push_back($1);
-        temp.subNode.push_back(createNode("MINUS"));
+        temp.subNode.push_back(createNode("MINUS","MINUS"));
         temp.subNode.push_back($3);
-        temp.show = addLine("Exp", @$.first_line);
         $$ = temp;
     }
     | Exp MUL Exp{
-        Node temp;
+        Node temp = createNode(addLine("Exp", @$.first_line),"Exp");
         temp.subNode.push_back($1);
-        temp.subNode.push_back(createNode("MUL"));
+        temp.subNode.push_back(createNode("MUL","MUL"));
         temp.subNode.push_back($3);
-        temp.show = addLine("Exp", @$.first_line);
         $$ = temp;
     }
     | Exp DIV Exp{
-        Node temp;
+        Node temp = createNode(addLine("Exp", @$.first_line),"Exp");
         temp.subNode.push_back($1);
-        temp.subNode.push_back(createNode("DIV"));
+        temp.subNode.push_back(createNode("DIV","DIV"));
         temp.subNode.push_back($3);
-        temp.show = addLine("Exp", @$.first_line);
         $$ = temp;
     }
     | LP Exp RP{
-        Node temp;
-        temp.subNode.push_back(createNode("LP"));
+        Node temp = createNode(addLine("Exp", @$.first_line),"Exp");
+        temp.subNode.push_back(createNode("LP","LP"));
         temp.subNode.push_back($2);
-        temp.subNode.push_back(createNode("RP"));
-        temp.show = addLine("Exp", @$.first_line);
+        temp.subNode.push_back(createNode("RP","RP"));
         $$ = temp;
     }
     | MINUS Exp{
-        Node temp;
-        temp.subNode.push_back(createNode("MINUS"));
+        Node temp = createNode(addLine("Exp", @$.first_line),"Exp");
+        temp.subNode.push_back(createNode("MINUS","MINUS"));
         temp.subNode.push_back($2);
-        temp.show = addLine("Exp", @$.first_line);
         $$ = temp;
     }
     | NOT Exp{
-        Node temp;
-        temp.subNode.push_back(createNode("NOT"));
+        Node temp = createNode(addLine("Exp", @$.first_line),"Exp");
+        temp.subNode.push_back(createNode("NOT","NOT"));
         temp.subNode.push_back($2);
-        temp.show = addLine("Exp", @$.first_line);
         $$ = temp;
     }
     | ID LP Args RP{
-        Node temp;
-        temp.subNode.push_back(createNode("ID: "+$1.show));
-        temp.subNode.push_back(createNode("LP"));
+        Node temp = createNode(addLine("Exp", @$.first_line),"Exp");
+        temp.subNode.push_back(createNode("ID: "+$1.show, "ID"));
+        temp.subNode.push_back(createNode("LP","LP"));
         temp.subNode.push_back($3);
-        temp.subNode.push_back(createNode("RP"));
-        temp.show = addLine("Exp", @$.first_line);
+        temp.subNode.push_back(createNode("RP","RP"));
         $$ = temp;
     }
     | LEXERR LP Args RP {
@@ -591,11 +500,10 @@ Exp
         errList.push_back(e);
     }
     | ID LP RP{
-        Node temp;
-        temp.subNode.push_back(createNode("ID: "+$1.show));
-        temp.subNode.push_back(createNode("LP"));
-        temp.subNode.push_back(createNode("RP"));
-        temp.show = addLine("Exp", @$.first_line);
+        Node temp = createNode(addLine("Exp", @$.first_line),"Exp");
+        temp.subNode.push_back(createNode("ID: "+$1.show, "ID"));
+        temp.subNode.push_back(createNode("LP","LP"));
+        temp.subNode.push_back(createNode("RP","RP"));
         $$ = temp;
     }
     | LEXERR LP RP {
@@ -603,20 +511,18 @@ Exp
         errList.push_back(e);
     }
     | Exp LB Exp RB{
-        Node temp;
+        Node temp = createNode(addLine("Exp", @$.first_line),"Exp");
         temp.subNode.push_back($1);
-        temp.subNode.push_back(createNode("LB"));
+        temp.subNode.push_back(createNode("LB","LB"));
         temp.subNode.push_back($3);
-        temp.subNode.push_back(createNode("RB"));
-        temp.show = addLine("Exp", @$.first_line);
+        temp.subNode.push_back(createNode("RB","RB"));
         $$ = temp;
     }
     | Exp DOT ID{
-        Node temp;
+        Node temp = createNode(addLine("Exp", @$.first_line),"Exp");
         temp.subNode.push_back($1);
-        temp.subNode.push_back(createNode("DOT"));
-        temp.subNode.push_back(createNode("ID: "+$3.show));
-        temp.show = addLine("Exp", @$.first_line);
+        temp.subNode.push_back(createNode("DOT","DOT"));
+        temp.subNode.push_back(createNode("ID: "+$3.show, "ID"));
         $$ = temp;
     } 
     | Exp DOT LEXERR {
@@ -624,27 +530,23 @@ Exp
         errList.push_back(e);
     }
     | ID{
-        Node temp;
-        temp.subNode.push_back(createNode("ID: "+$1.show));
-        temp.show = addLine("Exp", @$.first_line);
+        Node temp = createNode(addLine("Exp", @$.first_line),"Exp");
+        temp.subNode.push_back(createNode("ID: "+$1.show, "ID"));
         $$ = temp;
     }
     | INT{
-        Node temp;
-        temp.subNode.push_back(createNode("INT: "+$1.show));
-        temp.show = addLine("Exp", @$.first_line);
+        Node temp = createNode(addLine("Exp", @$.first_line),"Exp");
+        temp.subNode.push_back(createNode("INT: "+$1.show, "INT"));
         $$ = temp;
     }
     | FLOAT{
-        Node temp;
-        temp.subNode.push_back(createNode("FLOAT: "+$1.show));
-        temp.show = addLine("Exp", @$.first_line);
+        Node temp = createNode(addLine("Exp", @$.first_line),"Exp");
+        temp.subNode.push_back(createNode("FLOAT: "+$1.show, "FLOAT"));
         $$ = temp;
     }
     | CHAR{
-        Node temp;
-        temp.subNode.push_back(createNode("CHAR: "+$1.show));
-        temp.show = addLine("Exp", @$.first_line);
+        Node temp = createNode(addLine("Exp", @$.first_line),"Exp");
+        temp.subNode.push_back(createNode("CHAR: "+$1.show, "CHAR"));
         $$ = temp;
     }
     | LEXERR {
@@ -654,17 +556,15 @@ Exp
 	;
 Args 
     : Exp COMMA Args{
-        Node temp;
+        Node temp = createNode(addLine("Args", @$.first_line),"Args");
         temp.subNode.push_back($1);
-        temp.subNode.push_back(createNode("COMMA"));
+        temp.subNode.push_back(createNode("COMMA","COMMA"));
         temp.subNode.push_back($3);
-        temp.show = addLine("Args", @$.first_line);
         $$ = temp;
     }
     | Exp {
-        Node temp;
+        Node temp = createNode(addLine("Args", @$.first_line),"Args");
         temp.subNode.push_back($1);
-        temp.show = addLine("Args", @$.first_line);
         $$ = temp;
     }
 	;

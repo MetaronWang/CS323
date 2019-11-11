@@ -27,8 +27,8 @@ comment "/*"{A}*({C}{A}*|{B}|{C})*"*/"
   errList.push_back(e);
 }
 {comment} {}
-('.')|('\\x[0-9a-fA-F]{2}') {yylval=createNode(yytext);return CHAR;}
-(int)|(float)|(char)    {yylval = createNode(yytext); return TYPE;}
+('.')|('\\x[0-9a-fA-F]{2}') {yylval=createNode(yytext,"CHAR");return CHAR;}
+(int)|(float)|(char)    {yylval = createNode(yytext,"TYPE"); return TYPE;}
 "struct"                {return STRUCT;}
 "if"                    {return IF;}
 "else"                  {return ELSE;}
@@ -58,17 +58,17 @@ comment "/*"{A}*({C}{A}*|{B}|{C})*"*/"
 "{"                     {return LC;}
 "}"                     {return RC;}
 [0-9]+\.[0-9]+          {
-    yylval=createNode(yytext);
+    yylval=createNode(yytext,"FLOAT");
     return FLOAT;
 }
-([0-9]+)|(0x[0-9A-Fa-f]+) {yylval=createNode(yytext); return INT; }
-[a-zA-Z_][a-zA-Z_0-9]*  {yylval=createNode(yytext); return ID;}
-0x[0-9A-Za-z]+          {yylval=createNode(yytext); return LEXERR; }
-('\\x[0-9a-zA-Z]*')     {yylval=createNode(yytext); return LEXERR; }
-[0-9][a-zA-Z_0-9]*      {yylval=createNode(yytext); return LEXERR; }
+([0-9]+)|(0x[0-9A-Fa-f]+) {yylval=createNode(yytext,"INT"); return INT; }
+[a-zA-Z_][a-zA-Z_0-9]*  {yylval=createNode(yytext,"ID"); return ID;}
+0x[0-9A-Za-z]+          {yylval=createNode(yytext,"LEXERR"); return LEXERR; }
+('\\x[0-9a-zA-Z]*')     {yylval=createNode(yytext,"LEXERR"); return LEXERR; }
+[0-9][a-zA-Z_0-9]*      {yylval=createNode(yytext,"LEXERR"); return LEXERR; }
 \n                      {lines++;}
 [ \f\n\r\t\v]           {}
-.                       {yylval=createNode(yytext); return LEXERR;}
+.                       {yylval=createNode(yytext,"LEXERR"); return LEXERR;}
 
 %%
 int yywrap()
