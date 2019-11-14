@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "pro_1.y": "cpp",
+        "*.l": "cpp",
+        "map": "cpp"
+    }
+}
