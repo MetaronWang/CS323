@@ -8,6 +8,7 @@
 #include "iostream"
 #include "string"
 #include "vector"
+#include "type.cpp"
 #define YYSTYPE Node
 using namespace std;
 void yyerror(const char*); //必须要有
@@ -118,7 +119,7 @@ StructSpecifier
         Node temp = createNode( addLine("StructSpecifier", @$.first_line),"StructSpecifier");
         temp.subNode.push_back(createNode("STRUCT","STRUCT"));
         temp.subNode.push_back(createNode("ID: "+$2.show, "ID"));
-        temp.subNode.push_back(createNode("LC","RC"));
+        temp.subNode.push_back(createNode("LC","LC"));
         temp.subNode.push_back($4);
         temp.subNode.push_back(createNode("RC","RC"));
         $$ = temp;
@@ -598,8 +599,10 @@ string addLine(string s, int line){
 
 int main(){
     yyparse();
-    if (errList.empty())
-        output(program,0);
+    if (errList.empty()){
+        // output(program,0);
+        generateGrammerTree(program);
+    }
     else
         errOut();
 

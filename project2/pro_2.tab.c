@@ -77,6 +77,7 @@
 #include "iostream"
 #include "string"
 #include "vector"
+#include "type.cpp"
 #define YYSTYPE Node
 using namespace std;
 void yyerror(const char*); //必须要有
@@ -85,7 +86,7 @@ string addLine(string,int);
 
 Node program;
 
-#line 89 "pro_2.tab.c"
+#line 90 "pro_2.tab.c"
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus
@@ -485,15 +486,15 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    37,    37,    44,    52,    59,    64,    69,    76,    82,
-      91,    96,   105,   110,   117,   126,   130,   136,   143,   148,
-     152,   162,   166,   171,   179,   183,   190,   196,   203,   210,
-     218,   223,   235,   243,   249,   254,   260,   265,   269,   276,
-     285,   296,   307,   315,   322,   326,   335,   340,   349,   354,
-     364,   368,   372,   376,   383,   387,   394,   401,   408,   415,
-     422,   429,   436,   443,   450,   457,   464,   471,   478,   484,
-     490,   498,   502,   509,   513,   521,   528,   532,   537,   542,
-     547,   552,   558,   565
+       0,    38,    38,    45,    53,    60,    65,    70,    77,    83,
+      92,    97,   106,   111,   118,   127,   131,   137,   144,   149,
+     153,   163,   167,   172,   180,   184,   191,   197,   204,   211,
+     219,   224,   236,   244,   250,   255,   261,   266,   270,   277,
+     286,   297,   308,   316,   323,   327,   336,   341,   350,   355,
+     365,   369,   373,   377,   384,   388,   395,   402,   409,   416,
+     423,   430,   437,   444,   451,   458,   465,   472,   479,   485,
+     491,   499,   503,   510,   514,   522,   529,   533,   538,   543,
+     548,   553,   559,   566
 };
 #endif
 
@@ -1502,17 +1503,17 @@ yyreduce:
   switch (yyn)
     {
   case 2:
-#line 37 "pro_2.y"
+#line 38 "pro_2.y"
     {
         program.show = addLine("Program", (yyloc).first_line);
         program.subNode.push_back(yyvsp[0]);
         program.type = "Program";
     }
-#line 1512 "pro_2.tab.c"
+#line 1513 "pro_2.tab.c"
     break;
 
   case 3:
-#line 44 "pro_2.y"
+#line 45 "pro_2.y"
     {
         Node temp = createNode(addLine("ExtDefList", (yyloc).first_line), "ExtDefList"); 
         temp.subNode.push_back(yyvsp[-1]);
@@ -1520,38 +1521,38 @@ yyreduce:
             temp.subNode.push_back(yyvsp[0]);
         yyval = temp;
     }
-#line 1524 "pro_2.tab.c"
+#line 1525 "pro_2.tab.c"
     break;
 
   case 4:
-#line 52 "pro_2.y"
+#line 53 "pro_2.y"
     {
         Node temp = createNode(addLine("ExtDefList", (yyloc).first_line), "ExtDefList");         
         yyval = temp;
     }
-#line 1533 "pro_2.tab.c"
+#line 1534 "pro_2.tab.c"
     break;
 
   case 5:
-#line 59 "pro_2.y"
+#line 60 "pro_2.y"
     {
         string e = "Error type B at Line "+to_string((yyloc).first_line)+": Missing semicolon \';\'";
         errList.push_back(e);
     }
-#line 1542 "pro_2.tab.c"
+#line 1543 "pro_2.tab.c"
     break;
 
   case 6:
-#line 64 "pro_2.y"
+#line 65 "pro_2.y"
     {
         string e = "Error type B at Line "+to_string((yyloc).first_line)+": Missing semicolon \';\'";
         errList.push_back(e);
     }
-#line 1551 "pro_2.tab.c"
+#line 1552 "pro_2.tab.c"
     break;
 
   case 7:
-#line 69 "pro_2.y"
+#line 70 "pro_2.y"
     {
         Node temp = createNode( addLine("ExtDef", (yyloc).first_line),"ExtDef");
         temp.subNode.push_back(yyvsp[-2]);
@@ -1559,22 +1560,22 @@ yyreduce:
         temp.subNode.push_back(createNode("SEMI","SEMI"));
         yyval = temp;
     }
-#line 1563 "pro_2.tab.c"
+#line 1564 "pro_2.tab.c"
     break;
 
   case 8:
-#line 76 "pro_2.y"
+#line 77 "pro_2.y"
     {
         Node temp = createNode( addLine("ExtDef", (yyloc).first_line),"ExtDef");
         temp.subNode.push_back(yyvsp[-1]);
         temp.subNode.push_back(createNode("SEMI","SEMI")); 
         yyval = temp;
     }
-#line 1574 "pro_2.tab.c"
+#line 1575 "pro_2.tab.c"
     break;
 
   case 9:
-#line 82 "pro_2.y"
+#line 83 "pro_2.y"
     {
         Node temp = createNode( addLine("ExtDef", (yyloc).first_line),"ExtDef");
         temp.subNode.push_back(yyvsp[-2]);
@@ -1582,21 +1583,21 @@ yyreduce:
         temp.subNode.push_back(yyvsp[0]);
         yyval = temp;
     }
-#line 1586 "pro_2.tab.c"
+#line 1587 "pro_2.tab.c"
     break;
 
   case 10:
-#line 91 "pro_2.y"
+#line 92 "pro_2.y"
     {
         Node temp = createNode(addLine("ExtDecList", (yyloc).first_line),"ExtDecList");
         temp.subNode.push_back(yyvsp[0]);
         yyval = temp;
     }
-#line 1596 "pro_2.tab.c"
+#line 1597 "pro_2.tab.c"
     break;
 
   case 11:
-#line 96 "pro_2.y"
+#line 97 "pro_2.y"
     {
         Node temp = createNode(addLine("ExtDecList", (yyloc).first_line),"ExtDecList");
         temp.subNode.push_back(yyvsp[-2]);
@@ -1604,93 +1605,93 @@ yyreduce:
         temp.subNode.push_back(yyvsp[0]);
         yyval = temp;
     }
-#line 1608 "pro_2.tab.c"
+#line 1609 "pro_2.tab.c"
     break;
 
   case 12:
-#line 105 "pro_2.y"
+#line 106 "pro_2.y"
     {
         Node temp = createNode( addLine("Specifier", (yyloc).first_line),"Specifier");
         temp.subNode.push_back(createNode("TYPE: "+yyvsp[0].show, "TYPE"));
         yyval = temp;
     }
-#line 1618 "pro_2.tab.c"
+#line 1619 "pro_2.tab.c"
     break;
 
   case 13:
-#line 110 "pro_2.y"
+#line 111 "pro_2.y"
     {
         Node temp = createNode( addLine("Specifier", (yyloc).first_line),"Specifier");
         temp.subNode.push_back(yyvsp[0]);
         yyval = temp;
     }
-#line 1628 "pro_2.tab.c"
+#line 1629 "pro_2.tab.c"
     break;
 
   case 14:
-#line 117 "pro_2.y"
+#line 118 "pro_2.y"
     {
         Node temp = createNode( addLine("StructSpecifier", (yyloc).first_line),"StructSpecifier");
         temp.subNode.push_back(createNode("STRUCT","STRUCT"));
         temp.subNode.push_back(createNode("ID: "+yyvsp[-3].show, "ID"));
-        temp.subNode.push_back(createNode("LC","RC"));
+        temp.subNode.push_back(createNode("LC","LC"));
         temp.subNode.push_back(yyvsp[-1]);
         temp.subNode.push_back(createNode("RC","RC"));
         yyval = temp;
     }
-#line 1642 "pro_2.tab.c"
+#line 1643 "pro_2.tab.c"
     break;
 
   case 15:
-#line 126 "pro_2.y"
+#line 127 "pro_2.y"
     {
         string e = "Error type A at Line "+to_string((yyloc).first_line)+": unknown lexeme "+yyvsp[-3].show;
         errList.push_back(e);
     }
-#line 1651 "pro_2.tab.c"
+#line 1652 "pro_2.tab.c"
     break;
 
   case 16:
-#line 130 "pro_2.y"
+#line 131 "pro_2.y"
     {
         Node temp = createNode( addLine("StructSpecifier", (yyloc).first_line),"StructSpecifier");
         temp.subNode.push_back(createNode("STRUCT","STRUCT"));
         temp.subNode.push_back(createNode("ID: "+yyvsp[0].show,"ID"));
         yyval = temp;
     }
-#line 1662 "pro_2.tab.c"
+#line 1663 "pro_2.tab.c"
     break;
 
   case 17:
-#line 136 "pro_2.y"
+#line 137 "pro_2.y"
     {
         string e = "Error type A at Line "+to_string((yyloc).first_line)+": unknown lexeme "+yyvsp[0].show;
         errList.push_back(e);
     }
-#line 1671 "pro_2.tab.c"
+#line 1672 "pro_2.tab.c"
     break;
 
   case 18:
-#line 143 "pro_2.y"
+#line 144 "pro_2.y"
     {
         Node temp = createNode(addLine("VarDec", (yyloc).first_line),"VarDec");
         temp.subNode.push_back(createNode("ID: "+yyvsp[0].show, "ID"));
         yyval = temp;
     }
-#line 1681 "pro_2.tab.c"
+#line 1682 "pro_2.tab.c"
     break;
 
   case 19:
-#line 148 "pro_2.y"
+#line 149 "pro_2.y"
     {
         string e = "Error type A at Line "+to_string((yyloc).first_line)+": unknown lexeme "+yyvsp[0].show;
         errList.push_back(e);
     }
-#line 1690 "pro_2.tab.c"
+#line 1691 "pro_2.tab.c"
     break;
 
   case 20:
-#line 152 "pro_2.y"
+#line 153 "pro_2.y"
     {
         Node temp = createNode(addLine("VarDec", (yyloc).first_line), "VarDec");
         temp.subNode.push_back(yyvsp[-3]);
@@ -1699,29 +1700,29 @@ yyreduce:
         temp.subNode.push_back(createNode("RB","RB"));
         yyval = temp;
     }
-#line 1703 "pro_2.tab.c"
+#line 1704 "pro_2.tab.c"
     break;
 
   case 21:
-#line 162 "pro_2.y"
+#line 163 "pro_2.y"
     {
         string e = "Error type B at Line "+to_string((yyloc).first_line)+": Missing Right Parentheses \')\'";
         errList.push_back(e);
     }
-#line 1712 "pro_2.tab.c"
+#line 1713 "pro_2.tab.c"
     break;
 
   case 22:
-#line 166 "pro_2.y"
+#line 167 "pro_2.y"
     {
         string e = "Error type B at Line "+to_string((yyloc).first_line)+": Missing Right Parentheses \')\'";
         errList.push_back(e);
     }
-#line 1721 "pro_2.tab.c"
+#line 1722 "pro_2.tab.c"
     break;
 
   case 23:
-#line 171 "pro_2.y"
+#line 172 "pro_2.y"
     {
         Node temp = createNode( addLine("FunDec", (yyloc).first_line), "FunDec");
         temp.subNode.push_back(createNode("ID: "+yyvsp[-3].show, "ID"));
@@ -1730,20 +1731,20 @@ yyreduce:
         temp.subNode.push_back(createNode("RP","RP"));
         yyval = temp;
     }
-#line 1734 "pro_2.tab.c"
+#line 1735 "pro_2.tab.c"
     break;
 
   case 24:
-#line 179 "pro_2.y"
+#line 180 "pro_2.y"
     {
         string e = "Error type A at Line "+to_string((yyloc).first_line)+": unknown lexeme "+yyvsp[-3].show;
         errList.push_back(e);
     }
-#line 1743 "pro_2.tab.c"
+#line 1744 "pro_2.tab.c"
     break;
 
   case 25:
-#line 183 "pro_2.y"
+#line 184 "pro_2.y"
     {
         Node temp = createNode( addLine("FunDec", (yyloc).first_line), "FunDec");
         temp.subNode.push_back(createNode("ID: "+yyvsp[-2].show, "ID"));
@@ -1751,20 +1752,20 @@ yyreduce:
         temp.subNode.push_back(createNode("RP","RP"));
         yyval = temp;
     }
-#line 1755 "pro_2.tab.c"
+#line 1756 "pro_2.tab.c"
     break;
 
   case 26:
-#line 190 "pro_2.y"
+#line 191 "pro_2.y"
     {
         string e = "Error type A at Line "+to_string((yyloc).first_line)+": unknown lexeme "+yyvsp[-2].show;
         errList.push_back(e);
     }
-#line 1764 "pro_2.tab.c"
+#line 1765 "pro_2.tab.c"
     break;
 
   case 27:
-#line 196 "pro_2.y"
+#line 197 "pro_2.y"
     {
         Node temp = createNode(addLine("VarList", (yyloc).first_line),"VarList");
         temp.subNode.push_back(yyvsp[-2]);
@@ -1772,41 +1773,41 @@ yyreduce:
         temp.subNode.push_back(yyvsp[0]);
         yyval = temp;
     }
-#line 1776 "pro_2.tab.c"
+#line 1777 "pro_2.tab.c"
     break;
 
   case 28:
-#line 203 "pro_2.y"
+#line 204 "pro_2.y"
     {
         Node temp = createNode(addLine("VarList", (yyloc).first_line),"VarList");
         temp.subNode.push_back(yyvsp[0]);
         yyval = temp;
     }
-#line 1786 "pro_2.tab.c"
+#line 1787 "pro_2.tab.c"
     break;
 
   case 29:
-#line 210 "pro_2.y"
+#line 211 "pro_2.y"
     {
         Node temp = createNode(addLine("ParamDec", (yyloc).first_line),"ParamDec");
         temp.subNode.push_back(yyvsp[-1]);
         temp.subNode.push_back(yyvsp[0]);
         yyval = temp;
     }
-#line 1797 "pro_2.tab.c"
+#line 1798 "pro_2.tab.c"
     break;
 
   case 30:
-#line 218 "pro_2.y"
+#line 219 "pro_2.y"
     {
         string e = "Error type B at Line "+to_string((yyloc).first_line)+": Missing Right Curly Braces \'}\'";
         errList.push_back(e);
     }
-#line 1806 "pro_2.tab.c"
+#line 1807 "pro_2.tab.c"
     break;
 
   case 31:
-#line 223 "pro_2.y"
+#line 224 "pro_2.y"
     {
         Node temp = createNode(addLine("CompSt", (yyloc).first_line),"CompSt");
         temp.subNode.push_back(createNode("LC", "LC"));
@@ -1817,11 +1818,11 @@ yyreduce:
         temp.subNode.push_back(createNode("RC","RC"));
         yyval = temp;
     }
-#line 1821 "pro_2.tab.c"
+#line 1822 "pro_2.tab.c"
     break;
 
   case 32:
-#line 235 "pro_2.y"
+#line 236 "pro_2.y"
     {
         Node temp = createNode(addLine("StmtList", (yyloc).first_line),"StmtList");
         temp.subNode.push_back(yyvsp[-1]);
@@ -1829,59 +1830,59 @@ yyreduce:
             temp.subNode.push_back(yyvsp[0]);
         yyval = temp;
     }
-#line 1833 "pro_2.tab.c"
+#line 1834 "pro_2.tab.c"
     break;
 
   case 33:
-#line 243 "pro_2.y"
+#line 244 "pro_2.y"
     {
         Node temp = createNode(addLine("StmtList", (yyloc).first_line),"StmtList");
         yyval = temp;
     }
-#line 1842 "pro_2.tab.c"
+#line 1843 "pro_2.tab.c"
     break;
 
   case 34:
-#line 249 "pro_2.y"
+#line 250 "pro_2.y"
     {
         string e = "Error type B at Line "+to_string((yyloc).first_line)+": Missing semicolon \';\'";
         errList.push_back(e);
     }
-#line 1851 "pro_2.tab.c"
+#line 1852 "pro_2.tab.c"
     break;
 
   case 35:
-#line 254 "pro_2.y"
+#line 255 "pro_2.y"
     {
         Node temp = createNode(addLine("Stmt", (yyloc).first_line),"Stmt");
         temp.subNode.push_back(yyvsp[-1]);
         temp.subNode.push_back(createNode("SEMI","SEMI"));
         yyval = temp;
     }
-#line 1862 "pro_2.tab.c"
+#line 1863 "pro_2.tab.c"
     break;
 
   case 36:
-#line 260 "pro_2.y"
+#line 261 "pro_2.y"
     {
         Node temp = createNode(addLine("Stmt", (yyloc).first_line),"Stmt");
         temp.subNode.push_back(yyvsp[0]);
         yyval = temp;
     }
-#line 1872 "pro_2.tab.c"
+#line 1873 "pro_2.tab.c"
     break;
 
   case 37:
-#line 265 "pro_2.y"
+#line 266 "pro_2.y"
     {
         string e = "Error type B at Line "+to_string((yyloc).first_line)+": Missing semicolon \';\'";
         errList.push_back(e);
     }
-#line 1881 "pro_2.tab.c"
+#line 1882 "pro_2.tab.c"
     break;
 
   case 38:
-#line 269 "pro_2.y"
+#line 270 "pro_2.y"
     {
         Node temp = createNode(addLine("Stmt", (yyloc).first_line),"Stmt");
         temp.subNode.push_back(createNode("RETURN","RETURN"));
@@ -1889,11 +1890,11 @@ yyreduce:
         temp.subNode.push_back(createNode("SEMI","SEMI"));
         yyval = temp;
     }
-#line 1893 "pro_2.tab.c"
+#line 1894 "pro_2.tab.c"
     break;
 
   case 39:
-#line 276 "pro_2.y"
+#line 277 "pro_2.y"
     {
         Node temp = createNode(addLine("Stmt", (yyloc).first_line),"Stmt");
         temp.subNode.push_back(createNode("IF","IF"));
@@ -1903,11 +1904,11 @@ yyreduce:
         temp.subNode.push_back(yyvsp[0]);
         yyval = temp;
     }
-#line 1907 "pro_2.tab.c"
+#line 1908 "pro_2.tab.c"
     break;
 
   case 40:
-#line 285 "pro_2.y"
+#line 286 "pro_2.y"
     {
         Node temp = createNode(addLine("Stmt", (yyloc).first_line),"Stmt");
         temp.subNode.push_back(createNode("IF","IF"));
@@ -1919,11 +1920,11 @@ yyreduce:
         temp.subNode.push_back(yyvsp[0]);
         yyval = temp;
     }
-#line 1923 "pro_2.tab.c"
+#line 1924 "pro_2.tab.c"
     break;
 
   case 41:
-#line 296 "pro_2.y"
+#line 297 "pro_2.y"
     {
         Node temp = createNode(addLine("Stmt", (yyloc).first_line),"Stmt");
         temp.subNode.push_back(createNode("WHILE","WHILE"));
@@ -1933,11 +1934,11 @@ yyreduce:
         temp.subNode.push_back(yyvsp[0]);
         yyval = temp;
     }
-#line 1937 "pro_2.tab.c"
+#line 1938 "pro_2.tab.c"
     break;
 
   case 42:
-#line 307 "pro_2.y"
+#line 308 "pro_2.y"
     {
         Node temp = createNode(addLine("DefList", (yyloc).first_line), "DefList");
         temp.subNode.push_back(yyvsp[-1]);
@@ -1945,29 +1946,29 @@ yyreduce:
             temp.subNode.push_back(yyvsp[0]);
         yyval = temp;
     }
-#line 1949 "pro_2.tab.c"
+#line 1950 "pro_2.tab.c"
     break;
 
   case 43:
-#line 315 "pro_2.y"
+#line 316 "pro_2.y"
     {
         Node temp = createNode(addLine("DefList", (yyloc).first_line), "DefList");
         yyval = temp;
     }
-#line 1958 "pro_2.tab.c"
+#line 1959 "pro_2.tab.c"
     break;
 
   case 44:
-#line 322 "pro_2.y"
+#line 323 "pro_2.y"
     {
         string e = "Error type B at Line "+to_string((yyloc).first_line)+": Missing semicolon \';\'";
         errList.push_back(e);
     }
-#line 1967 "pro_2.tab.c"
+#line 1968 "pro_2.tab.c"
     break;
 
   case 45:
-#line 326 "pro_2.y"
+#line 327 "pro_2.y"
     {
         Node temp = createNode(addLine("Def", (yyloc).first_line),"Def");
         temp.subNode.push_back(yyvsp[-2]);
@@ -1975,21 +1976,21 @@ yyreduce:
         temp.subNode.push_back(createNode("SEMI","SEMI"));
         yyval = temp;
     }
-#line 1979 "pro_2.tab.c"
+#line 1980 "pro_2.tab.c"
     break;
 
   case 46:
-#line 335 "pro_2.y"
+#line 336 "pro_2.y"
     {
         Node temp = createNode(addLine("DecList", (yyloc).first_line),"DecList");
         temp.subNode.push_back(yyvsp[0]);
         yyval = temp;
     }
-#line 1989 "pro_2.tab.c"
+#line 1990 "pro_2.tab.c"
     break;
 
   case 47:
-#line 340 "pro_2.y"
+#line 341 "pro_2.y"
     {
         Node temp = createNode(addLine("DecList", (yyloc).first_line),"DecList");
         temp.subNode.push_back(yyvsp[-2]);
@@ -1997,21 +1998,21 @@ yyreduce:
         temp.subNode.push_back(yyvsp[0]);
         yyval = temp;
     }
-#line 2001 "pro_2.tab.c"
+#line 2002 "pro_2.tab.c"
     break;
 
   case 48:
-#line 349 "pro_2.y"
+#line 350 "pro_2.y"
     {
         Node temp = createNode(addLine("Dec", (yyloc).first_line),"Dec");
         temp.subNode.push_back(yyvsp[0]);
         yyval = temp;
     }
-#line 2011 "pro_2.tab.c"
+#line 2012 "pro_2.tab.c"
     break;
 
   case 49:
-#line 354 "pro_2.y"
+#line 355 "pro_2.y"
     {
         Node temp = createNode(addLine("Dec", (yyloc).first_line),"Dec");
         temp.subNode.push_back(yyvsp[-2]);
@@ -2019,38 +2020,38 @@ yyreduce:
         temp.subNode.push_back(yyvsp[0]);
         yyval = temp;
     }
-#line 2023 "pro_2.tab.c"
+#line 2024 "pro_2.tab.c"
     break;
 
   case 50:
-#line 364 "pro_2.y"
+#line 365 "pro_2.y"
     {
         string e = "Error type B at Line "+to_string((yyloc).first_line)+": Missing Right Parentheses \')\'";
         errList.push_back(e);
     }
-#line 2032 "pro_2.tab.c"
+#line 2033 "pro_2.tab.c"
     break;
 
   case 51:
-#line 368 "pro_2.y"
+#line 369 "pro_2.y"
     {
         string e = "Error type B at Line "+to_string((yyloc).first_line)+": Missing Right Parentheses \')\'";
         errList.push_back(e);
     }
-#line 2041 "pro_2.tab.c"
+#line 2042 "pro_2.tab.c"
     break;
 
   case 52:
-#line 372 "pro_2.y"
+#line 373 "pro_2.y"
     {
         string e = "Error type A at Line "+to_string((yyloc).first_line)+": unknown lexeme "+yyvsp[-3].show;
         errList.push_back(e);
     }
-#line 2050 "pro_2.tab.c"
+#line 2051 "pro_2.tab.c"
     break;
 
   case 53:
-#line 376 "pro_2.y"
+#line 377 "pro_2.y"
     {
         Node temp = createNode(addLine("Exp", (yyloc).first_line),"Exp");
         temp.subNode.push_back(yyvsp[-2]);
@@ -2058,20 +2059,20 @@ yyreduce:
         temp.subNode.push_back(yyvsp[0]);
         yyval = temp;
     }
-#line 2062 "pro_2.tab.c"
+#line 2063 "pro_2.tab.c"
     break;
 
   case 54:
-#line 383 "pro_2.y"
+#line 384 "pro_2.y"
     {
         string e = "Error type A at Line "+to_string((yyloc).first_line)+": unknown lexeme "+yyvsp[-1].show;
         errList.push_back(e);
     }
-#line 2071 "pro_2.tab.c"
+#line 2072 "pro_2.tab.c"
     break;
 
   case 55:
-#line 387 "pro_2.y"
+#line 388 "pro_2.y"
     {
         Node temp = createNode(addLine("Exp", (yyloc).first_line),"Exp");
         temp.subNode.push_back(yyvsp[-2]);
@@ -2079,11 +2080,11 @@ yyreduce:
         temp.subNode.push_back(yyvsp[0]);
         yyval = temp;
     }
-#line 2083 "pro_2.tab.c"
+#line 2084 "pro_2.tab.c"
     break;
 
   case 56:
-#line 394 "pro_2.y"
+#line 395 "pro_2.y"
     {
         Node temp = createNode(addLine("Exp", (yyloc).first_line),"Exp");
         temp.subNode.push_back(yyvsp[-2]);
@@ -2091,11 +2092,11 @@ yyreduce:
         temp.subNode.push_back(yyvsp[0]);
         yyval = temp;
     }
-#line 2095 "pro_2.tab.c"
+#line 2096 "pro_2.tab.c"
     break;
 
   case 57:
-#line 401 "pro_2.y"
+#line 402 "pro_2.y"
     {
         Node temp = createNode(addLine("Exp", (yyloc).first_line),"Exp");
         temp.subNode.push_back(yyvsp[-2]);
@@ -2103,11 +2104,11 @@ yyreduce:
         temp.subNode.push_back(yyvsp[0]);
         yyval = temp;
     }
-#line 2107 "pro_2.tab.c"
+#line 2108 "pro_2.tab.c"
     break;
 
   case 58:
-#line 408 "pro_2.y"
+#line 409 "pro_2.y"
     {
         Node temp = createNode(addLine("Exp", (yyloc).first_line),"Exp");
         temp.subNode.push_back(yyvsp[-2]);
@@ -2115,11 +2116,11 @@ yyreduce:
         temp.subNode.push_back(yyvsp[0]);
         yyval = temp;
     }
-#line 2119 "pro_2.tab.c"
+#line 2120 "pro_2.tab.c"
     break;
 
   case 59:
-#line 415 "pro_2.y"
+#line 416 "pro_2.y"
     {
         Node temp = createNode(addLine("Exp", (yyloc).first_line),"Exp");
         temp.subNode.push_back(yyvsp[-2]);
@@ -2127,11 +2128,11 @@ yyreduce:
         temp.subNode.push_back(yyvsp[0]);
         yyval = temp;
     }
-#line 2131 "pro_2.tab.c"
+#line 2132 "pro_2.tab.c"
     break;
 
   case 60:
-#line 422 "pro_2.y"
+#line 423 "pro_2.y"
     {
         Node temp = createNode(addLine("Exp", (yyloc).first_line),"Exp");
         temp.subNode.push_back(yyvsp[-2]);
@@ -2139,11 +2140,11 @@ yyreduce:
         temp.subNode.push_back(yyvsp[0]);
         yyval = temp;
     }
-#line 2143 "pro_2.tab.c"
+#line 2144 "pro_2.tab.c"
     break;
 
   case 61:
-#line 429 "pro_2.y"
+#line 430 "pro_2.y"
     {
         Node temp = createNode(addLine("Exp", (yyloc).first_line),"Exp");
         temp.subNode.push_back(yyvsp[-2]);
@@ -2151,11 +2152,11 @@ yyreduce:
         temp.subNode.push_back(yyvsp[0]);
         yyval = temp;
     }
-#line 2155 "pro_2.tab.c"
+#line 2156 "pro_2.tab.c"
     break;
 
   case 62:
-#line 436 "pro_2.y"
+#line 437 "pro_2.y"
     {
         Node temp = createNode(addLine("Exp", (yyloc).first_line),"Exp");
         temp.subNode.push_back(yyvsp[-2]);
@@ -2163,11 +2164,11 @@ yyreduce:
         temp.subNode.push_back(yyvsp[0]);
         yyval = temp;
     }
-#line 2167 "pro_2.tab.c"
+#line 2168 "pro_2.tab.c"
     break;
 
   case 63:
-#line 443 "pro_2.y"
+#line 444 "pro_2.y"
     {
         Node temp = createNode(addLine("Exp", (yyloc).first_line),"Exp");
         temp.subNode.push_back(yyvsp[-2]);
@@ -2175,11 +2176,11 @@ yyreduce:
         temp.subNode.push_back(yyvsp[0]);
         yyval = temp;
     }
-#line 2179 "pro_2.tab.c"
+#line 2180 "pro_2.tab.c"
     break;
 
   case 64:
-#line 450 "pro_2.y"
+#line 451 "pro_2.y"
     {
         Node temp = createNode(addLine("Exp", (yyloc).first_line),"Exp");
         temp.subNode.push_back(yyvsp[-2]);
@@ -2187,11 +2188,11 @@ yyreduce:
         temp.subNode.push_back(yyvsp[0]);
         yyval = temp;
     }
-#line 2191 "pro_2.tab.c"
+#line 2192 "pro_2.tab.c"
     break;
 
   case 65:
-#line 457 "pro_2.y"
+#line 458 "pro_2.y"
     {
         Node temp = createNode(addLine("Exp", (yyloc).first_line),"Exp");
         temp.subNode.push_back(yyvsp[-2]);
@@ -2199,11 +2200,11 @@ yyreduce:
         temp.subNode.push_back(yyvsp[0]);
         yyval = temp;
     }
-#line 2203 "pro_2.tab.c"
+#line 2204 "pro_2.tab.c"
     break;
 
   case 66:
-#line 464 "pro_2.y"
+#line 465 "pro_2.y"
     {
         Node temp = createNode(addLine("Exp", (yyloc).first_line),"Exp");
         temp.subNode.push_back(yyvsp[-2]);
@@ -2211,11 +2212,11 @@ yyreduce:
         temp.subNode.push_back(yyvsp[0]);
         yyval = temp;
     }
-#line 2215 "pro_2.tab.c"
+#line 2216 "pro_2.tab.c"
     break;
 
   case 67:
-#line 471 "pro_2.y"
+#line 472 "pro_2.y"
     {
         Node temp = createNode(addLine("Exp", (yyloc).first_line),"Exp");
         temp.subNode.push_back(createNode("LP","LP"));
@@ -2223,33 +2224,33 @@ yyreduce:
         temp.subNode.push_back(createNode("RP","RP"));
         yyval = temp;
     }
-#line 2227 "pro_2.tab.c"
+#line 2228 "pro_2.tab.c"
     break;
 
   case 68:
-#line 478 "pro_2.y"
+#line 479 "pro_2.y"
     {
         Node temp = createNode(addLine("Exp", (yyloc).first_line),"Exp");
         temp.subNode.push_back(createNode("MINUS","MINUS"));
         temp.subNode.push_back(yyvsp[0]);
         yyval = temp;
     }
-#line 2238 "pro_2.tab.c"
+#line 2239 "pro_2.tab.c"
     break;
 
   case 69:
-#line 484 "pro_2.y"
+#line 485 "pro_2.y"
     {
         Node temp = createNode(addLine("Exp", (yyloc).first_line),"Exp");
         temp.subNode.push_back(createNode("NOT","NOT"));
         temp.subNode.push_back(yyvsp[0]);
         yyval = temp;
     }
-#line 2249 "pro_2.tab.c"
+#line 2250 "pro_2.tab.c"
     break;
 
   case 70:
-#line 490 "pro_2.y"
+#line 491 "pro_2.y"
     {
         Node temp = createNode(addLine("Exp", (yyloc).first_line),"Exp");
         temp.subNode.push_back(createNode("ID: "+yyvsp[-3].show, "ID"));
@@ -2258,20 +2259,20 @@ yyreduce:
         temp.subNode.push_back(createNode("RP","RP"));
         yyval = temp;
     }
-#line 2262 "pro_2.tab.c"
+#line 2263 "pro_2.tab.c"
     break;
 
   case 71:
-#line 498 "pro_2.y"
+#line 499 "pro_2.y"
     {
         string e = "Error type A at Line "+to_string((yyloc).first_line)+": unknown lexeme "+yyvsp[-3].show;
         errList.push_back(e);
     }
-#line 2271 "pro_2.tab.c"
+#line 2272 "pro_2.tab.c"
     break;
 
   case 72:
-#line 502 "pro_2.y"
+#line 503 "pro_2.y"
     {
         Node temp = createNode(addLine("Exp", (yyloc).first_line),"Exp");
         temp.subNode.push_back(createNode("ID: "+yyvsp[-2].show, "ID"));
@@ -2279,20 +2280,20 @@ yyreduce:
         temp.subNode.push_back(createNode("RP","RP"));
         yyval = temp;
     }
-#line 2283 "pro_2.tab.c"
+#line 2284 "pro_2.tab.c"
     break;
 
   case 73:
-#line 509 "pro_2.y"
+#line 510 "pro_2.y"
     {
         string e = "Error type A at Line "+to_string((yyloc).first_line)+": unknown lexeme "+yyvsp[-2].show;
         errList.push_back(e);
     }
-#line 2292 "pro_2.tab.c"
+#line 2293 "pro_2.tab.c"
     break;
 
   case 74:
-#line 513 "pro_2.y"
+#line 514 "pro_2.y"
     {
         Node temp = createNode(addLine("Exp", (yyloc).first_line),"Exp");
         temp.subNode.push_back(yyvsp[-3]);
@@ -2301,11 +2302,11 @@ yyreduce:
         temp.subNode.push_back(createNode("RB","RB"));
         yyval = temp;
     }
-#line 2305 "pro_2.tab.c"
+#line 2306 "pro_2.tab.c"
     break;
 
   case 75:
-#line 521 "pro_2.y"
+#line 522 "pro_2.y"
     {
         Node temp = createNode(addLine("Exp", (yyloc).first_line),"Exp");
         temp.subNode.push_back(yyvsp[-2]);
@@ -2313,69 +2314,69 @@ yyreduce:
         temp.subNode.push_back(createNode("ID: "+yyvsp[0].show, "ID"));
         yyval = temp;
     }
-#line 2317 "pro_2.tab.c"
+#line 2318 "pro_2.tab.c"
     break;
 
   case 76:
-#line 528 "pro_2.y"
+#line 529 "pro_2.y"
     {
         string e = "Error type A at Line "+to_string((yyloc).first_line)+": unknown lexeme "+yyvsp[0].show;
         errList.push_back(e);
     }
-#line 2326 "pro_2.tab.c"
+#line 2327 "pro_2.tab.c"
     break;
 
   case 77:
-#line 532 "pro_2.y"
+#line 533 "pro_2.y"
     {
         Node temp = createNode(addLine("Exp", (yyloc).first_line),"Exp");
         temp.subNode.push_back(createNode("ID: "+yyvsp[0].show, "ID"));
         yyval = temp;
     }
-#line 2336 "pro_2.tab.c"
+#line 2337 "pro_2.tab.c"
     break;
 
   case 78:
-#line 537 "pro_2.y"
+#line 538 "pro_2.y"
     {
         Node temp = createNode(addLine("Exp", (yyloc).first_line),"Exp");
         temp.subNode.push_back(createNode("INT: "+yyvsp[0].show, "INT"));
         yyval = temp;
     }
-#line 2346 "pro_2.tab.c"
+#line 2347 "pro_2.tab.c"
     break;
 
   case 79:
-#line 542 "pro_2.y"
+#line 543 "pro_2.y"
     {
         Node temp = createNode(addLine("Exp", (yyloc).first_line),"Exp");
         temp.subNode.push_back(createNode("FLOAT: "+yyvsp[0].show, "FLOAT"));
         yyval = temp;
     }
-#line 2356 "pro_2.tab.c"
+#line 2357 "pro_2.tab.c"
     break;
 
   case 80:
-#line 547 "pro_2.y"
+#line 548 "pro_2.y"
     {
         Node temp = createNode(addLine("Exp", (yyloc).first_line),"Exp");
         temp.subNode.push_back(createNode("CHAR: "+yyvsp[0].show, "CHAR"));
         yyval = temp;
     }
-#line 2366 "pro_2.tab.c"
+#line 2367 "pro_2.tab.c"
     break;
 
   case 81:
-#line 552 "pro_2.y"
+#line 553 "pro_2.y"
     {
         string e = "Error type A at Line "+to_string((yyloc).first_line)+": unknown lexeme "+yyvsp[0].show;
         errList.push_back(e);
     }
-#line 2375 "pro_2.tab.c"
+#line 2376 "pro_2.tab.c"
     break;
 
   case 82:
-#line 558 "pro_2.y"
+#line 559 "pro_2.y"
     {
         Node temp = createNode(addLine("Args", (yyloc).first_line),"Args");
         temp.subNode.push_back(yyvsp[-2]);
@@ -2383,21 +2384,21 @@ yyreduce:
         temp.subNode.push_back(yyvsp[0]);
         yyval = temp;
     }
-#line 2387 "pro_2.tab.c"
+#line 2388 "pro_2.tab.c"
     break;
 
   case 83:
-#line 565 "pro_2.y"
+#line 566 "pro_2.y"
     {
         Node temp = createNode(addLine("Args", (yyloc).first_line),"Args");
         temp.subNode.push_back(yyvsp[0]);
         yyval = temp;
     }
-#line 2397 "pro_2.tab.c"
+#line 2398 "pro_2.tab.c"
     break;
 
 
-#line 2401 "pro_2.tab.c"
+#line 2402 "pro_2.tab.c"
 
       default: break;
     }
@@ -2635,7 +2636,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 571 "pro_2.y"
+#line 572 "pro_2.y"
 
  
  
@@ -2666,8 +2667,10 @@ string addLine(string s, int line){
 
 int main(){
     yyparse();
-    if (errList.empty())
-        output(program,0);
+    if (errList.empty()){
+        // output(program,0);
+        generateGrammerTree(program);
+    }
     else
         errOut();
 
