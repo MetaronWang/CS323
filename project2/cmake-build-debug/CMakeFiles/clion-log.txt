@@ -1,0 +1,4 @@
+/home/metaron/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/192.6603.37/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/usr/bin/make -DCMAKE_C_COMPILER=/usr/bin/gcc -DCMAKE_CXX_COMPILER=/usr/bin/g++ -G "CodeBlocks - Unix Makefiles" /home/metaron/文档/Study/CS323/CS323/project2
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/metaron/文档/Study/CS323/CS323/project2/cmake-build-debug

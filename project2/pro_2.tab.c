@@ -71,7 +71,7 @@
 #include "lex.yy.c"
 #include "stdlib.h"
 #include "stdio.h"
-#include "node.hpp"
+// #include "node.hpp"
 #include "queue"
 #include "stack"
 #include "iostream"
@@ -2666,6 +2666,7 @@ string addLine(string s, int line){
 }
 
 int main(){
+    freopen("test/test_1_r02.spl", "r", stdin);
     yyparse();
     if (errList.empty()){
         // output(program,0);
