@@ -58,20 +58,36 @@
     $$
         \begin{array}{c}{S \rightarrow a B} \\ {B \rightarrow S+B | \epsilon}\end{array}
     $$
-        \subsection{1. Construct the predictive parsing table for G. [20 points]}
-        \begin{table}[!htbp]
-            \centering
-            \caption{Parsing Table}
-            \label{tab:aStrangeTable}
-            \begin{tabular}{|c|c|c|c|}
-                \hline
-                \multirow{2}*{Non-Terminal} & \multicolumn{3}{c|}{INPUT SYMBOL}\\
-                \cline{2-4}
-                ~ & a & + & \$\\
-                \hline
-                S & $S \rightarrow a B$ & & \\
-                B & $B \rightarrow S+B$ & & \\
-                \hline
-            \end{tabular}
-        \end{table}
+        \subsection{Construct the predictive parsing table for G. [20 points]}
+            $$
+                \begin{array}{c}
+                    {FIRST(S):\{a\}}\\
+                    {FIRST(B):\{a,\epsilon\}}\\
+                    {FELLOW(S)\{+,\$\}}\\
+                    {FELLOW(B)\{+,\$\}}
+                \end{array}
+            $$
+            \begin{table}[!htbp]
+                \centering
+                \caption{Parsing Table}
+                \label{tab:aStrangeTable}
+                \begin{tabular}{|c|c|c|c|}
+                    \hline
+                    \multirow{2}*{Non-Terminal} & \multicolumn{3}{c|}{INPUT SYMBOL}\\
+                    \cline{2-4}
+                    ~ & a & + & \$\\
+                    \hline
+                    S & $S \rightarrow a B$ & & \\
+                    B & $B \rightarrow S+B$ & $B \rightarrow \epsilon$ & $B \rightarrow \epsilon$ \\
+                    \hline
+                \end{tabular}
+            \end{table}
+        \subsection{Is the grammar LL(1)? [10 points]}
+            For the $B \rightarrow S+B | \epsilon$
+            \begin{itemize}
+                \item ${FIRST(S+B)=\{a\}}$ and ${FIRST(\epsilon)=\{\epsilon\}}$, $FIRST(S+B)\bigcup FIRST(\epsilon)=\emptyset$
+                \item ${FIRST(\epsilon)=\{\epsilon\}}$, and $FIRST(S+B)\bigcup FELLOW(B)=\emptyset$
+            \end{itemize}
+            So $B \rightarrow S+B | \epsilon$ is LL(1)
+        \subsection{Can an LL(1) parser accept the input string aaaa+++? If yes, please list the moves made by the parser; otherwise, state the reason. Before parsing, please resolve conflicts in the parsing table if any. [20 points]}
 \end{document}

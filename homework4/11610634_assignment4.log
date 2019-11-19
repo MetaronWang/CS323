@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/Arch Linux) (preloaded format=xelatex 2019.9.20)  19 NOV 2019 00:43
+This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/Arch Linux) (preloaded format=xelatex 2019.9.20)  19 NOV 2019 17:19
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -727,7 +727,7 @@ Package: xkeyval 2014/12/03 v2.7a package option processing (HA)
 File: xkeyval.tex 2014/12/03 v2.7a key=value parser (HA)
 ))
 \verbatim@out=\write3
-runsystem(echo 'write18-test-2019111943'>"11610634_assignment4.w18")...disabled (restricted).
+runsystem(echo 'write18-test-201911191039'>"11610634_assignment4.w18")...disabled (restricted).
 
 
 
@@ -1140,26 +1140,32 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) 
 AED: lastpage setting LastPage
 [1]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 77.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 77.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 93.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 93.
  (./11610634_assignment4.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 77.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 77.
-Package rerunfilecheck Info: File `11610634_assignment4.out' has not changed.
-(rerunfilecheck)             Checksum: 18BA0583E302695790CA92C097130B34.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 93.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 93.
 
+
+Package rerunfilecheck Warning: File `11610634_assignment4.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `11610634_assignment4.out':
+(rerunfilecheck)             Before: 584129A88DB754F6D728886678F5D7D2
+(rerunfilecheck)             After:  037296B4CD9912F44B196E1181D0558F.
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 77.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 93.
  ) 
 Here is how much of TeX's memory you used:
  38679 strings out of 492922
  783136 string characters out of 6138851
- 1044334 words of memory out of 5000000
+ 1046340 words of memory out of 5000000
  42199 multiletter control sequences out of 15000+600000
  538873 words of font info for 68 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 56i,11n,77p,480b,446s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 56i,11n,77p,474b,446s stack positions out of 5000i,500n,10000p,200000b,80000s
 
 Output written on 11610634_assignment4.pdf (2 pages).
