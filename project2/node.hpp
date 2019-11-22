@@ -14,6 +14,12 @@ struct Node{
     string type;
 };
 
+void errOut(){
+    int size = errList.size();
+    for (int i=0;i<size;i++){
+        cout<<errList[i]<<endl;
+    }
+}
 
 Node createNode(string s, string type){
     Node node;

@@ -2644,13 +2644,6 @@ void yyerror(const char *s){
     // fprintf(stderr, "%s\n", s);
 }
 
-void errOut(){
-    int size = errList.size();
-    for (int i=0;i<size;i++){
-        cout<<errList[i]<<endl;
-    }
-}
-
 void output(Node node, int num){
     int size = node.subNode.size();
     string tab(num,' ');
@@ -2666,7 +2659,7 @@ string addLine(string s, int line){
 }
 
 int main(){
-    freopen("test/test_1_r02.spl", "r", stdin);
+    freopen("test1/test_1_r09.spl", "r", stdin);
     yyparse();
     if (errList.empty()){
         // output(program,0);
