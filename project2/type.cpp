@@ -24,7 +24,7 @@ struct StructInfo {
 struct FuncInfo {
     string name;
     int returnType;
-    map<string, VarInfo> argSet;
+    vector<VarInfo> argSet;
 };
 
 struct ScopeInfo {
@@ -42,6 +42,8 @@ map<string, int> types;
 int speciferAnalysis(Node specifer, ScopeInfo *scope);
 
 void compStAnalysis(Node compSt, ScopeInfo *scope, int type);
+
+int *expAnalysis(Node exp, ScopeInfo *scope);
 
 void initType() {
     typeMap[0] = "int";
@@ -126,18 +128,15 @@ bool checkStruct(string name) {
 
 VarInfo createVar(Node varDec, int type) {
     VarInfo var;
+    var.array = false;
+    var.dimension = 0;
     while (varDec.subNode.size() > 1) {
         varDec = varDec.subNode[0];
+        var.array = true;
+        var.dimension += 1;
     }
     var.name = varDec.subNode[0].show.substr(4);
     var.type = type;
-    if (varDec.subNode.size() > 1) {
-        var.array = true;
-        var.dimension = 1;
-    } else {
-        var.array = false;
-        var.dimension = 0;
-    }
     return var;
 }
 
@@ -247,9 +246,26 @@ void defListAnalysis(Node defList, ScopeInfo *scope) {
     }
 }
 
+vector<int *> argsAnalysis(Node args, ScopeInfo *scope) {
+    vector<int *> argTypes;
+    int size = args.subNode.size();
+    while (size > 0) {
+        argTypes.push_back(expAnalysis(args.subNode[0], scope));
+        if (size > 1) {
+            args = args.subNode[2];
+            size = args.subNode.size();
+        } else {
+            break;
+        }
+    }
+    return argTypes;
+}
+
 int *expAnalysis(Node exp, ScopeInfo *scope) {
     int size = exp.subNode.size();
-    int returnArray[2] = {-1, 0};
+    int *returnArray = new int[2];
+    returnArray[0] = -1;
+    returnArray[1] = 0;
     switch (size) {
         case 1: {
             if (exp.subNode[0].type == "ID") {
@@ -439,27 +455,80 @@ int *expAnalysis(Node exp, ScopeInfo *scope) {
                     returnArray[0] = -1;
                     returnArray[1] = 0;
                 } else {
-                    if (type[0] < 4) {
+                    if (type[0] < 4 || type[1] == 1) {
                         errList.push_back("Error type 13");
                         returnArray[0] = -1;
                         returnArray[1] = 0;
-                    }else{
-
+                    } else {
+                        string field = exp.subNode[2].show.substr(4);
+                        StructInfo structInfo = structSet.find(typeMap.find(type[0])->second)->second;
+                        for (int i = 0; i < structInfo.varSet.size(); i++) {
+                            if (structInfo.varSet[i].name == field) {
+                                returnArray[0] = structInfo.varSet[i].type;
+                                returnArray[1] = structInfo.varSet[i].array;
+                                return returnArray;
+                            }
+                        }
+                        errList.push_back("Error type 14");
+                        returnArray[0] = -1;
+                        returnArray[1] = 0;
                     }
                 }
             }
             break;
         }
         case 4: {
-
+            if (exp.subNode[0].type == "ID") {
+                FuncInfo *func = getFunc(exp.subNode[0].show.substr(4));
+                if (func != nullptr) {
+                    vector<int *> args = argsAnalysis(exp.subNode[2], scope);
+                    int argSize = args.size();
+                    if (argSize != func->argSet.size()) {
+                        errList.push_back("Error type 9");
+                    } else {
+                        for (int i = 0; i < argSize; i++) {
+                            if (args[i][0] != func->argSet[i].type || args[i][1] != func->argSet[i].array) {
+                                errList.push_back("Error type 9");
+                                break;
+                            }
+                        }
+                    }
+                    returnArray[0] = func->returnType;
+                    returnArray[1] = 0;
+                } else {
+                    VarInfo *var = getVar(exp.subNode[0].show.substr(4), scope);
+                    if (var != nullptr) {
+                        errList.push_back("Error type 2");
+                        returnArray[0] = -1;
+                        returnArray[1] = 0;
+                    } else {
+                        errList.push_back("Error type 11");
+                        returnArray[0] = -1;
+                        returnArray[1] = 0;
+                    }
+                }
+            } else if (exp.subNode[0].type == "Exp") {
+                int *type = expAnalysis(exp.subNode[0], scope);
+                if (type[1] == 1) {
+                    int *type1 = expAnalysis(exp.subNode[2], scope);
+                    if (type1[0] == 0 && type1[1] == 0) {
+                        returnArray[0] = type[0];
+                        returnArray[1] = 0;
+                    } else {
+                        errList.push_back("Error Type 12");
+                        returnArray[0] = -1;
+                        returnArray[1] = 0;
+                    }
+                } else {
+                    errList.push_back("Error type 10");
+                    returnArray[0] = -1;
+                    returnArray[1] = 0;
+                }
+            }
             break;
         }
     }
     return returnArray;
-}
-
-void returnAnalysis(Node exp, ScopeInfo *scope, int type) {
-
 }
 
 void stmtAnalysis(Node stmt, ScopeInfo *scope, int type) {
@@ -474,11 +543,17 @@ void stmtAnalysis(Node stmt, ScopeInfo *scope, int type) {
             break;
         }
         case 3: {//RETURN Exp SEMI
-            returnAnalysis(stmt.subNode[1], scope, type);
+            int * returnType = expAnalysis(stmt.subNode[1], scope);
+            if(type != returnType[0]){
+                errList.push_back("Error type 8");
+            }
             break;
         }
         case 5: {//IF / WHILE
-            returnAnalysis(stmt.subNode[2], scope, 4);
+            int * returnType = expAnalysis(stmt.subNode[1], scope);
+            if(type != returnType[2]){
+                errList.push_back("Error type 18");
+            }
             ScopeInfo child;
             child.parentScope = scope;
             scope->childList.push_back(child);
@@ -486,7 +561,10 @@ void stmtAnalysis(Node stmt, ScopeInfo *scope, int type) {
             break;
         }
         case 7: {//IF-ELSE
-            returnAnalysis(stmt.subNode[2], scope, 4);
+            int * returnType = expAnalysis(stmt.subNode[1], scope);
+            if(type != returnType[2]){
+                errList.push_back("Error type 18");
+            }
             ScopeInfo child1;
             child1.parentScope = scope;
             scope->childList.push_back(child1);
@@ -504,8 +582,13 @@ void stmtListAnalysis(Node stmtList, ScopeInfo *scope, int type) {
     int size = stmtList.subNode.size();
     while (size > 0) {
         stmtAnalysis(stmtList.subNode[0], scope, type);
-        stmtList = stmtList.subNode[1];
-        size = stmtList.subNode.size();
+        if (size>1){
+            stmtList = stmtList.subNode[1];
+            size = stmtList.subNode.size();
+        }else{
+            break;
+        }
+
     }
 }
 
@@ -532,9 +615,16 @@ void funcAnalysis(Node func, Node compSt, ScopeInfo *scope, int type) {
         while (size1 > 0) {
             int type = speciferAnalysis(varList.subNode[0].subNode[0], scope);
             VarInfo temp = createVar(varList.subNode[0].subNode[1], type);
-            map<string, VarInfo>::iterator it = f.argSet.find(temp.name);
-            if (it == f.argSet.end()) {
-                f.argSet[temp.name] = temp;
+            int argSize = f.argSet.size();
+            bool exist = false;
+            for (int i = 0; i < argSize; i++) {
+                if (f.argSet[i].name == temp.name) {
+                    exist = true;
+                    break;
+                }
+            }
+            if (!exist) {
+                f.argSet[argSize] = temp;
             } else {
                 errList.push_back("Error type 3");
             }
@@ -631,10 +721,10 @@ void printProgram(ScopeInfo scope, int num) {
     cout << "func" << endl;
     map<string, FuncInfo>::iterator itf = funcSet.begin();
     while (itf != funcSet.end()) {
-        map<string, VarInfo>::iterator itv = itf->second.argSet.begin();
+        vector<VarInfo>::iterator itv = itf->second.argSet.begin();
         cout << itf->first << endl;
         while (itv != itf->second.argSet.end()) {
-            cout << "  " << itv->second.name << ":" << itv->second.type << endl;
+            cout << "  " << itv->name << ":" << itv->type << endl;
             itv++;
         }
         itf++;
