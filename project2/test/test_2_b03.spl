@@ -1,0 +1,30 @@
+struct a{
+    int c;
+    int d;
+};
+struct b{
+    int c;
+    int d;
+};
+struct a1{
+    struct a aa;
+    int i;
+};
+
+struct b1{
+    struct b bb;
+    int i;
+};
+
+struct a2{
+    struct b1 bb;
+    int i;
+};
+
+int main(){
+    struct a1 aa;
+    struct b1 bb;
+    struct a2 aaa;
+    aa = bb;
+    aa = aaa;
+}

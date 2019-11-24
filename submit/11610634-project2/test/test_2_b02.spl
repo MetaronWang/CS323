@@ -1,0 +1,24 @@
+struct aa{
+    int a;
+    float b;
+};
+
+struct bb{
+    float a;
+    int b;
+};
+
+struct cc{
+    int a;
+    float b;
+};
+
+
+int main(){
+    struct aa a;
+    struct bb b;
+    struct cc c;
+    a = c;
+    a = b;
+    return 0;
+};

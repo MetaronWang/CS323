@@ -10,4 +10,4 @@ BISON=bison
 splc: .lex .pro_2
 	$(PP) pro_2.tab.c  -o splc.out
 clean:
-	@rm -f lex.yy.c pro_2.tab.* *.out *.so *.aux *.log *.gz *.output
+	@rm -f lex.yy.c pro_2.tab.* *.so *.aux *.log *.gz *.output
