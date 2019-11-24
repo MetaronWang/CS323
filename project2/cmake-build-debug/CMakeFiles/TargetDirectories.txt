@@ -1,3 +1,4 @@
-/home/metaron/文档/Study/CS323/CS323/project2/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/metaron/文档/Study/CS323/CS323/project2/cmake-build-debug/CMakeFiles/project2.dir
 /home/metaron/文档/Study/CS323/CS323/project2/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/metaron/文档/Study/CS323/CS323/project2/cmake-build-debug/CMakeFiles/project2.dir
+/home/metaron/文档/Study/CS323/CS323/project2/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/metaron/文档/Study/CS323/CS323/project2/cmake-build-debug/CMakeFiles/testCode.dir

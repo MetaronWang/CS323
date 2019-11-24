@@ -2658,11 +2658,23 @@ string addLine(string s, int line){
     return s+" ("+to_string(line)+")";
 }
 
-int main(){
-    freopen("test1/test_1_r09.spl", "r", stdin);
+int main(int argc, char** argv){
+    if(argc>1){
+        string s = argv[1];
+        int size = s.size();
+        s = s.substr(0, size-4);
+        string in = s+".spl";
+        string out = s+".out";
+        freopen(in.c_str(), "r", stdin);
+        freopen(out.c_str(), "w", stdout);
+        freopen(out.c_str(), "w", stderr);
+        cout<<"";
+    }else{
+        freopen("test/test_2_r06.spl", "r", stdin);
+    }
     yyparse();
     if (errList.empty()){
-        // output(program,0);
+        //output(program,0);
         generateGrammerTree(program);
     }
     else

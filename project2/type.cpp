@@ -45,6 +45,17 @@ void compStAnalysis(Node compSt, ScopeInfo *scope, int type);
 
 int *expAnalysis(Node exp, ScopeInfo *scope);
 
+string getLineFromShow(string show) {
+    int size = show.size();
+    int start = show.rfind("(");
+    int end = show.rfind(")");
+    int length = end - start;
+    if (length > 0) {
+        length--;
+    }
+    return show.substr(start + 1, length);
+}
+
 void initType() {
     typeMap[0] = "int";
     typeMap[1] = "float";
@@ -83,6 +94,16 @@ bool findVarInScope(string name, ScopeInfo *scope) {
         } else {
             return false;
         }
+    }
+}
+
+bool findVarInThisScope(string name, ScopeInfo *scope) {
+    map<string, VarInfo>::iterator it;
+    it = scope->varSet.find(name);
+    if (it != scope->varSet.end()) {
+        return true;
+    } else {
+        return false;
     }
 }
 
@@ -163,9 +184,21 @@ void createStruct(Node defList, string name, ScopeInfo *scope) {
                 }
             }
             if (!exist) {
-                s.varSet.push_back(temp);
+                if (decList.subNode[0].subNode.size() > 1) {
+                    int *type1 = expAnalysis(decList.subNode[0].subNode[2], scope);
+                    if (type1[0] == temp.type && type1[1] == temp.array) {
+                        s.varSet.push_back(temp);
+                    } else {
+                        errList.push_back(
+                                "Error type 5 at Line " + getLineFromShow(decList.subNode[0].subNode[2].show) +
+                                ": unmatching types on both sides of assignment operator (=)");
+                    }
+                } else {
+                    s.varSet.push_back(temp);
+                };
             } else {
-                errList.push_back("Error type 15");
+                errList.push_back("Error type 16 at Line " + getLineFromShow(defList.subNode[0].subNode[0].show) +
+                                  ": The field has existed");
             }
             if (size2 > 1) {
                 decList = decList.subNode[2];
@@ -193,7 +226,8 @@ int structAnalysis(Node structSpecifier, ScopeInfo *scope) {
         map<string, int>::iterator it =
                 types.find(structSpecifier.subNode[1].show.substr(4));
         if (it == types.end()) {
-            errList.push_back("Error type 17");
+            errList.push_back("Error type 17 at Line " + getLineFromShow(structSpecifier.show) +
+                              ": The Struct hasn't been defined");
             return -1;
         } else {
             return it->second;
@@ -202,7 +236,8 @@ int structAnalysis(Node structSpecifier, ScopeInfo *scope) {
         map<string, int>::iterator it =
                 types.find(structSpecifier.subNode[1].show.substr(4));
         if (it != types.end()) {
-            errList.push_back("Error type 16");
+            errList.push_back("Error type 15 at Line " + getLineFromShow(structSpecifier.show) +
+                              ": redefine the same structure type");
             return -1;
         } else {
             createStruct(structSpecifier.subNode[3],
@@ -224,11 +259,23 @@ void defListAnalysis(Node defList, ScopeInfo *scope) {
         int size2 = decList.subNode.size();
         while (size2 > 0) {
             VarInfo temp = createVar(decList.subNode[0].subNode[0], type);
-            bool exist = findVarInScope(temp.name, scope);
+            bool exist = findVarInThisScope(temp.name, scope);
             if (!exist) {
-                scope->varSet[temp.name] = temp;
+                if (decList.subNode[0].subNode.size() > 1) {
+                    int *type1 = expAnalysis(decList.subNode[0].subNode[2], scope);
+                    if (type1[0] == temp.type && type1[1] == temp.array) {
+                        scope->varSet[temp.name] = temp;
+                    } else {
+                        errList.push_back(
+                                "Error type 5 at Line " + getLineFromShow(decList.subNode[0].subNode[2].show) +
+                                ": unmatching types on both sides of assignment operator (=)");
+                    }
+                } else {
+                    scope->varSet[temp.name] = temp;
+                };
             } else {
-                errList.push_back("Error type 3");
+                errList.push_back("Error type 3 at Line " + getLineFromShow(decList.subNode[0].subNode[0].show) +
+                                  ": variable is redefined in the same scope");
             }
             if (size2 > 1) {
                 decList = decList.subNode[2];
@@ -261,6 +308,39 @@ vector<int *> argsAnalysis(Node args, ScopeInfo *scope) {
     return argTypes;
 }
 
+bool checkLeftValue(Node exp) {
+    int size = exp.subNode.size();
+    switch (size) {
+        case 1: {
+            if (exp.subNode[0].type == "ID") {
+                return true;
+            } else {
+                return false;
+            }
+            break;
+        }
+        case 3: {
+            if (exp.subNode[1].type == "Exp" || exp.subNode[1].type == "DOT") {
+                return true;
+            } else {
+                return false;
+            }
+            break;
+        }
+        case 4: {
+            if (exp.subNode[0].type == "Exp") {
+                return true;
+            } else {
+                return false;
+            }
+            break;
+        }
+        default: {
+            return false;
+        }
+    }
+}
+
 int *expAnalysis(Node exp, ScopeInfo *scope) {
     int size = exp.subNode.size();
     int *returnArray = new int[2];
@@ -271,7 +351,8 @@ int *expAnalysis(Node exp, ScopeInfo *scope) {
             if (exp.subNode[0].type == "ID") {
                 VarInfo *var = getVar(exp.subNode[0].show.substr(4), scope);
                 if (var == nullptr) {
-                    errList.push_back("Error type 1");
+                    errList.push_back("Error type 1 at Line " + getLineFromShow(exp.show) +
+                                      ": variable is used without definition");
                     returnArray[0] = -1;
                     returnArray[1] = 0;
                 } else {
@@ -305,11 +386,13 @@ int *expAnalysis(Node exp, ScopeInfo *scope) {
                         returnArray[1] = type[1];
                     } else {
                         if (type[1] == 1) {
-                            errList.push_back("Error type 7");
+                            errList.push_back("Error type 7 at Line " + getLineFromShow(exp.subNode[1].show) +
+                                              ": unmatching operands, such as adding an integer to a structure variable");
                             returnArray[0] = -1;
                             returnArray[1] = 0;
                         } else {
-                            errList.push_back("Error type 18: Only int and float have minus");
+                            errList.push_back("Error type 7 at Line " + getLineFromShow(exp.subNode[1].show) +
+                                              ": unmatching operands, such as adding an integer to a structure variable");
                             returnArray[0] = -1;
                             returnArray[1] = 0;
                         }
@@ -320,11 +403,13 @@ int *expAnalysis(Node exp, ScopeInfo *scope) {
                         returnArray[1] = type[1];
                     } else {
                         if (type[1] == 1) {
-                            errList.push_back("Error type 7");
+                            errList.push_back("Error type 7 at Line " + getLineFromShow(exp.subNode[1].show) +
+                                              ": unmatching operands, such as adding an integer to a structure variable");
                             returnArray[0] = -1;
                             returnArray[1] = 0;
                         } else {
-                            errList.push_back("Error type 18: Only bool have not");
+                            errList.push_back("Error type 7 at Line " + getLineFromShow(exp.subNode[1].show) +
+                                              ": unmatching operands, such as adding an integer to a structure variable");
                             returnArray[0] = -1;
                             returnArray[1] = 0;
                         }
@@ -343,32 +428,68 @@ int *expAnalysis(Node exp, ScopeInfo *scope) {
                             returnArray[0] = 4;
                             returnArray[1] = 0;
                         } else {
-                            errList.push_back("Error type 7");
+                            errList.push_back("Error type 7 at Line " + getLineFromShow(exp.subNode[0].show) +
+                                              ": unmatching operands, such as adding an integer to a structure variable");
                             returnArray[0] = -1;
                             returnArray[1] = 0;
                         }
                     } else {
-                        errList.push_back("Error type 18: Only bool have " + exp.subNode[1].type);
+                        errList.push_back(
+                                "Error type 7 at Line " + getLineFromShow(exp.subNode[0].show) +
+                                ": unmatching operands, such as adding an integer to a structure variable");
                         returnArray[0] = -1;
                         returnArray[1] = 0;
                     }
                 } else if (exp.subNode[1].type == "LT" || exp.subNode[1].type == "LE" ||
                            exp.subNode[1].type == "GT" || exp.subNode[1].type == "GE" ||
-                           exp.subNode[1].type == "PLUS" || exp.subNode[1].type == "MINUS" ||
-                           exp.subNode[1].type == "MUL" || exp.subNode[1].type == "DIV") {
+                           exp.subNode[1].type == "NE" || exp.subNode[1].type == "EQ") {
                     if (type1[0] < 2 && type2[0] < 2) {
                         if (type1[1] == 0 && type2[1] == 0) {
                             returnArray[0] = 4;
                             returnArray[1] = 0;
                         } else {
-                            errList.push_back("Error type 7");
+                            errList.push_back("Error type 7 at Line " + getLineFromShow(exp.subNode[0].show) +
+                                              ": unmatching operands, such as adding an integer to a structure variable");
                             returnArray[0] = -1;
                             returnArray[1] = 0;
                         }
+                    } else {
+                        errList.push_back(
+                                "Error type 7 at Line " + getLineFromShow(exp.subNode[0].show) +
+                                ": unmatching operands, such as adding an integer to a structure variable");
+                        returnArray[0] = -1;
+                        returnArray[1] = 0;
+                    }
+                } else if (exp.subNode[1].type == "PLUS" || exp.subNode[1].type == "MINUS" ||
+                           exp.subNode[1].type == "MUL" || exp.subNode[1].type == "DIV") {
+                    if (type1[0] < 2 && type2[0] < 2) {
+                        if (type1[1] == 0 && type2[1] == 0) {
+                            if (type1[0] == 1 || type2[0] == 1) {
+                                returnArray[0] = 1;
+                            } else {
+                                returnArray[0] = 0;
+                            }
+                            returnArray[1] = 0;
+                        } else {
+                            errList.push_back("Error type 7 at Line " + getLineFromShow(exp.subNode[0].show) +
+                                              ": unmatching operands, such as adding an integer to a structure variable");
+                            returnArray[0] = -1;
+                            returnArray[1] = 0;
+                        }
+                    } else {
+                        errList.push_back(
+                                "Error type 7 at Line " + getLineFromShow(exp.subNode[0].show) +
+                                ": unmatching operands, such as adding an integer to a structure variable");
+                        returnArray[0] = -1;
+                        returnArray[1] = 0;
                     }
                 } else if (exp.subNode[1].type == "ASSIGN") {
-                    if (type2[1] == 3) {
-                        errList.push_back("Error type 6");
+                    if (!checkLeftValue(exp.subNode[0])) {
+                        errList.push_back("Error type 6 at Line " + getLineFromShow(exp.subNode[0].show) +
+                                          ": rvalue on the left side of assignment operator");
+                    } else if (type2[1] == 3) {
+                        errList.push_back("Error type 5 at Line " + getLineFromShow(exp.subNode[2].show) +
+                                          ": unmatching types on both sides of assignment operator (=)");
                         returnArray[0] = -1;
                         returnArray[1] = 0;
                     } else if (type1[0] == type2[0] && type1[1] == type2[1]) {
@@ -407,7 +528,8 @@ int *expAnalysis(Node exp, ScopeInfo *scope) {
                             for (int i = 0; i < struct1.varSet.size(); i++) {
                                 if (struct1.varSet[i].type != struct2.varSet[i].type ||
                                     struct1.varSet[i].array != struct2.varSet[i].array) {
-                                    errList.push_back("Error type 5");
+                                    errList.push_back("Error type 5 at Line " + getLineFromShow(exp.subNode[0].show) +
+                                                      ": unmatching types on both sides of assignment operator (=)");
                                     returnArray[0] = -1;
                                     returnArray[1] = 0;
                                     return returnArray;
@@ -416,12 +538,14 @@ int *expAnalysis(Node exp, ScopeInfo *scope) {
                             returnArray[0] = 3;
                             returnArray[1] = 0;
                         } else {
-                            errList.push_back("Error type 5");
+                            errList.push_back("Error type 5 at Line " + getLineFromShow(exp.subNode[0].show) +
+                                              ": unmatching types on both sides of assignment operator (=)");
                             returnArray[0] = -1;
                             returnArray[1] = 0;
                         }
                     } else {
-                        errList.push_back("Error type 5");
+                        errList.push_back("Error type 5 at Line " + getLineFromShow(exp.subNode[0].show) +
+                                          ": unmatching types on both sides of assignment operator (=)");
                         returnArray[0] = -1;
                         returnArray[1] = 0;
                     }
@@ -432,19 +556,22 @@ int *expAnalysis(Node exp, ScopeInfo *scope) {
                 FuncInfo *func = getFunc(exp.subNode[0].show.substr(4));
                 if (func != nullptr) {
                     if (func->argSet.size() != 0) {
-                        errList.push_back("Error type 9");
+                        errList.push_back("Error type 9 at Line " + getLineFromShow(exp.show) +
+                                          ": the function’s arguments mismatch the declared parameters (either types or numbers, or both)");
                     }
                     returnArray[0] = func->returnType;
                     returnArray[1] = 0;
 
                 } else {
                     VarInfo *var = getVar(exp.subNode[0].show.substr(4), scope);
-                    if (var != nullptr) {
-                        errList.push_back("Error type 2");
+                    if (var == nullptr) {
+                        errList.push_back("Error type 2 at Line " + getLineFromShow(exp.show) +
+                                          ": function is invoked without definition");
                         returnArray[0] = -1;
                         returnArray[1] = 0;
                     } else {
-                        errList.push_back("Error type 11");
+                        errList.push_back("Error type 11 at Line " + getLineFromShow(exp.show) +
+                                          ": applying function invocation operator (foo(...)) on non-function names");
                         returnArray[0] = -1;
                         returnArray[1] = 0;
                     }
@@ -456,7 +583,8 @@ int *expAnalysis(Node exp, ScopeInfo *scope) {
                     returnArray[1] = 0;
                 } else {
                     if (type[0] < 4 || type[1] == 1) {
-                        errList.push_back("Error type 13");
+                        errList.push_back("Error type 13 at Line " + getLineFromShow(exp.subNode[0].show) +
+                                          " accessing member of non-structure variable (i.e., misuse the dot operator)");
                         returnArray[0] = -1;
                         returnArray[1] = 0;
                     } else {
@@ -469,7 +597,8 @@ int *expAnalysis(Node exp, ScopeInfo *scope) {
                                 return returnArray;
                             }
                         }
-                        errList.push_back("Error type 14");
+                        errList.push_back("Error type 14 at Line " + getLineFromShow(exp.subNode[0].show) +
+                                          ": accessing an undefined structure member");
                         returnArray[0] = -1;
                         returnArray[1] = 0;
                     }
@@ -484,11 +613,13 @@ int *expAnalysis(Node exp, ScopeInfo *scope) {
                     vector<int *> args = argsAnalysis(exp.subNode[2], scope);
                     int argSize = args.size();
                     if (argSize != func->argSet.size()) {
-                        errList.push_back("Error type 9");
+                        errList.push_back("Error type 9 at Line " + getLineFromShow(exp.subNode[2].show) +
+                                          ": the function’s arguments mismatch the declared parameters (either types or numbers, or both)");
                     } else {
                         for (int i = 0; i < argSize; i++) {
                             if (args[i][0] != func->argSet[i].type || args[i][1] != func->argSet[i].array) {
-                                errList.push_back("Error type 9");
+                                errList.push_back("Error type 9 at Line " + getLineFromShow(exp.subNode[2].show) +
+                                                  ": the function’s arguments mismatch the declared parameters (either types or numbers, or both)");
                                 break;
                             }
                         }
@@ -497,12 +628,14 @@ int *expAnalysis(Node exp, ScopeInfo *scope) {
                     returnArray[1] = 0;
                 } else {
                     VarInfo *var = getVar(exp.subNode[0].show.substr(4), scope);
-                    if (var != nullptr) {
-                        errList.push_back("Error type 2");
+                    if (var == nullptr) {
+                        errList.push_back("Error type 2 at Line " + getLineFromShow(exp.show) +
+                                          ": function is invoked without definition");
                         returnArray[0] = -1;
                         returnArray[1] = 0;
                     } else {
-                        errList.push_back("Error type 11");
+                        errList.push_back("Error type 11 at Line " + getLineFromShow(exp.show) +
+                                          ": applying function invocation operator (foo(...)) on non-function names");
                         returnArray[0] = -1;
                         returnArray[1] = 0;
                     }
@@ -515,12 +648,14 @@ int *expAnalysis(Node exp, ScopeInfo *scope) {
                         returnArray[0] = type[0];
                         returnArray[1] = 0;
                     } else {
-                        errList.push_back("Error Type 12");
-                        returnArray[0] = -1;
+                        errList.push_back("Error Type 12 at Line " + getLineFromShow(exp.subNode[2].show) +
+                                          ": array indexing with non-integer type expression");
+                        returnArray[0] = type[0];
                         returnArray[1] = 0;
                     }
                 } else {
-                    errList.push_back("Error type 10");
+                    errList.push_back("Error type 10 at Line " + getLineFromShow(exp.subNode[0].show) +
+                                      " applying indexing operator ([...]) on non-array type variables");
                     returnArray[0] = -1;
                     returnArray[1] = 0;
                 }
@@ -543,16 +678,18 @@ void stmtAnalysis(Node stmt, ScopeInfo *scope, int type) {
             break;
         }
         case 3: {//RETURN Exp SEMI
-            int * returnType = expAnalysis(stmt.subNode[1], scope);
-            if(type != returnType[0]){
-                errList.push_back("Error type 8");
+            int *returnType = expAnalysis(stmt.subNode[1], scope);
+            if (type != returnType[0]) {
+                errList.push_back("Error type 8 at Line " + getLineFromShow(stmt.subNode[1].show) +
+                                  ": the function’s return value type mismatches the declared type");
             }
             break;
         }
         case 5: {//IF / WHILE
-            int * returnType = expAnalysis(stmt.subNode[1], scope);
-            if(type != returnType[2]){
-                errList.push_back("Error type 18");
+            int *returnType = expAnalysis(stmt.subNode[2], scope);
+            if (4 != returnType[0]) {
+                errList.push_back("Error type 18 at Line " + getLineFromShow(stmt.subNode[2].show) +
+                                  ": Only Bool can be used in the if()/while()");
             }
             ScopeInfo child;
             child.parentScope = scope;
@@ -561,9 +698,10 @@ void stmtAnalysis(Node stmt, ScopeInfo *scope, int type) {
             break;
         }
         case 7: {//IF-ELSE
-            int * returnType = expAnalysis(stmt.subNode[1], scope);
-            if(type != returnType[2]){
-                errList.push_back("Error type 18");
+            int *returnType = expAnalysis(stmt.subNode[2], scope);
+            if (4 != returnType[0]) {
+                errList.push_back("Error type 18 at Line " + getLineFromShow(stmt.subNode[2].show) +
+                                  ": Only Bool can be used in the if()/while()");
             }
             ScopeInfo child1;
             child1.parentScope = scope;
@@ -572,7 +710,7 @@ void stmtAnalysis(Node stmt, ScopeInfo *scope, int type) {
             ScopeInfo child2;
             child2.parentScope = scope;
             scope->childList.push_back(child2);
-            stmtAnalysis(stmt.subNode[4], &(scope->childList[scope->childList.size() - 1]), type);
+            stmtAnalysis(stmt.subNode[6], &(scope->childList[scope->childList.size() - 1]), type);
             break;
         }
     }
@@ -582,10 +720,10 @@ void stmtListAnalysis(Node stmtList, ScopeInfo *scope, int type) {
     int size = stmtList.subNode.size();
     while (size > 0) {
         stmtAnalysis(stmtList.subNode[0], scope, type);
-        if (size>1){
+        if (size > 1) {
             stmtList = stmtList.subNode[1];
             size = stmtList.subNode.size();
-        }else{
+        } else {
             break;
         }
 
@@ -594,9 +732,15 @@ void stmtListAnalysis(Node stmtList, ScopeInfo *scope, int type) {
 
 void compStAnalysis(Node compSt, ScopeInfo *scope, int type) {
     Node defList = compSt.subNode[1];
-    Node stmtList = compSt.subNode[2];
-    defListAnalysis(defList, scope);
-    stmtListAnalysis(stmtList, scope, type);
+    Node stmtList;
+    if (defList.type == "DefList") {
+        defListAnalysis(defList, scope);
+        stmtList = compSt.subNode[2];
+    } else {
+        stmtList = compSt.subNode[1];
+    }
+    if (stmtList.type == "StmtList")
+        stmtListAnalysis(stmtList, scope, type);
 }
 
 void funcAnalysis(Node func, Node compSt, ScopeInfo *scope, int type) {
@@ -605,7 +749,8 @@ void funcAnalysis(Node func, Node compSt, ScopeInfo *scope, int type) {
     f.name = func.subNode[0].show.substr(4);
     map<string, FuncInfo>::iterator it = funcSet.find(f.name);
     if (it != funcSet.end()) {
-        errList.push_back("Error type 4");
+        errList.push_back("Error type 4 at Line " + getLineFromShow(func.show) +
+                          ": function is redefined (in the global scope, since we don’t have nested function)");
         return;
     }
     int size = func.subNode.size();
@@ -624,9 +769,11 @@ void funcAnalysis(Node func, Node compSt, ScopeInfo *scope, int type) {
                 }
             }
             if (!exist) {
-                f.argSet[argSize] = temp;
+                f.argSet.push_back(temp);
+                scope->varSet[temp.name] = temp;
             } else {
-                errList.push_back("Error type 3");
+                errList.push_back("Error type 3 at Line " + getLineFromShow(func.subNode[2].show) +
+                                  ": variable is redefined in the same scope");
             }
             if (size1 > 1) {
                 varList = varList.subNode[2];
@@ -642,8 +789,24 @@ void funcAnalysis(Node func, Node compSt, ScopeInfo *scope, int type) {
     compStAnalysis(compSt, scope, f.returnType);
 }
 
-void extDecListAnalysis(Node ExtDecList, ScopeInfo *scope) {
-
+void extDecListAnalysis(Node extDecList, ScopeInfo *scope, int type) {
+    int size = extDecList.subNode.size();
+    while (size > 0) {
+        VarInfo temp = createVar(extDecList.subNode[0], type);
+        bool exist = findVarInThisScope(temp.name, scope);
+        if (!exist) {
+            scope->varSet[temp.name] = temp;
+        } else {
+            errList.push_back("Error type 3 at Line " + getLineFromShow(extDecList.subNode[0].show) +
+                              ": variable is redefined in the same scope");
+        }
+        if (size > 1) {
+            extDecList = extDecList.subNode[2];
+            size = extDecList.subNode.size();
+        } else {
+            break;
+        }
+    }
 }
 
 int speciferAnalysis(Node specifer, ScopeInfo *scope) {
@@ -651,7 +814,8 @@ int speciferAnalysis(Node specifer, ScopeInfo *scope) {
         string type = specifer.subNode[0].show.substr(6);
         map<string, int>::iterator it = types.find(type);
         if (it == types.end()) {
-            errList.push_back("Error Type 17");
+            errList.push_back("Error Type 17 at Line " + getLineFromShow(specifer.show) +
+                              ": Use the struct as the type without definition.");
             return -1;
         } else {
             return it->second;
@@ -678,7 +842,8 @@ void extDefAnalysis(Node extDef, ScopeInfo *scope) {
                          &(scope->childList[scope->childList.size() - 1]),
                          speciferAnalysis(extDef.subNode[0], scope));
         } else {
-            extDecListAnalysis(extDef.subNode[1], scope);
+            int type = speciferAnalysis(extDef.subNode[0], scope);
+            extDecListAnalysis(extDef.subNode[1], scope, type);
         }
     }
 }
@@ -733,9 +898,14 @@ void printProgram(ScopeInfo scope, int num) {
 
 void generateGrammerTree(Node program) {
     initType();
+    if (errList.size() > 0) {
+        errOut();
+        return;
+    }
     extDefListAnalysis(program.subNode[0], &root);
     if (errList.size() > 0) {
         errOut();
     }
-    printProgram(root, 0);
+//    printProgram(root, 0);
 }
+

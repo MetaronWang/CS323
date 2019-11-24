@@ -13,6 +13,5 @@ set(PROJECT_SOURCES
 #        lex.yy.c
 #        type.cpp
         )
-
-
 add_executable(project2 ${PROJECT_SOURCES} ${PROJECT_HEADERS})
+add_executable(testCode testCode.cpp)

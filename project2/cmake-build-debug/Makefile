@@ -56,17 +56,6 @@ CMAKE_BINARY_DIR = /home/metaron/文档/Study/CS323/CS323/project2/cmake-build-d
 #=============================================================================
 # Targets provided globally by CMake.
 
-# Special rule for the target rebuild_cache
-rebuild_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/home/metaron/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/192.6603.37/bin/cmake/linux/bin/cmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : rebuild_cache
-
-# Special rule for the target rebuild_cache
-rebuild_cache/fast: rebuild_cache
-
-.PHONY : rebuild_cache/fast
-
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
@@ -77,6 +66,17 @@ edit_cache:
 edit_cache/fast: edit_cache
 
 .PHONY : edit_cache/fast
+
+# Special rule for the target rebuild_cache
+rebuild_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
+	/home/metaron/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/192.6603.37/bin/cmake/linux/bin/cmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : rebuild_cache
+
+# Special rule for the target rebuild_cache
+rebuild_cache/fast: rebuild_cache
+
+.PHONY : rebuild_cache/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -123,6 +123,19 @@ project2/fast:
 	$(MAKE) -f CMakeFiles/project2.dir/build.make CMakeFiles/project2.dir/build
 .PHONY : project2/fast
 
+#=============================================================================
+# Target rules for targets named testCode
+
+# Build rule for target.
+testCode: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 testCode
+.PHONY : testCode
+
+# fast build rule for target.
+testCode/fast:
+	$(MAKE) -f CMakeFiles/testCode.dir/build.make CMakeFiles/testCode.dir/build
+.PHONY : testCode/fast
+
 pro_2.tab.o: pro_2.tab.c.o
 
 .PHONY : pro_2.tab.o
@@ -150,18 +163,49 @@ pro_2.tab.c.s:
 	$(MAKE) -f CMakeFiles/project2.dir/build.make CMakeFiles/project2.dir/pro_2.tab.c.s
 .PHONY : pro_2.tab.c.s
 
+testCode.o: testCode.cpp.o
+
+.PHONY : testCode.o
+
+# target to build an object file
+testCode.cpp.o:
+	$(MAKE) -f CMakeFiles/testCode.dir/build.make CMakeFiles/testCode.dir/testCode.cpp.o
+.PHONY : testCode.cpp.o
+
+testCode.i: testCode.cpp.i
+
+.PHONY : testCode.i
+
+# target to preprocess a source file
+testCode.cpp.i:
+	$(MAKE) -f CMakeFiles/testCode.dir/build.make CMakeFiles/testCode.dir/testCode.cpp.i
+.PHONY : testCode.cpp.i
+
+testCode.s: testCode.cpp.s
+
+.PHONY : testCode.s
+
+# target to generate assembly for a file
+testCode.cpp.s:
+	$(MAKE) -f CMakeFiles/testCode.dir/build.make CMakeFiles/testCode.dir/testCode.cpp.s
+.PHONY : testCode.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... rebuild_cache"
-	@echo "... project2"
 	@echo "... edit_cache"
+	@echo "... project2"
+	@echo "... rebuild_cache"
+	@echo "... testCode"
 	@echo "... pro_2.tab.o"
 	@echo "... pro_2.tab.i"
 	@echo "... pro_2.tab.s"
+	@echo "... testCode.o"
+	@echo "... testCode.i"
+	@echo "... testCode.s"
 .PHONY : help
 
 
