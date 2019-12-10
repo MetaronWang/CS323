@@ -58,12 +58,28 @@
         \begin{figure}[H]
             \centering
             \caption{Syntax-directed definition of a simple desk calculator}
-            \includegraphics[scale=0.5]{./Q1_1.png}
+            \includegraphics[scale=0.5]{./Q1_T.png}
             \label{fig:label}
         \end{figure}
         \subsection{(3 + 4) ∗ (5 + 6)n [20 points]}
+        \begin{figure}[H]
+            \centering
+            
+            \includegraphics[scale=0.15]{./Q1_1.jpg}
+            \label{fig:label}
+        \end{figure}
         \subsection{1 ∗ 2 ∗ 3 ∗ (4 + 5)n [20 points]}
+        \begin{figure}[H]
+            \centering
+            \includegraphics[scale=0.15]{./Q1_2.jpg}
+            \label{fig:label}
+        \end{figure}
         \subsection{(9 + 8 ∗ (7 + 6) + 5) ∗ 4n [20 points]}
+        \begin{figure}[H]
+            \centering
+            \includegraphics[scale=0.15]{./Q1_3.jpg}
+            \label{fig:label}
+        \end{figure}
     \section{Exercise 2: What are all the topological sorts for the dependency graph of Figure 2? One 
     sort mentioned during lecture is 1, 2, 3, . . . , 9 (slide \#16 of Chapter 4). [20 points]}
         \begin{figure}[H]
@@ -91,5 +107,21 @@
     $$
         \begin{aligned} E \rightarrow E+T | T \\ T \rightarrow \operatorname{num} \cdot \operatorname{num} | \operatorname{num} \end{aligned}
     $$
+    \begin{table}[!htbp]
+        \centering
+        \label{tab:aStrangeTable}
+        \begin{tabular}{|c|c|}
+            \hline
+            $E\rightarrow E_1+T$ & $E.type = E_1.type||T.type=float?float:int$\\
+            \hline
+            $E\rightarrow T$ & $E.type = T.type$ \\
+            \hline
+            $T\rightarrow num.num$ & $T.type = float$\\
+            \hline
+            $T->num$ & $T.type = int$\\
+            \hline
+            
+        \end{tabular}
+    \end{table}
     
 \end{document}
