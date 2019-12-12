@@ -112,7 +112,7 @@
         \label{tab:aStrangeTable}
         \begin{tabular}{|c|c|}
             \hline
-            $E\rightarrow E_1+T$ & $E.type = E_1.type||T.type=float?float:int$\\
+            $E\rightarrow E_1+T$ & $E.type = (E_1.type == float||T.type ==float)?float:int$\\
             \hline
             $E\rightarrow T$ & $E.type = T.type$ \\
             \hline
