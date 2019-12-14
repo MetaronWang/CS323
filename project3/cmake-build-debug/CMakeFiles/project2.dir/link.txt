@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/project2.dir/pro_3.tab.c.o  -o project2 

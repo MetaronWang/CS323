@@ -1,0 +1,12 @@
+[
+ {
+  "directory": "/home/metaron/\u6587\u6863/Study/CS323/CS323/project2",
+  "arguments": [
+   "g++",
+   "pro_2.tab.c",
+   "-o",
+   "splc.out"
+  ],
+  "file": "pro_2.tab.c"
+ }
+]
