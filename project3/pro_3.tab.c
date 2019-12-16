@@ -2666,7 +2666,8 @@ int main(int argc, char** argv){
         string in = s+".spl";
         string out = s+".out";
         freopen(in.c_str(), "r", stdin);
-        //freopen(out.c_str(), "w", stdout);
+        freopen(out.c_str(), "w", stdout);
+        freopen(out.c_str(), "w", stderr);
         cout<<"";
     }else{
         freopen("test/test_2_b04.spl", "r", stdin);

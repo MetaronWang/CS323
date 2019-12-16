@@ -10,12 +10,6 @@
 #pragma once
 using namespace std;
 
-ScopeInfo root;
-map<string, FuncInfo> funcSet;
-map<string, StructInfo> structSet;
-map<int, string> typeMap;
-map<string, int> types;
-
 int speciferAnalysis(Node *specifer, ScopeInfo *scope);
 
 void compStAnalysis(Node *compSt, ScopeInfo *scope, int type);
@@ -540,6 +534,9 @@ int *expAnalysis(Node *exp, ScopeInfo *scope) {
                     } else if (type1[0] == 1 && type2[0] == 0 && type1[1] == type2[1]) {
                         returnArray[0] = 3;
                         returnArray[1] = 0;
+                    }else if (type1[0] == 0 && type2[0] == 4 && type1[1] == type2[1]) {
+                        returnArray[0] = 3;
+                        returnArray[1] = 0;
                     } else if (type1[0] > 4 && type2[0] > 4) {
                         if (structEqual(type1[0], type2[0])) {
                             returnArray[0] = 3;
@@ -896,13 +893,12 @@ void generateGrammerTree(Node program) {
         return;
     }
     setScopeInfo(&program, &root);
-    cout<<"SS"<<endl;
     extDefListAnalysis(&program.subNode[0], &root);
     if (errList.size() > 0) {
         errOut();
         return;
     }
     generateIR(program);
-    printProgram(program, 0);
+//    printProgram(program, 0);
 }
 

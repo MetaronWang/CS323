@@ -6,16 +6,277 @@
 #include <string>
 #include <vector>
 
-struct constInfo{
-    string name;
-    string value;
-    int type;
-};
-
-int varNum = 0;
+int tempNum = 0;
 int constNum = 0;
+int labelNum = 0;
+int varNum = 0;
 
+map<string, string> varSet;
+map<string, string> constSet;
 
-void generateIR(Node program){
+bool getConst(string value) {
+    map<string, string>::iterator it = constSet.find(value);
+    if (it != constSet.end()) {
+        return true;
+    } else {
+        return false;
+    }
+}
 
+string translate_Exp(Node *exp, string varName);
+
+string calculateMath(Node *exp, string varName, string operation) {
+    int tempNumKeep1 = tempNum;
+    tempNum++;
+    int tempNumKeep2 = tempNum;
+    tempNum++;
+    string result1 = translate_Exp(&exp->subNode[0], "t" + to_string(tempNumKeep1));
+    string result2 = translate_Exp(&exp->subNode[2], "t" + to_string(tempNumKeep2));
+    tempNum = tempNumKeep1;
+    string output;
+    if (result1.empty()) {
+        result1 = exp->subNode[0].value;
+    } else {
+        output += result1;
+        result1 = "t" + to_string(tempNumKeep1);
+    }
+    if (result2.empty()) {
+        result2 = exp->subNode[2].value;
+    } else {
+        output += result2;
+        result2 = "t" + to_string(tempNumKeep2);
+    }
+    string operateSym = "";
+    if (operation == "PLUS") { operateSym = "+"; }
+    else if (operation == "MINUS") { operateSym = "-"; }
+    else if (operation == "MUL") { operateSym = "*"; }
+    else if (operation == "DIV") { operateSym = "/"; }
+    output += varName + " := " + result1 + " " + operateSym + " " + result2 + "\n";
+    return output;
+}
+
+string getLogicOp(string operationName) {
+    string operation;
+    if (operationName == "LT") {
+        operation = "<";
+    } else if (operationName == "LE") {
+        operation = "<=";
+    } else if (operationName == "GT") {
+        operation = ">";
+    } else if (operationName == "GE") {
+        operation = ">=";
+    } else if (operationName == "NE") {
+        operation = "==";
+    } else if (operationName == "EQ") {
+        operation = "!=";
+    }
+    return operation;
+}
+
+string calculateLogic(Node *exp, string varName, string operation) {
+    return "test\n";
+}
+
+string translate_cond(Node *exp, string labelTrue, string labelFalse) {
+    int size = exp->subNode.size();
+    switch (size) {
+        case 2: {
+            return translate_cond(&exp->subNode[1], labelFalse, labelTrue);
+        }
+        case 3: {
+            if (exp->subNode[1].type == "AND") {
+                string label = "l" + to_string(labelNum);
+                labelNum++;
+                string result1 = translate_cond(&exp->subNode[0], label, labelFalse);
+                string result2 = translate_cond(&exp->subNode[2], labelTrue, labelFalse);
+                return result1 + "LABEL " + label + ":\n" + result2;
+            } else if (exp->subNode[1].type == "OR") {
+                string label = "l" + to_string(labelNum);
+                labelNum++;
+                string result1 = translate_cond(&exp->subNode[0], labelTrue, label);
+                string result2 = translate_cond(&exp->subNode[2], labelTrue, labelFalse);
+                return result1 + "LABEL " + label + ":\n" + result2;
+            } else if (exp->subNode[1].type == "LT" || exp->subNode[1].type == "LE" ||
+                       exp->subNode[1].type == "GT" || exp->subNode[1].type == "GE" ||
+                       exp->subNode[1].type == "NE" || exp->subNode[1].type == "EQ") {
+                string op = getLogicOp(exp->subNode[0].type);
+                int tempNumKeep1 = tempNum;
+                tempNum++;
+                int tempNumKeep2 = tempNum;
+                tempNum++;
+                string result1 = translate_Exp(&exp->subNode[0], "t" + to_string(tempNumKeep1));
+                string result2 = translate_Exp(&exp->subNode[2], "t" + to_string(tempNumKeep2));
+                tempNum = tempNumKeep1;
+                string output;
+                if (result1.empty()) {
+                    string value = exp->subNode[0].value;
+                    if (value[0] == '#') {
+                        if(getConst(value)){
+                            result1 = constSet[value];
+                        }else{
+                            result1 = "c"+to_string(constNum);
+                            output += "c"+to_string(constNum)+" := "+value+"\n";
+                            constNum++;
+                            constSet[value] = result1;
+                        }
+                    }else{
+                        result1 = value;
+                    }
+                }
+            }
+        }
+    }
+}
+
+string translate_Exp(Node *exp, string varName) {
+    int size = exp->subNode.size();
+    switch (size) {
+        case 1: {
+            if (exp->subNode[0].type == "ID") {
+                string name = exp->subNode[0].show.substr(4);
+                exp->value = varSet[name];
+            } else if (exp->subNode[0].type == "INT") {
+                exp->value = "#" + exp->subNode[0].show.substr(5);
+            }
+            return "";
+        }
+        case 2: {
+            if (exp->subNode[0].type == "MINUS") {
+                int tempNumKeep = tempNum;
+                tempNum++;
+                string result = translate_Exp(&exp->subNode[1], "t" + to_string(tempNumKeep));
+                tempNum = tempNumKeep;
+                if (result == "") {
+                    return varName + " := #0 - " + exp->subNode[1].value + "\n";
+                } else {
+                    return varName + " := #0 - t" + to_string(tempNumKeep) + "\n";
+                }
+            } else if (exp->subNode[0].type == "NOT") {
+                return "test\n";
+            } else {
+                return "test\n";
+            }
+        }
+        case 3: {
+            if (exp->subNode[1].type == "PLUS" || exp->subNode[1].type == "MINUS" ||
+                exp->subNode[1].type == "MUL" || exp->subNode[1].type == "DIV") {
+                return calculateMath(exp, varName, exp->subNode[1].type);
+            } else if (exp->subNode[1].type == "AND" || exp->subNode[1].type == "OR" ||
+                       exp->subNode[1].type == "LT" || exp->subNode[1].type == "LE" ||
+                       exp->subNode[1].type == "GT" || exp->subNode[1].type == "GE" ||
+                       exp->subNode[1].type == "NE" || exp->subNode[1].type == "EQ") {
+                return calculateLogic(exp, varName, exp->subNode[1].type);
+            } else if (exp->subNode[1].type == "ASSIGN") {
+                string name = exp->subNode[0].subNode[0].show.substr(4);
+                string symbol;
+                symbol = varSet[name];
+                int tempNumKeep = tempNum;
+                tempNum++;
+                string result = translate_Exp(&exp->subNode[2], "t" + to_string(tempNumKeep));
+                tempNum = tempNumKeep;
+                string output;
+                if (result.empty()) {
+                    output += symbol + " := " + exp->subNode[2].value + "\n";
+                } else {
+                    output += result;
+                    output += symbol + " := " + "t" + to_string(tempNumKeep) + "\n";
+                }
+                output += varName + " := " + symbol + "\n";
+                return output;
+
+            } else if (exp->subNode[0].type == "LP" && exp->subNode[2].type == "RP") {
+                return translate_Exp(&exp->subNode[1], varName);
+            } else {
+                return "test\n";
+            }
+        }
+        case 4: {
+            if (exp->subNode[0].type == "ID" && exp->subNode[1].type == "LP" &&
+                exp->subNode[2].type == "Args" && exp->subNode[3].type == "RP") {
+                return "test\n";
+            }
+        }
+        default: {
+            return "";
+        }
+    }
+}
+
+string translate_stmt(Node *stmt) {
+    int size = stmt->subNode.size();
+    switch (size) {
+        case 1: {
+            return "test\n";
+        }
+        case 2: {
+            int tempNumKeep = tempNum;
+            tempNum++;
+            string result = translate_Exp(&stmt->subNode[0], "t" + to_string(tempNumKeep));
+            tempNum = tempNumKeep;
+            return result;
+        }
+        case 3: {
+            int tempNumKeep = tempNum;
+            tempNum++;
+            string result = translate_Exp(&stmt->subNode[1], "t" + to_string(tempNumKeep));
+            tempNum = tempNumKeep;
+            string output;
+            if (result.empty()) {
+                output = "RETURN " + stmt->subNode[1].value + "\n";
+            } else {
+                output += result;
+                output += "RETURN t" + to_string(tempNumKeep);
+            }
+        }
+        case 5: {
+            return "test\n";
+        }
+        case 7: {
+            return "test\n";
+        }
+        default: {
+            return "test\n";
+        }
+    }
+}
+
+string decVar(Node dec) {
+    string name = dec.subNode[0].subNode[0].show.substr(4);
+    varSet[name] = "v" + to_string(varNum);
+    varNum++;
+    if (dec.subNode.size() > 1) {
+        string symbol;
+        symbol = varSet[name];
+        int tempNumKeep = tempNum;
+        tempNum++;
+        string result = translate_Exp(&dec.subNode[2], "t" + to_string(tempNumKeep));
+        tempNum = tempNumKeep;
+        string output;
+        if (result.empty()) {
+            output += symbol + " := " + dec.subNode[2].value + "\n";
+        } else {
+            output += result;
+            output += symbol + " := " + "t" + to_string(tempNumKeep) + "\n";
+        }
+        return output;
+    } else {
+        return "";
+    }
+}
+
+void traversalNode(Node node) {
+    int size = node.subNode.size();
+    for (int i = 0; i < size; i++) {
+        if (node.subNode[i].type == "Stmt") {
+            cout << translate_stmt(&node.subNode[i]);
+        } else if (node.subNode[i].type == "Dec") {
+            cout << decVar(node.subNode[i]);
+        } else {
+            traversalNode(node.subNode[i]);
+        }
+    }
+}
+
+void generateIR(Node program) {
+    traversalNode(program);
 }

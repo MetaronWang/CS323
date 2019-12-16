@@ -10,8 +10,12 @@ set(PROJECT_HEADERS
         )
 set(PROJECT_SOURCES
         pro_3.tab.c
+#        ir.cpp
 #        lex.yy.c
 #        type.cpp
         )
+
+add_custom_target(makeScanner COMMAND make splc -C ${PROJECT_SOURCE_DIR}
+        CLION_EXE_DIR=${PROJECT_SOURCE_DIR})
 add_executable(project3 ${PROJECT_SOURCES} ${PROJECT_HEADERS})
 add_executable(testCode testCode.cpp)

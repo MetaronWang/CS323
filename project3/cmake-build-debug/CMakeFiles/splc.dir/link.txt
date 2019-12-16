@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/splc.dir/ir.cpp.o CMakeFiles/splc.dir/type.cpp.o CMakeFiles/splc.dir/parser.tab.cpp.o CMakeFiles/splc.dir/scanner.yy.cpp.o  -o splc 

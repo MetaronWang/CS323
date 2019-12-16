@@ -111,17 +111,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named project3
+# Target rules for targets named makeScanner
 
 # Build rule for target.
-project3: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 project3
-.PHONY : project3
+makeScanner: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 makeScanner
+.PHONY : makeScanner
 
 # fast build rule for target.
-project3/fast:
-	$(MAKE) -f CMakeFiles/project3.dir/build.make CMakeFiles/project3.dir/build
-.PHONY : project3/fast
+makeScanner/fast:
+	$(MAKE) -f CMakeFiles/makeScanner.dir/build.make CMakeFiles/makeScanner.dir/build
+.PHONY : makeScanner/fast
 
 #=============================================================================
 # Target rules for targets named testCode
@@ -135,6 +135,19 @@ testCode: cmake_check_build_system
 testCode/fast:
 	$(MAKE) -f CMakeFiles/testCode.dir/build.make CMakeFiles/testCode.dir/build
 .PHONY : testCode/fast
+
+#=============================================================================
+# Target rules for targets named project3
+
+# Build rule for target.
+project3: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 project3
+.PHONY : project3
+
+# fast build rule for target.
+project3/fast:
+	$(MAKE) -f CMakeFiles/project3.dir/build.make CMakeFiles/project3.dir/build
+.PHONY : project3/fast
 
 pro_3.tab.o: pro_3.tab.c.o
 
@@ -197,9 +210,10 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... edit_cache"
+	@echo "... makeScanner"
 	@echo "... rebuild_cache"
-	@echo "... project3"
 	@echo "... testCode"
+	@echo "... project3"
 	@echo "... pro_3.tab.o"
 	@echo "... pro_3.tab.i"
 	@echo "... pro_3.tab.s"

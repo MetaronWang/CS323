@@ -8,8 +8,6 @@
 #pragma once
 using namespace std;
 
-vector<string> errList;
-
 struct VarInfo {
     string name;
     int type;
@@ -39,8 +37,15 @@ struct Node {
     string show;
     string type;
     ScopeInfo *scopeInfo;
+    string value;
 };
 
+vector<string> errList;
+ScopeInfo root;
+map<string, FuncInfo> funcSet;
+map<string, StructInfo> structSet;
+map<int, string> typeMap;
+map<string, int> types;
 
 void errOut() {
     int size = errList.size();
