@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.14)
-project(project2 LANGUAGES CXX)
+project(project3 LANGUAGES CXX)
 set_source_files_properties(pro_3.tab.c PROPERTIES LANGUAGE CXX)
 set(CMAKE_CXX_STANDARD 14)
 include_directories(.)

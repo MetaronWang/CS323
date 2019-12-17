@@ -43,10 +43,10 @@ RM = /home/metaron/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/193.5233.144/b
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/metaron/文档/Study/CS323/CS323/project3
+CMAKE_SOURCE_DIR = /home/metaron/Nextcloud/CS323/CS323/project3
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/metaron/文档/Study/CS323/CS323/project3/cmake-build-debug
+CMAKE_BINARY_DIR = /home/metaron/Nextcloud/CS323/CS323/project3/cmake-build-debug
 
 # Utility rule file for makeScanner.
 
@@ -54,7 +54,7 @@ CMAKE_BINARY_DIR = /home/metaron/文档/Study/CS323/CS323/project3/cmake-build-d
 include CMakeFiles/makeScanner.dir/progress.make
 
 CMakeFiles/makeScanner:
-	make splc -C /home/metaron/文档/Study/CS323/CS323/project3 CLION_EXE_DIR=/home/metaron/文档/Study/CS323/CS323/project3
+	make splc -C /home/metaron/Nextcloud/CS323/CS323/project3 CLION_EXE_DIR=/home/metaron/Nextcloud/CS323/CS323/project3
 
 makeScanner: CMakeFiles/makeScanner
 makeScanner: CMakeFiles/makeScanner.dir/build.make
@@ -71,6 +71,6 @@ CMakeFiles/makeScanner.dir/clean:
 .PHONY : CMakeFiles/makeScanner.dir/clean
 
 CMakeFiles/makeScanner.dir/depend:
-	cd /home/metaron/文档/Study/CS323/CS323/project3/cmake-build-debug && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/metaron/文档/Study/CS323/CS323/project3 /home/metaron/文档/Study/CS323/CS323/project3 /home/metaron/文档/Study/CS323/CS323/project3/cmake-build-debug /home/metaron/文档/Study/CS323/CS323/project3/cmake-build-debug /home/metaron/文档/Study/CS323/CS323/project3/cmake-build-debug/CMakeFiles/makeScanner.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/metaron/Nextcloud/CS323/CS323/project3/cmake-build-debug && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/metaron/Nextcloud/CS323/CS323/project3 /home/metaron/Nextcloud/CS323/CS323/project3 /home/metaron/Nextcloud/CS323/CS323/project3/cmake-build-debug /home/metaron/Nextcloud/CS323/CS323/project3/cmake-build-debug /home/metaron/Nextcloud/CS323/CS323/project3/cmake-build-debug/CMakeFiles/makeScanner.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/makeScanner.dir/depend
 

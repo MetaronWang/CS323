@@ -14,6 +14,12 @@ int varNum = 0;
 map<string, string> varSet;
 map<string, string> constSet;
 
+string new_label(){
+    string l = "l"+to_string(labelNum);
+    labelNum++;
+    return l;
+}
+
 bool getConst(string value) {
     map<string, string>::iterator it = constSet.find(value);
     if (it != constSet.end()) {
@@ -23,15 +29,17 @@ bool getConst(string value) {
     }
 }
 
-string translate_Exp(Node *exp, string varName);
+string translate_exp(Node *exp, string varName);
+
+string translate_cond(Node *exp, string labelTrue, string labelFalse);
 
 string calculateMath(Node *exp, string varName, string operation) {
     int tempNumKeep1 = tempNum;
     tempNum++;
     int tempNumKeep2 = tempNum;
     tempNum++;
-    string result1 = translate_Exp(&exp->subNode[0], "t" + to_string(tempNumKeep1));
-    string result2 = translate_Exp(&exp->subNode[2], "t" + to_string(tempNumKeep2));
+    string result1 = translate_exp(&exp->subNode[0], "t" + to_string(tempNumKeep1));
+    string result2 = translate_exp(&exp->subNode[2], "t" + to_string(tempNumKeep2));
     tempNum = tempNumKeep1;
     string output;
     if (result1.empty()) {
@@ -46,7 +54,7 @@ string calculateMath(Node *exp, string varName, string operation) {
         output += result2;
         result2 = "t" + to_string(tempNumKeep2);
     }
-    string operateSym = "";
+    string operateSym;
     if (operation == "PLUS") { operateSym = "+"; }
     else if (operation == "MINUS") { operateSym = "-"; }
     else if (operation == "MUL") { operateSym = "*"; }
@@ -74,7 +82,13 @@ string getLogicOp(string operationName) {
 }
 
 string calculateLogic(Node *exp, string varName, string operation) {
-    return "test\n";
+    string label_1 = new_label();
+    labelNum++;
+    string label_2 = new_label();
+    labelNum++;
+    string output = varName + " := #0"+"\n";
+    output += translate_cond(exp,label_1,label_2);
+    output += "LABEL "+label_1+"\n"+varName+" :=#1"+"\nLABEL "+label_2+"\n";
 }
 
 string translate_cond(Node *exp, string labelTrue, string labelFalse) {
@@ -85,13 +99,13 @@ string translate_cond(Node *exp, string labelTrue, string labelFalse) {
         }
         case 3: {
             if (exp->subNode[1].type == "AND") {
-                string label = "l" + to_string(labelNum);
+                string label = new_label();
                 labelNum++;
                 string result1 = translate_cond(&exp->subNode[0], label, labelFalse);
                 string result2 = translate_cond(&exp->subNode[2], labelTrue, labelFalse);
                 return result1 + "LABEL " + label + ":\n" + result2;
             } else if (exp->subNode[1].type == "OR") {
-                string label = "l" + to_string(labelNum);
+                string label = new_label();
                 labelNum++;
                 string result1 = translate_cond(&exp->subNode[0], labelTrue, label);
                 string result2 = translate_cond(&exp->subNode[2], labelTrue, labelFalse);
@@ -104,31 +118,109 @@ string translate_cond(Node *exp, string labelTrue, string labelFalse) {
                 tempNum++;
                 int tempNumKeep2 = tempNum;
                 tempNum++;
-                string result1 = translate_Exp(&exp->subNode[0], "t" + to_string(tempNumKeep1));
-                string result2 = translate_Exp(&exp->subNode[2], "t" + to_string(tempNumKeep2));
+                string result1 = translate_exp(&exp->subNode[0], "t" + to_string(tempNumKeep1));
+                string result2 = translate_exp(&exp->subNode[2], "t" + to_string(tempNumKeep2));
                 tempNum = tempNumKeep1;
                 string output;
                 if (result1.empty()) {
                     string value = exp->subNode[0].value;
                     if (value[0] == '#') {
-                        if(getConst(value)){
+                        if (getConst(value)) {
                             result1 = constSet[value];
-                        }else{
-                            result1 = "c"+to_string(constNum);
-                            output += "c"+to_string(constNum)+" := "+value+"\n";
+                        } else {
+                            result1 = "c" + to_string(constNum);
+                            output += "c" + to_string(constNum) + " := " + value + "\n";
                             constNum++;
                             constSet[value] = result1;
                         }
-                    }else{
+                    } else {
                         result1 = value;
                     }
+                } else {
+                    output += result1;
+                    result1 = "t" + to_string(tempNumKeep1);
+                }
+                if (result2.empty()) {
+                    string value = exp->subNode[0].value;
+                    if (value[0] == '#') {
+                        if (getConst(value)) {
+                            result2 = constSet[value];
+                        } else {
+                            result2 = "c" + to_string(constNum);
+                            output += "c" + to_string(constNum) + " := " + value + "\n";
+                            constNum++;
+                            constSet[value] = result2;
+                        }
+                    } else {
+                        result2 = value;
+                    }
+                } else {
+                    output += result2;
+                    result2 = "t" + to_string(tempNumKeep1);
+                }
+                output += "IF " + result1 + " " + op + " " + result2 + "\n" + "GOTO " + labelFalse + "\n";
+                return output;
+            } else {
+                int tempNumKeep = tempNum;
+                tempNum++;
+                string result = translate_exp(exp, "t" + to_string(tempNumKeep));
+                string output;
+                if (result.empty()) {
+                    if (result.empty()) {
+                        string value = exp->subNode[0].value;
+                        if (value[0] == '#') {
+                            if (getConst(value)) {
+                                result = constSet[value];
+                            } else {
+                                result = "c" + to_string(constNum);
+                                output += "c" + to_string(constNum) + " := " + value + "\n";
+                                constNum++;
+                                constSet[value] = result;
+                            }
+                        } else {
+                            result = value;
+                        }
+                    } else {
+                        output += result;
+                        result = "t" + to_string(tempNumKeep);
+                    }
+                }
+                output += "IF " + result + " != #0 GOTO " + labelTrue + "\n" + "GOTO " + labelFalse + "\n";
+                return output;
+            }
+        }
+        default: {
+            int tempNumKeep = tempNum;
+            tempNum++;
+            string result = translate_exp(exp, "t" + to_string(tempNumKeep));
+            string output;
+            if (result.empty()) {
+                if (result.empty()) {
+                    string value = exp->subNode[0].value;
+                    if (value[0] == '#') {
+                        if (getConst(value)) {
+                            result = constSet[value];
+                        } else {
+                            result = "c" + to_string(constNum);
+                            output += "c" + to_string(constNum) + " := " + value + "\n";
+                            constNum++;
+                            constSet[value] = result;
+                        }
+                    } else {
+                        result = value;
+                    }
+                } else {
+                    output += result;
+                    result = "t" + to_string(tempNumKeep);
                 }
             }
+            output += "IF " + result + " != #0 GOTO " + labelTrue + "\n" + "GOTO " + labelFalse + "\n";
+            return output;
         }
     }
 }
 
-string translate_Exp(Node *exp, string varName) {
+string translate_exp(Node *exp, string varName) {
     int size = exp->subNode.size();
     switch (size) {
         case 1: {
@@ -144,7 +236,7 @@ string translate_Exp(Node *exp, string varName) {
             if (exp->subNode[0].type == "MINUS") {
                 int tempNumKeep = tempNum;
                 tempNum++;
-                string result = translate_Exp(&exp->subNode[1], "t" + to_string(tempNumKeep));
+                string result = translate_exp(&exp->subNode[1], "t" + to_string(tempNumKeep));
                 tempNum = tempNumKeep;
                 if (result == "") {
                     return varName + " := #0 - " + exp->subNode[1].value + "\n";
@@ -152,9 +244,9 @@ string translate_Exp(Node *exp, string varName) {
                     return varName + " := #0 - t" + to_string(tempNumKeep) + "\n";
                 }
             } else if (exp->subNode[0].type == "NOT") {
-                return "test\n";
+                return calculateLogic(exp, varName,exp->subNode[0].type);
             } else {
-                return "test\n";
+                return "ERROR\n";
             }
         }
         case 3: {
@@ -172,7 +264,7 @@ string translate_Exp(Node *exp, string varName) {
                 symbol = varSet[name];
                 int tempNumKeep = tempNum;
                 tempNum++;
-                string result = translate_Exp(&exp->subNode[2], "t" + to_string(tempNumKeep));
+                string result = translate_exp(&exp->subNode[2], "t" + to_string(tempNumKeep));
                 tempNum = tempNumKeep;
                 string output;
                 if (result.empty()) {
@@ -183,9 +275,8 @@ string translate_Exp(Node *exp, string varName) {
                 }
                 output += varName + " := " + symbol + "\n";
                 return output;
-
             } else if (exp->subNode[0].type == "LP" && exp->subNode[2].type == "RP") {
-                return translate_Exp(&exp->subNode[1], varName);
+                return translate_exp(&exp->subNode[1], varName);
             } else {
                 return "test\n";
             }
@@ -211,14 +302,15 @@ string translate_stmt(Node *stmt) {
         case 2: {
             int tempNumKeep = tempNum;
             tempNum++;
-            string result = translate_Exp(&stmt->subNode[0], "t" + to_string(tempNumKeep));
+            string result = translate_exp(&stmt->subNode[0], "t" + to_string(tempNumKeep));
             tempNum = tempNumKeep;
+            //单独一个变量作为一个stmt可以不管
             return result;
         }
         case 3: {
             int tempNumKeep = tempNum;
             tempNum++;
-            string result = translate_Exp(&stmt->subNode[1], "t" + to_string(tempNumKeep));
+            string result = translate_exp(&stmt->subNode[1], "t" + to_string(tempNumKeep));
             tempNum = tempNumKeep;
             string output;
             if (result.empty()) {
@@ -228,14 +320,33 @@ string translate_stmt(Node *stmt) {
                 output += "RETURN t" + to_string(tempNumKeep);
             }
         }
-        case 5: {
-            return "test\n";
+        case 5: {//If or While
+            if(stmt->subNode[0].type == "IF"){
+                string label_1 = new_label();
+                string label_2 = new_label();
+                string code_1 = translate_cond(&stmt->subNode[2],label_1, label_2) + "LABEL "+label_1+"\n";
+                string code_2 = translate_stmt(&stmt->subNode[4])+"LABEL "+label_2+"\n";
+                return code_1+code_2;
+            }else{
+                string label_1 = new_label();
+                string label_2 = new_label();
+                string label_3 = new_label();
+                string code_1 = "LABEL "+label_1+"\n"+translate_cond(&stmt->subNode[2],label_2,label_3);
+                string code_2 = "LABEL "+label_2+"\n"+translate_stmt(&stmt->subNode[4])+"GOTO "+label_1+"\n";
+                return code_1+code_2+"LABEL "+label_3;
+            }
         }
         case 7: {
-            return "test\n";
+            string label_1 = new_label();
+            string label_2 = new_label();
+            string label_3 = new_label();
+            string code_1 = translate_cond(&stmt->subNode[2],label_1, label_2) + "LABEL "+label_1+"\n";
+            string code_2 = translate_stmt(&stmt->subNode[4])+"GOTO "+label_3+"\nLABEL "+label_2+"\n";
+            string code_3 = translate_stmt(&stmt->subNode[6])+"LABEL "+label_3+"\n";
+            return code_1+code_2+code_3;
         }
         default: {
-            return "test\n";
+            return "ERROR\n";
         }
     }
 }
@@ -249,7 +360,7 @@ string decVar(Node dec) {
         symbol = varSet[name];
         int tempNumKeep = tempNum;
         tempNum++;
-        string result = translate_Exp(&dec.subNode[2], "t" + to_string(tempNumKeep));
+        string result = translate_exp(&dec.subNode[2], "t" + to_string(tempNumKeep));
         tempNum = tempNumKeep;
         string output;
         if (result.empty()) {

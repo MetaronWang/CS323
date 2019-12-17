@@ -48,10 +48,10 @@ RM = /home/metaron/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/193.5233.144/b
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/metaron/文档/Study/CS323/CS323/project3
+CMAKE_SOURCE_DIR = /home/metaron/Nextcloud/CS323/CS323/project3
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/metaron/文档/Study/CS323/CS323/project3/cmake-build-debug
+CMAKE_BINARY_DIR = /home/metaron/Nextcloud/CS323/CS323/project3/cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/metaron/文档/Study/CS323/CS323/project3/cmake-build-debug/CMakeFiles /home/metaron/文档/Study/CS323/CS323/project3/cmake-build-debug/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/metaron/Nextcloud/CS323/CS323/project3/cmake-build-debug/CMakeFiles /home/metaron/Nextcloud/CS323/CS323/project3/cmake-build-debug/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/metaron/文档/Study/CS323/CS323/project3/cmake-build-debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/metaron/Nextcloud/CS323/CS323/project3/cmake-build-debug/CMakeFiles 0
 .PHONY : all
 
 # The main clean target

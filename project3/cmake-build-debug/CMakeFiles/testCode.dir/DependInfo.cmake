@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/metaron/文档/Study/CS323/CS323/project3/testCode.cpp" "/home/metaron/文档/Study/CS323/CS323/project3/cmake-build-debug/CMakeFiles/testCode.dir/testCode.cpp.o"
+  "/home/metaron/Nextcloud/CS323/CS323/project3/testCode.cpp" "/home/metaron/Nextcloud/CS323/CS323/project3/cmake-build-debug/CMakeFiles/testCode.dir/testCode.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

@@ -1,4 +1,4 @@
-# Install script for directory: /home/metaron/文档/Study/CS323/CS323/project3
+# Install script for directory: /home/metaron/Nextcloud/CS323/CS323/project3
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/metaron/文档/Study/CS323/CS323/project3/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/metaron/Nextcloud/CS323/CS323/project3/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

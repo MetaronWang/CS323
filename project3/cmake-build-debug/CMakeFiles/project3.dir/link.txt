@@ -1,1 +1,1 @@
-/usr/bin/c++  -g   CMakeFiles/project3.dir/pro_3.tab.c.o  -o project3 
+/usr/local/bin/g++  -g   CMakeFiles/project3.dir/pro_3.tab.c.o  -o project3 
