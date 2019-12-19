@@ -1,0 +1,126 @@
+\documentclass{article}
+\usepackage[a4paper,scale=0.8,hcentering,bindingoffset=8mm]{geometry} % A4纸大小，缩放80%，设置奇数页右边留空多一点
+\usepackage{hyperref}      % 超链接
+\usepackage{listings}      % 代码块
+\usepackage{courier}       % 字体
+\usepackage{fontspec}      % 字体
+\usepackage{fancyhdr}      % 页眉页脚相关宏包
+\usepackage{lastpage}      % 引用最后一页
+\usepackage{amsmath,amsthm,amsfonts,amssymb,bm} %数学
+\usepackage{graphicx}      % 图片
+\usepackage{subcaption}    % 图片描述
+\usepackage{longtable,booktabs} % 表格
+\usepackage{ctex}
+\usepackage{soul}
+\usepackage{hyperref}
+\lstset{                  %设置代码块
+         basicstyle=\footnotesize\ttfamily,% 基本风格
+         numbers=left,    % 行号
+         numbersep=10pt,  % 行号间隔 
+         tabsize=4,       % 缩进
+         extendedchars=true, % 扩展符号？
+         breaklines=true, % 自动换行
+         language=C,
+         frame=leftline,  % 框架左边竖线
+         xleftmargin=5pt,% 竖线左边间距
+         showspaces=false,% 空格字符加下划线
+         showstringspaces=false,% 字符串中的空格加下划线
+         showtabs=false,  % 字符串中的tab加下划线
+ }
+\pagestyle{fancy}         % 页眉页脚风格
+\fancyhf{}                % 清空当前设置
+\fancyfoot[C]{\thepage\ / \pageref{LastPage}}%页脚中间显示 当前页 / 总页数，把\label{LastPage}放在最后
+\begin{document} 
+    \begin{titlepage}       % 封面
+        \centering
+        \includegraphics[width=\textwidth]{../SUSTC_LOGO.png}
+        % \vspace*{\baselineskip}
+        \rule{\textwidth}{1.6pt}\vspace*{-\baselineskip}\vspace*{2pt}
+        \rule{\textwidth}{0.4pt}\\[\baselineskip]
+        {\LARGE COMPILIER @Liu Yepang 2019\\[\baselineskip]\small for SUSTech CSE}
+        \\[0.2\baselineskip]
+        \rule{\textwidth}{0.4pt}\vspace*{-\baselineskip}\vspace{3.2pt}
+        \rule{\textwidth}{1.6pt}\\[\baselineskip]
+        \scshape
+        \vspace*{\baselineskip}
+        {\Large Project 3\par }
+        Edited by \\[\baselineskip] {汪至圆\par}
+        {\Large 11610634\par }
+        \vfill
+        {\scshape 2019} \\{\large SHENZHEN}\par
+    \end{titlepage}
+
+    \section{Lab Demand}
+        In last two project, I have finished the parser for the SPL source code and generated the syntex 
+        tree and do the semantic analysis for the SPL source code. In this project I will generate the intermediate code for my syntex tree.
+        
+
+    \section{Environment}
+        The environment for my project is g++ 9.1, flex 2.6, bison 3.4, urwid 2.1. All the work of coding
+        and test was finished in the Manjaro 18.1 which based on Linux 4.19.
+    \section{Run}
+        My project was compiled by the make. If you want to compile the project, you just need run `\hl{make splc}'. 
+        And then it will output a executable file splc.out. The splc.out will receive a argument which is the path of 
+        SPL source code file, and the output of the program will at the same folder of the source code and the extend name of the file 
+        will be ".ir". The context of the output file will be the intermediate-code.
+    \section{Generate Process}
+        When generate the intermediate-code, I use the translation schemes introduced in the document. I define the translation schemes for the expression, the condition, the
+        statement, the arguments and the CompSt node. For the assumptions in the document, I traversal the node and find all the definitions of the function and apply the
+        translation schemes to it.
+        For the translation schemes for CompSt node, I will do the declaration for the variable and add the variable to the variable map which storage the correspondence
+        information of the variable name and the name I used in the intermediate-code. And for the Stat node in the CompSt node, I will apply the statement translation scheme
+        to it, and in the statement translation scheme, there will use other translation schemes to translate specific node.
+    \section{Optimization}
+        After generated the intermediate-code, I find there are many repeated statements, so I want to optimize it.
+        \begin{itemize}
+            \item For all the expression with a const value or a single variable which has been defined, the expression translation scheme won't return the code to set a code 
+            to define a new variable but a string with length 0, and it will set the value of the expression be the expression node be the const value or the name used in the 
+            intermediate-code of the single variable. And while using this expression node in the right value expression, we can use the value of it directly.
+            \item In the intermediate-code, we will use so many temporary variables to transfer the value, and most of them are so redundant. In these step, I will find and
+            analysis all the temporary variables. If the temporary which won't be used in the code below it, I will delete the line define the temporary variable. If the 
+            temporary variable just used in the right value individually, I will delete the line which used it and set the left value of the line define the temporary variable
+            be the left value of the line be deleted.
+            \item And I find, there are may be some line which used to define the variable has right value consist of immediate value, for these lines, I will give them the result
+            of the expression immediately.
+            \item There are some lines have a feature, they have the same left value, and in their right value, there are only the left value of them will appear except the immediate
+            value. For these lines, I will compress them to one line.
+            \item The last one is a very useful optimization but it can't implement because of the limitation of the simulation. In the simulation, the immediate value can't be used
+            in the logical calculation, so we need to define a variable with the value to do the calculation, it's so wasteful to define a variable for each const value in the
+            logical calculation. So I want to set a const value pool, all the const values which appear in the logical expressions in the program will be distributed to a variable, and
+            when we need to use the const value, we can use the corresponding variable. But this optimization can't be implemented because that the simulation don't support global
+            variable. Maybe can create a const value pool for each function, but it is also wasteful.
+        \end{itemize}
+        \subsection{Performance}
+            For the test case privaded by the TA, I test their performance.
+            \begin{table}[!htbp]
+                \centering
+                \label{tab:Performance}
+                \begin{tabular}{|c|c|c|}
+                    \hline
+                    Test Case & Input & Number of Instructions \\
+                    \hline
+                    test\_3\_r01 &              & 20    \\
+                    \hline
+                    test\_3\_r02 & 2019,10      & 26    \\
+                    \hline
+                    test\_3\_r03 &              & 3715  \\
+                    \hline
+                    test\_3\_r04 & 10           & 18    \\
+                    \hline
+                    test\_3\_r05 &              & 17    \\
+                    \hline
+                    test\_3\_r06 &              & 124   \\
+                    \hline
+                    test\_3\_r07 & 5,10         & 45    \\
+                    \hline
+                    test\_3\_r08 & -10          & 13    \\
+                    \hline
+                    test\_3\_r09 &              & 52212 \\
+                    \hline
+                    test\_3\_r10 & 10           & 95    \\
+                    \hline
+                \end{tabular}
+            \end{table}
+    \section{Bonus}
+        I haven't implemented bonus features yet.
+\end{document}

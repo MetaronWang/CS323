@@ -1,2 +1,0 @@
-[DEBUG] 2019-12-19 03:35:25,920 (irsim.py 620): Parsed arguments: {'irpath': 'test_3_r02.out', 'inputs': '2019,2', 'logpath': 'irsim.log'}
-[DEBUG] 2019-12-19 04:08:00,429 (irsim.py 620): Parsed arguments: {'irpath': 'test_3_r06.out', 'inputs': '', 'logpath': 'irsim.log'}
