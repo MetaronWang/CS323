@@ -60,15 +60,15 @@ include CMakeFiles/testCode.dir/flags.make
 CMakeFiles/testCode.dir/testCode.cpp.o: CMakeFiles/testCode.dir/flags.make
 CMakeFiles/testCode.dir/testCode.cpp.o: ../testCode.cpp
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/metaron/Nextcloud/CS323/CS323/project3/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/testCode.dir/testCode.cpp.o"
-	/usr/local/bin/g++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/testCode.dir/testCode.cpp.o -c /home/metaron/Nextcloud/CS323/CS323/project3/testCode.cpp
+	/usr/bin/g++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/testCode.dir/testCode.cpp.o -c /home/metaron/Nextcloud/CS323/CS323/project3/testCode.cpp
 
 CMakeFiles/testCode.dir/testCode.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/testCode.dir/testCode.cpp.i"
-	/usr/local/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/metaron/Nextcloud/CS323/CS323/project3/testCode.cpp > CMakeFiles/testCode.dir/testCode.cpp.i
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/metaron/Nextcloud/CS323/CS323/project3/testCode.cpp > CMakeFiles/testCode.dir/testCode.cpp.i
 
 CMakeFiles/testCode.dir/testCode.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/testCode.dir/testCode.cpp.s"
-	/usr/local/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/metaron/Nextcloud/CS323/CS323/project3/testCode.cpp -o CMakeFiles/testCode.dir/testCode.cpp.s
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/metaron/Nextcloud/CS323/CS323/project3/testCode.cpp -o CMakeFiles/testCode.dir/testCode.cpp.s
 
 # Object files for target testCode
 testCode_OBJECTS = \

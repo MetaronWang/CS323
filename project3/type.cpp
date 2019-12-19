@@ -899,6 +899,7 @@ void generateGrammerTree(Node program) {
         return;
     }
     generateIR(program);
+
 //    printProgram(program, 0);
 }
 

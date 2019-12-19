@@ -1,1 +1,1 @@
-/usr/local/bin/g++  -g   CMakeFiles/testCode.dir/testCode.cpp.o  -o testCode 
+/usr/bin/g++  -g   CMakeFiles/testCode.dir/testCode.cpp.o  -o testCode 

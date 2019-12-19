@@ -1,13 +1,22 @@
-//
-// Created by metaron on 2019/11/23.
-//
-
-#include <string>
 #include <iostream>
-
+#include <stdio.h>
 using namespace::std;
 
-int main(){
-    string s = "Sfdsdf";
-    cout<<s.rfind("s")<<endl;
+int fact(int n)
+{
+    if (n == 1)
+        return n;
+    else
+        return (n * fact(n-1));
+}
+int main()
+{
+    int m, result;
+    m = 10;
+    if (m > 1)
+        result = fact(m);
+    else
+        result = 1;
+    cout<<result<<endl;
+    return 0;
 }

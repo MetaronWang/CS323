@@ -1,0 +1,19 @@
+FUNCTION foo :
+PARAM v0
+PARAM v1
+PARAM v2
+t1 := v0 - v1
+t2 := v2 * #2
+t0 := t1 + t2
+RETURN t0
+FUNCTION main :
+v3 := #110
+v4 := #97
+v5 := #3
+ARG v5
+ARG v4
+ARG v3
+v5 := CALL foo
+WRITE v5
+RETURN #0
+

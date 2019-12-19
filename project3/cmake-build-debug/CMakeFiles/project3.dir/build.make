@@ -60,15 +60,15 @@ include CMakeFiles/project3.dir/flags.make
 CMakeFiles/project3.dir/pro_3.tab.c.o: CMakeFiles/project3.dir/flags.make
 CMakeFiles/project3.dir/pro_3.tab.c.o: ../pro_3.tab.c
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/metaron/Nextcloud/CS323/CS323/project3/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/project3.dir/pro_3.tab.c.o"
-	/usr/local/bin/g++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/project3.dir/pro_3.tab.c.o -c /home/metaron/Nextcloud/CS323/CS323/project3/pro_3.tab.c
+	/usr/bin/g++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/project3.dir/pro_3.tab.c.o -c /home/metaron/Nextcloud/CS323/CS323/project3/pro_3.tab.c
 
 CMakeFiles/project3.dir/pro_3.tab.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/project3.dir/pro_3.tab.c.i"
-	/usr/local/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/metaron/Nextcloud/CS323/CS323/project3/pro_3.tab.c > CMakeFiles/project3.dir/pro_3.tab.c.i
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/metaron/Nextcloud/CS323/CS323/project3/pro_3.tab.c > CMakeFiles/project3.dir/pro_3.tab.c.i
 
 CMakeFiles/project3.dir/pro_3.tab.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/project3.dir/pro_3.tab.c.s"
-	/usr/local/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/metaron/Nextcloud/CS323/CS323/project3/pro_3.tab.c -o CMakeFiles/project3.dir/pro_3.tab.c.s
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/metaron/Nextcloud/CS323/CS323/project3/pro_3.tab.c -o CMakeFiles/project3.dir/pro_3.tab.c.s
 
 # Object files for target project3
 project3_OBJECTS = \
